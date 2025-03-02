@@ -1,0 +1,23 @@
+{
+  "name": "ego",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Youssef-Ashraf2099/EGO.git"
+  },
+  "author": "Youssef Ashraf",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Youssef-Ashraf2099/EGO/issues"
+  },
+  "homepage": "https://github.com/Youssef-Ashraf2099/EGO#readme",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
