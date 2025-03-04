@@ -1,30 +1,34 @@
-const mongoose = require('mongoose');
-const event = require('./event');
-const bookingSchema = mongoose.Schema({
-ticketBookings:{
-    type: [mongoose.Schema.Types.ObjectId],
-    required: true,
-    ref: 'event'
-},
-numOfTickets:{
-    type: Number,
-    required: true
-},
-totalPrice:{
-    type: Number,
-    required: true
-},// number 2 in the tasks is missing @mostafa
-status:{
-    type: String,
-    required: true,
-    enum:['pending', 'confirmed', 'canceled']
-},
-timeStamp:{
-    type: Date,
-    default: Date.now
-}  
+const mongoose = require("mongoose");
 
+const BookingSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  event: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Event',
+    required: true,
+  },
+  numberOfTickets: {
+    type: Number,
+    required: true,
+    //min: 1,// This line is to be discussed on how to handle the attributes
+  },
+  totalPrice: {
+    type: Number,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ["pending", "confirmed", "canceled"],
+    default: "pending",
+  },
+}, {
+  timestamps: true,
 });
 
-const bookingModel = mongoose.model('Booking',bookingSchema); 
-module.exports = bookingModel;
+const Booking = mongoose.model("Booking", BookingSchema);
+
+module.exports = Booking;
