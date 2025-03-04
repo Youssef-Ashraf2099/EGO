@@ -32,6 +32,8 @@ cd path\to\your\repository\EGO
 npm install
 
 npm install express
+npm i mongoose
+npm i validator
 
 node app.js #run javascript file
 ```
