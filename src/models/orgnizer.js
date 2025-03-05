@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
-const userschema = mongoose.Schema(
+const organizerschema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -33,6 +33,6 @@ const userschema = mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userschema);
+const Organizer = mongoose.model("Organizer", organizerschema);
 
-module.exports = User;
+module.exports = Organizer;
