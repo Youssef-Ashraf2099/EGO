@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const EventSchema = mongoose.Schema({
   title: {
@@ -32,15 +33,4 @@ const EventSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  organizer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-}, {
-  timestamps: true,
 });
-
-const Event = mongoose.model("Event", EventSchema);
-
-module.exports = Event;
