@@ -42,3 +42,10 @@ node app.js #run javascript file
    npm i dotenv
    ```
    set up your .env with the needed configrations
+5. **additional configs**
+   ```
+   npm install --save-dev jest # for testing
+   npm install bcrypt #password hashing
+   npm install body-parser # read jason file to export into html views
+   npm install --save-dev nodemon #for auto restart
+   ```
