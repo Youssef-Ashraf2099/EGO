@@ -1,38 +1,66 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
-const userschema = mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      trim: true,
-      unique: true,
-      lowercase: true,
-      required: true,
-      validator(value) {
-        if (!validator.isEmail(value)) {
-          throw new error("invalid email");
-        }
-      },
-    },
-    profilepic: {
-      type: String, //url or path to profile picture
-    },
-    password: {
-      type: String,
-      required: true,
-      minlength: 7,
+// Base User Schema
+const options = { discriminatorKey: 'role', timestamps: true };
+
+const BaseUserSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error("Email is invalid");
+      }
     },
   },
-  {
-    timestamps: true,
-  }
-);
+  profilePicture: {
+    type: String,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
+    trim: true,
+  },
+}, options);
 
-const User = mongoose.model("User", userschema);
+// Base User Model
+const User = mongoose.model("User", BaseUserSchema);
 
-module.exports = User;
+// Standard User Schema
+const StandardUserSchema = new mongoose.Schema({
+  // Add any fields specific to Standard User here
+});
+
+// Organizer Schema
+const OrganizerSchema = new mongoose.Schema({
+  // Add any fields specific to Organizer here
+});
+
+// Virtual field for Organizer's events
+OrganizerSchema.virtual("events", {
+  ref: "Event",
+  localField: "_id",
+  foreignField: "organizer",
+});
+
+// System Admin Schema
+const SystemAdminSchema = new mongoose.Schema({
+  // Add any fields specific to System Admin here
+});
+
+// Discriminators
+const StandardUser = User.discriminator("Standard User", StandardUserSchema);
+const Organizer = User.discriminator("Organizer", OrganizerSchema);
+const SystemAdmin = User.discriminator("System Admin", SystemAdminSchema);
+
+module.exports = { User, StandardUser, Organizer, SystemAdmin };

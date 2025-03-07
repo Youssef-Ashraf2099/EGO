@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const User = require("../models/user");
+const { User, StandardUser, Organizer, SystemAdmin } = require("../models/user");
 const Event = require("../models/event");
 const Booking = require("../models/booking");
 
 // Load environment variables from .env file
 dotenv.config();
 
-//mongoose connection
+// mongoose connection
 const uri = process.env.DATABASE_URL;
 
 mongoose
@@ -18,25 +18,22 @@ mongoose
     // Sample data insertion
     try {
       // Create sample users
-      const admin = new User({
+      const admin = new SystemAdmin({
         name: "Admin User",
         email: "admin@example.com",
         password: "adminpass",
-        role: "System Admin",
       });
 
-      const organizer = new User({
+      const organizer = new Organizer({
         name: "Organizer User",
         email: "organizer@example.com",
         password: "organizerpass",
-        role: "Organizer",
       });
 
-      const standardUser = new User({
+      const standardUser = new StandardUser({
         name: "Standard User",
         email: "user@example.com",
         password: "userpass",
-        role: "Standard User",
       });
 
       await admin.save();
@@ -69,13 +66,16 @@ mongoose
       await event1.save();
       await event2.save();
 
-      // Create sample bookings
+      // Fetch and print organizer's events
+      const organizerWithEvents = await Organizer.findById(organizer._id).populate('events').exec();
+      console.log("Organizer's Events:", organizerWithEvents.events);
+
+      //Create sample bookings
       const booking1 = new Booking({
         user: standardUser._id,
         event: event1._id,
         numberOfTickets: 2,
         totalPrice: 100,
-        status: "confirmed",
       });
 
       const booking2 = new Booking({
@@ -83,18 +83,14 @@ mongoose
         event: event2._id,
         numberOfTickets: 1,
         totalPrice: 30,
-        status: "confirmed",
       });
 
       await booking1.save();
       await booking2.save();
 
-      console.log("Sample data inserted successfully");
-
-      // Fetch and print organizer's events
-      const organizerWithEvents = await User.findById(organizer._id).populate('events').exec();
-      console.log("Organizer's Events:", organizerWithEvents.events);
-
+      // Fetch the  bookings
+      const userWithBookings = await Booking.findById(booking1._id).populate('event').populate('user').exec();
+      console.log("User's Bookings:", userWithBookings);
     } catch (error) {
       console.error("Error inserting sample data:", error);
     }

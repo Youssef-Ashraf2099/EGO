@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const options = { timestamps: true };
+
 const BookingSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -25,9 +27,7 @@ const BookingSchema = new mongoose.Schema({
     enum: ["pending", "confirmed", "canceled"],
     default: "pending",
   },
-}, {
-  timestamps: true,
-});
+}, options);
 
 const Booking = mongoose.model("Booking", BookingSchema);
 
