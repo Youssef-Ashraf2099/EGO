@@ -52,15 +52,16 @@ node app.js #run javascript file
    ```
 
 ## Architecture
-
+```
 EGO/
 ├── src/
-│ ├── routes/
-│ ├── controllers/
-│ ├── models/
-│ ├── middleware/
-│ └── database/
+│   ├── routes/
+│   ├── controllers/
+│   ├── models/
+│   ├── middleware/
+│   └── database/
 ├── .env
 ├── .gitignore
 ├── package.json
-└── index.js //our server
+└── index.js // our server
+```
