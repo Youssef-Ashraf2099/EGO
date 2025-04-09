@@ -37,6 +37,7 @@ npm i validator
 
 node app.js #run javascript file
 ```
+
 4. **set up your env file with the same names in the mongoose and index files**
    ```
    npm i dotenv
@@ -49,3 +50,17 @@ node app.js #run javascript file
    npm install body-parser # read jason file to export into html views
    npm install --save-dev nodemon #for auto restart
    ```
+
+## Architecture
+
+EGO/
+├── src/
+│ ├── routes/
+│ ├── controllers/
+│ ├── models/
+│ ├── middleware/
+│ └── database/
+├── .env
+├── .gitignore
+├── package.json
+└── index.js //our server
