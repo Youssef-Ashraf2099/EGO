@@ -1,6 +1,8 @@
 //user schema
 const mongoose = require("mongoose");
 const validator = require("validator");
+const bcrypt=require("bcrypt");
+
 
 const UserSchema = new mongoose.Schema(
   {
@@ -48,23 +50,31 @@ UserSchema.virtual("events", {
   foreignField: "organizer",
 });
 
-/*
-adding the concept of hasing the password before saving the user as a draft
 
-// Hash the password before saving the user
-UserSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
+UserSchema.statics.findByCredentials= async(email, password)=>{
+  const user= await User.findOne({email})
+  if(!user){
+      throw new Error('unable to find email')
   }
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (err) {
-    next(err);
+  const isMatch= await bcrypt.compare(password, user.password)
+
+  if(!isMatch){
+      throw new Error('unable to login')
   }
-});
-*/
+  return user
+}
+
+UserSchema.pre('save',async function(next){
+  const user= this
+
+  if(user.isModified('password')){
+      user.password= await bcrypt.hash(user.password,8)
+  }
+
+  next()
+})
+
+
 const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
