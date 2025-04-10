@@ -5,7 +5,7 @@ const booking = require("../model/Booking");
 router.get("/test", (req, res) => {
   res.send("testing booking route");
 });
-
+//koloh user 3ady
 router.get("bookings", async (req, res) => {
   try {
     const bookings = await booking.find().populate("event").populate("user");
