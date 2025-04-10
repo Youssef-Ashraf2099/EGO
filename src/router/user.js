@@ -28,6 +28,21 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.put("/forgetPassword", async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.status(200).send({ message: "Password updated successfully" });
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
+
 //create user
 router.post("/user", async (req, res) => {
   const user = new User(req.body);
