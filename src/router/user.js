@@ -48,6 +48,13 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
+    if (!req.body.email || !req.body.password) {
+      return res.status(400).json({
+        error: "Missing required fields",
+        required: ["email", "password"],
+      });
+    }
+    // Check if all required fields are present
     const { email, password } = req.body;
     const user = await User.findByCredentials(email, password);
     const token = await user.generateAuthToken();
