@@ -122,6 +122,7 @@ router.delete("/users/:id", async (req, res) => {
 });
 
 router.get("/users/bookings", async (req, res) => {
+  //user 3ady
   //Admin access
   try {
     const user = await User.findById(req.user._id).populate("bookings");
@@ -134,6 +135,7 @@ router.get("/users/bookings", async (req, res) => {
   }
 });
 router.get("/users/events", async (req, res) => {
+  //orgnizer
   //Admin access
   try {
     const user = await User.findById(req.user._id).populate("events");
@@ -146,6 +148,7 @@ router.get("/users/events", async (req, res) => {
   }
 });
 router.get("/users/events/analtyics", async (req, res) => {
+  //orgnizer
   //Admin access
   try {
     const user = await User.findById(req.user._id).populate("events");
