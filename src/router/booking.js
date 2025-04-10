@@ -14,3 +14,18 @@ router.get("bookings", async (req, res) => {
     res.status(500).send(e);
   }
 });
+
+router.get("/bookings/:id", async (req, res) => {
+  try {
+    const booking = await booking
+      .findById(req.params.id)
+      .populate("event")
+      .populate("user");
+    if (!booking) {
+      return res.status(404).send("not found");
+    }
+    res.status(200).send(booking);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
