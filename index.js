@@ -4,9 +4,9 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const userRouter = require("./src/routes/user");
-const eventRouter = require("./src/routes/events");
-const bookingRouter = require("./src/routes/booking");
+const userRouter = require("./src/router/user");
+const eventRouter = require("./src/router/events");
+const bookingRouter = require("./src/router/booking");
 const authernticationMiddleware = require("./src/middleware/authenticationMiddleware");
 
 require("dotenv").config();
@@ -26,7 +26,7 @@ app.use(
 
 //app.use("/api/v1", ay routerhena);@hamza00234
 //app.use("/api/v1/user", userRouter); //public route no authentication required
-app.use(authenticationMiddleware); //any route after this line will be protected by the authentication middleware but otherwise it will be public
+///app.use(authenticationMiddleware); //any route after this line will be protected by the authentication middleware but otherwise it will be public
 //app.use("/api/v1/user", userRouter); is protected route requires authentication
 
 const PORT = process.env.PORT;

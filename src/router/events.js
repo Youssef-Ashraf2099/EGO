@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Event = require("../model/Event");
+const Event = require("../models/event");
 
 router.get("/test", (req, res) => {
   res.send("testing event route");
