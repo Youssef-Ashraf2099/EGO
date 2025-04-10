@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
-const User = require("../models/user");
+const User = require("../models/User");
 const Event = require("../models/event");
 const Booking = require("../models/booking");
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
-// Load environment variables from .env file
-dotenv.config();
 
 //mongoose connection
 const uri = process.env.DATABASE_URL;
+console.log(process.env.DATABASE_URL)
 
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
