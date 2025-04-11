@@ -3,7 +3,7 @@ const bcrypt=require("bcrypt")
 require("dotenv").config()
 const jwt=require("jsonwebtoken")
 const {forgotpassword,verify}=require("../email/account")
-const secretKey=process.env.JWT_Key
+const secretKey=process.env.SECRET_KEY
 
 const userController={
     register: async (req,res)=>{
