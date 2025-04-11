@@ -1,21 +1,11 @@
-
-function adminauth(req, res, next){
-   if(req.user.role=="System Admin"){
-    next()
-   }else{
-    res.status(401).send("unauthorized")
-   }
-}
-
-function organizerauth(req,res,next){
-    if(req.user.role=="Organizer"){
+module.exports = function authorizationMiddleware(roles){
+    return (req,res,next)=>{
+        const role = req.user.role
+        if(!roles.includes(role))
+            return res.status(403).json('unauthorized access')
+    
         next()
-    }else{
-        res.status(401).send("unauthorized")
     }
-}
 
-module.exorts={
-    organizerauth,
-    adminauth
+
 }
