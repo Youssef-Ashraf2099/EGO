@@ -42,6 +42,11 @@ const EventSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["approved", "pending", "declined"],
+      default: "pending",
+    },
   },
   {
     timestamps: true,
