@@ -10,21 +10,21 @@ const getAllEvents = async (req, res) => {
   }
 };
 
-// Public: Get a single event by ID
+// Public: Get event details by ID
 const getEventById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const event = await Event.findById(id).populate("organizer");
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
+    try {
+        const { id } = req.params;
+        const event = await Event.findById(id).populate("organizer");
+        if (!event || event.status !== "approved") {
+        return res.status(404).json({ error: "Event not found" });
+        }
+        res.status(200).json(event);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-    res.status(200).json(event);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
 };
 
-// Organizer: Create a new event
+// Wvent Organizer: Create a new event
 const createEvent = async (req, res) => {
   try {
     const { title, description, date, location, category, ticketPrice, ticketAvailable } = req.body;
@@ -45,7 +45,7 @@ const createEvent = async (req, res) => {
   }
 };
 
-// Organizer: Edit an event
+// Event Organizer or Admin: Edit an event
 const editEvent = async (req, res) => {
   try {
     const { id } = req.params;
@@ -64,7 +64,7 @@ const editEvent = async (req, res) => {
   }
 };
 
-// Organizer: Delete an event
+// Event Organizer or Admin: Delete an event
 const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;
@@ -78,10 +78,44 @@ const deleteEvent = async (req, res) => {
   }
 };
 
+// Event Organizer: View analytics for their events
+const getEventAnalytics = async (req, res) => {
+  try {
+    const events = await Event.find({ organizer: req.user._id });
+    const analytics = events.map((event) => ({
+      title: event.title,
+      percentageBooked: ((event.ticketSold / (event.ticketSold + event.ticketAvailable)) * 100).toFixed(2) + "%",
+    }));
+    res.status(200).json(analytics);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Admin: Approve or reject an event
+const updateEventStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body; // "approved" or "declined"
+    if (!["approved", "declined"].includes(status)) {
+      return res.status(400).json({ error: "Invalid status value" });
+    }
+    const event = await Event.findByIdAndUpdate(id, { status }, { new: true });
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+    res.status(200).json(event);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllEvents,
   getEventById,
   createEvent,
   editEvent,
-  deleteEvent
+  deleteEvent,
+  getEventAnalytics,
+  updateEventStatus,
 };
