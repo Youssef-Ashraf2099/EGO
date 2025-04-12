@@ -12,9 +12,9 @@ module.exports = function authenticationMiddleware(req, res, next) {
     return res.status(401).json({ message: "no token found" });
   }
 
-  jwt.verify(token, secretKey, (error, user) => {
+  jwt.verify(token, secretKey, (error, payload) => {
     if (error) return res.status(401).json({ message: "invalid token" });
-    req.user = user;
+    req.user = payload.user;
     next();
   });
 };
