@@ -6,6 +6,18 @@ const { forgotpassword, verify } = require("../email/account");
 const secretKey = process.env.SECRET_KEY;
 
 const userController = {
+  // Add admin middleware
+  adminAuth: async (req, res, next) => {
+    try {
+      if (req.user && req.user.role === "System Admin") {
+        next();
+      } else {
+        res.status(403).json({ error: "Access denied. Admin only." });
+      }
+    } catch (error) {
+      res.status(401).json({ error: "Authentication failed" });
+    }
+  },
   register: async (req, res) => {
     try {
       const { name, email, password } = req.body;

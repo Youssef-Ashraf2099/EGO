@@ -21,8 +21,9 @@ router.put("/forgetPassword", async (req, res) => {
   userController.forgetPassword(req, res);
 });
 
-//get all users by admin
-router.get("/users", async (req, res) => {
+// get all users as admin only
+// Update the route to use the middleware from controller
+router.get("/users", auth, userController.adminAuth, async (req, res) => {
   userController.getAllUsers(req, res);
 });
 //get user profile and put user profile
