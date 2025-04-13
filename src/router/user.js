@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const userController = require("../controllers/userController");
-const auth = require("../middleware/auth");
+const auth = require("../middleware/authenticationMiddleware");
 
 router.get("/test", (req, res) => {
   res.send("testing");
@@ -14,47 +14,16 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  try {
-    if (!req.body.email || !req.body.password) {
-      return res.status(400).json({
-        error: "Missing required fields",
-        required: ["email", "password"],
-      });
-    }
-    // Check if all required fields are present
-    const { email, password } = req.body;
-    const user = await User.findByCredentials(email, password);
-    const token = await user.generateAuthToken();
-    res.status(200).send({ user, token });
-  } catch (e) {
-    res.status(400).send({ error: "Unable to login" });
-  }
+  userController.login(req, res);
 });
 
 router.put("/forgetPassword", async (req, res) => {
-  try {
-    const { email, newPassword } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).send({ error: "User not found" });
-    }
-    user.password = newPassword;
-    await user.save();
-    res.status(200).send({ message: "Password updated successfully" });
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  userController.forgetPassword(req, res);
 });
 
-//get all users
+//get all users by admin
 router.get("/users", async (req, res) => {
-  //@ziyadzakzouk add authentication middleware as admin here lama t5les el middleware bta3tek
-  try {
-    const users = await User.find();
-    res.status(200).send(users);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  userController.getAllUsers(req, res);
 });
 //get user profile and put user profile
 router.get("/users/profile", async (req, res) => {

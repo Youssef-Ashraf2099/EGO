@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 const userRouter = require("./src/router/user");
 const eventRouter = require("./src/router/events");
 const bookingRouter = require("./src/router/booking");
-const authernticationMiddleware = require("./src/middleware/authenticationMiddleware");
+//const authernticationMiddleware = require("./src/middleware/authenticationMiddleware");
 
 require("dotenv").config();
 
