@@ -23,123 +23,44 @@ router.put("/forgetPassword", async (req, res) => {
 
 // get all users as admin only
 // Update the route to use the middleware from controller
-router.get("/users", auth, userController.adminAuth, async (req, res) => {
+router.get("/users", async (req, res) => {
   userController.getAllUsers(req, res);
 });
 //get user profile and put user profile
 router.get("/users/profile", async (req, res) => {
-  //user should be authenticated to access this route @ziyadzakzouk
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(404).send("not found");
-    }
-    res.status(200).send(user);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  userController.getUser(req, res);
 });
+//update user profile
 router.put("/users/profile", async (req, res) => {
-  //user should be authenticated to access this route @ziyadzakzouk
-  try {
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(404).send("not found");
-    }
-    Object.assign(user, req.body);
-    await user.save();
-    res.status(200).send(user);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  userController.updateUser(req, res);
 });
 //get user by id
 router.get("/users/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    res.status(200).send(user);
-  } catch (e) {
-    res.status(400).send(e);
-  }
+  userController.getUser(req, res);
 });
 
 //update
 router.patch("/users/:id", async (req, res) => {
-  // put wla patch ?
-  try {
-    const update = req.body;
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).send("not found");
-    }
-    Object.assign(user, update);
-    await user.save();
-    res.status(200).send(user);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  userController.updateUser(req, res);
 });
 //delete
 router.delete("/users/:id", async (req, res) => {
-  try {
-    const user = await User.findByIdAndDelete(req.params.id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.status(204).json({ message: "deleted" });
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  userController.deleteUser(req, res);
 });
-
+//user 3ady
+//Admin access
 router.get("/users/bookings", async (req, res) => {
-  //user 3ady
-  //Admin access
-  try {
-    const user = await User.findById(req.user._id).populate("bookings");
-    if (!user) {
-      return res.status(404).send("not found");
-    }
-    res.status(200).send(user.bookings);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  userController.getUserBookings(req, res);
 });
+//orgnizer
+//Admin access
 router.get("/users/events", async (req, res) => {
-  //orgnizer
-  //Admin access
-  try {
-    const user = await User.findById(req.user._id).populate("events");
-    if (!user) {
-      return res.status(404).send("not found");
-    }
-    res.status(200).send(user.events);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  userController.getUserEvents(req, res);
 });
+//orgnizer
+//Admin access
 router.get("/users/events/analtyics", async (req, res) => {
-  //orgnizer
-  //Admin access
-  try {
-    const user = await User.findById(req.user._id).populate("events");
-    if (!user) {
-      return res.status(404).send("not found");
-    }
-    const events = user.events;
-    const analytics = events.map((event) => {
-      return {
-        eventName: event.name,
-        totalBookings: event.bookings.length,
-        totalAttendees: event.attendees.length,
-      };
-    });
-    res.status(200).send(analytics);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  userController.getUserEventsAnalytics(req, res);
 });
 
 module.exports = router;
