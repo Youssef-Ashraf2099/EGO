@@ -6,63 +6,33 @@ const { forgotpassword, verify } = require("../email/account");
 const secretKey = process.env.SECRET_KEY;
 
 const userController = {
-  // Add admin middleware
-  // adminAuth: async (req, res, next) => {
-  //   try {
-  //     if (req.user && req.user.role === "System Admin") {
-  //       next();
-  //     } else {
-  //       res.status(403).json({ error: "Access denied. Admin only." });
-  //     }
-  //   } catch (error) {
-  //     res.status(401).json({ error: "Authentication failed" });
-  //   }
-  // },
   register: async (req, res) => {
+    // enum: ["Standard User", "Organizer", "System Admin"],
     try {
-      const { name, email, password } = req.body;
-
-      // Check if all required fields are present
-      if (!name || !email || !password) {
-        return res.status(400).json({
-          error: "Missing required fields",
-          required: ["name", "email", "password"],
-        });
+      //check if user is already registered
+      const check = await User.findOne({ email: user.email });
+      if (check) {
+        return res.status(409).send("user already registered");
       }
-
-      // Create new user with validated data
-      const user = new User({
-        name,
-        email,
-        password,
-      });
+      const user = new User(req.body);
+      const hashedPassword = await bcrypt.hash(user.password, 8);
+      user.password = hashedPassword;
 
       await user.save();
-      res.status(201).json({
-        success: true,
-        data: user,
-      });
+      return res.status(201).send("successfully registered");
     } catch (e) {
-      // Handle different types of errors
-      if (e.code === 11000) {
-        // Duplicate email error
-        return res.status(400).json({
-          error: "Email already exists",
-        });
-      }
-
-      res.status(400).json({
-        error: e.message,
-      });
+      return res.status(500).send(e);
     }
   },
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
+
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(404).send("email not found");
       }
+      console.log(user);
 
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
@@ -71,6 +41,7 @@ const userController = {
 
       const currentDateTime = new Date();
       const expiresAt = new Date(+currentDateTime + 1800000);
+
       // Generate a JWT token
       const token = jwt.sign(
         { user: { userId: user._id, role: user.role } },
@@ -84,11 +55,11 @@ const userController = {
         .cookie("token", token, {
           expires: expiresAt,
           httpOnly: true,
-          secure: true,
+          secure: true, // Set to true if using HTTPS
           SameSite: "none",
         })
         .status(200)
-        .send("login successfully", user);
+        .send(user);
     } catch (e) {
       res.status(500).send(e);
     }
