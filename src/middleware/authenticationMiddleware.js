@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET_KEY; // Use your secret key here
 
 module.exports = function authenticationMiddleware(req, res, next) {
-  const cookie = req.cookie;
+  const cookie = req.cookies;
   if (!cookie) {
     return res.status(401).json({ message: "no cookie found" });
   }
