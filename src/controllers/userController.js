@@ -56,7 +56,7 @@ const userController={
               SameSite: "none",
             })
             .status(200)
-            .send("login successfully", user);
+            .send(user);
         } catch (e) {
           res.status(500).send(e);
         }
