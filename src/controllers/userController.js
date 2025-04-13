@@ -6,60 +6,23 @@ const { forgotpassword, verify } = require("../email/account");
 const secretKey = process.env.SECRET_KEY;
 
 const userController = {
-  register: async (req, res) => {
-    try {
-      // Check if required fields exist
-      const { name, email, password, role = "Standard User" } = req.body;
-
-      if (!name || !email || !password) {
-        return res.status(400).json({
-          success: false,
-          error: "Missing required fields",
-          required: ["name", "email", "password"],
-        });
-      }
-
-      // Check if user already exists
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-        return res.status(409).json({
-          success: false,
-          error: "User already registered",
-        });
-      }
-
-      // Create new user
-      const user = new User({
-        name,
-        email,
-        password,
-        role,
-      });
-
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 8);
-      user.password = hashedPassword;
-
-      await user.save();
-
-      // Return success without password
-      const userResponse = user.toObject();
-      delete userResponse.password;
-
-      return res.status(201).json({
-        success: true,
-        message: "User registered successfully",
-        data: userResponse,
-      });
-    } catch (error) {
-      console.error("Registration error:", error);
-      return res.status(500).json({
-        success: false,
-        error: "Server error during registration",
-        message: error.message,
-      });
-    }
-  },
+  register: async (req,res)=>{
+        try{
+            //check if user is already registered
+            const check=await User.findOne({email:req.body.email})
+            if(check){
+                return res.status(409).send("user already registered")
+            }
+            const user=new User(req.body)
+            const hashedPassword=await bcrypt.hash(user.password,8)
+            user.password=hashedPassword
+            await user.save()
+            return res.status(201).send("successfully registered")
+            
+        }catch(e){
+            return  res.status(500).send(e)
+        }
+    },
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
