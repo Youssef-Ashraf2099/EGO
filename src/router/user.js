@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User");
+const User = require("../models/user");
+const userController = require("../controllers/userController");
+const auth = require("../middleware/auth");
 
 router.get("/test", (req, res) => {
   res.send("testing");
@@ -8,42 +10,7 @@ router.get("/test", (req, res) => {
 
 // Public routes
 router.post("/register", async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-
-    // Check if all required fields are present
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        error: "Missing required fields",
-        required: ["name", "email", "password"],
-      });
-    }
-
-    // Create new user with validated data
-    const user = new User({
-      name,
-      email,
-      password,
-    });
-
-    await user.save();
-    res.status(201).json({
-      success: true,
-      data: user,
-    });
-  } catch (e) {
-    // Handle different types of errors
-    if (e.code === 11000) {
-      // Duplicate email error
-      return res.status(400).json({
-        error: "Email already exists",
-      });
-    }
-
-    res.status(400).json({
-      error: e.message,
-    });
-  }
+  userController.register(req, res);
 });
 
 router.post("/login", async (req, res) => {
