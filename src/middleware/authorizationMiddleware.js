@@ -3,7 +3,6 @@ module.exports = function authorizationMiddleware(roles){
         const role = req.user.role
         if(!roles.includes(role))
             return res.status(403).json('unauthorized access')
-    
         next()
     }
 
