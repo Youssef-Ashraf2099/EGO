@@ -1,43 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const booking = require("../models/booking");
+const BookingController = require("../controllers/bookingController");
 
 router.get("/test", (req, res) => {
   res.send("testing booking route");
 });
 //koloh user 3ady
 router.get("bookings", async (req, res) => {
-  try {
-    const bookings = await booking.find().populate("event").populate("user");
-    res.status(200).send(bookings);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  BookingController.getAllBookings(req, res);
 });
 
 router.get("/bookings/:id", async (req, res) => {
-  try {
-    const booking = await booking
-      .findById(req.params.id)
-      .populate("event")
-      .populate("user");
-    if (!booking) {
-      return res.status(404).send("not found");
-    }
-    res.status(200).send(booking);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  BookingController.getBooking(req, res);
 });
 
 router.delete("/bookings/:id", async (req, res) => {
-  try {
-    const booking = await booking.findByIdAndDelete(req.params.id);
-    if (!booking) {
-      return res.status(404).send("not found");
-    }
-    res.status(200).send(booking);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+  BookingController.deleteBooking(req, res);
 });
