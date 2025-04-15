@@ -32,10 +32,9 @@ const userController = {
         return res.status(404).send("email not found");
       }
       console.log(user);
-
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
-        return res.status(405).send("incorect password");
+        return res.status(405).send("incorrect password");
       }
 
       const currentDateTime = new Date();
@@ -85,6 +84,7 @@ const userController = {
     try {
       const id = req.params.id;
       const user = await User.findById(id);
+      console.log(user)
       if (!user) {
         return res.status(404).send("user not found");
       }
@@ -102,6 +102,7 @@ const userController = {
 
       Object.assign(user, req.body);
       await user.save();
+      console.log(user)
       return res.status(200).send("updated successfully");
     } catch (e) {
       return res.status(500).send(e);
@@ -118,7 +119,7 @@ const userController = {
     }
   },
   deleteAllUsers: async (req, res) => {
-    try {
+    try { 
       const users = await User.deleteMany({});
       return res.status(200).send("All users have been deleted");
     } catch (e) {
@@ -135,12 +136,12 @@ const userController = {
     }
   },
   getCurrentUser: (req, res) => {
-    return res.send(req.user);
+    res.send(req.user);
+    console.log(req.user)
   },
   forgotPassword: async (req, res) => {
     try {
-      const { email, otp, password } = req.body;
-
+      const { email,otp, password } = req.body;
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(404).send("User not found");

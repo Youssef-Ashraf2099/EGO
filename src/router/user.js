@@ -18,7 +18,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.put("/forgetPassword", async (req, res) => {
-  userController.forgetPassword(req, res);
+  userController.forgotPassword(req, res);
 });
 
 // get all users as admin only
@@ -26,9 +26,15 @@ router.put("/forgetPassword", async (req, res) => {
 router.get("/users", async (req, res) => {
   userController.getAllUsers(req, res);
 });
+
+//temporary
+router.delete("/users", async (req, res) => {
+  userController.deleteAllUsers(req, res);
+});
+
 //get user profile and put user profile
 router.get("/users/profile", async (req, res) => {
-  userController.getUser(req, res);
+  userController.getCurrentUser(req, res);
 });
 //update user profile
 router.put("/users/profile", async (req, res) => {
@@ -40,8 +46,8 @@ router.get("/users/:id", async (req, res) => {
 });
 
 //update
-router.patch("/users/:id", async (req, res) => {
-  userController.updateUser(req, res);
+router.put("/users/:id", async (req, res) => {
+  userController.updateRole(req, res);
 });
 //delete
 router.delete("/users/:id", async (req, res) => {
