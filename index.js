@@ -25,7 +25,7 @@ app.use(
 );
 app.use("/api/v1", userRouter);
 app.use("/api/v1/events", eventRouter);
-//app.use("/api/v1", bookingRouter);
+app.use("/api/v1/bookings", bookingRouter);
 //app.use("/api/v1", ay routerhena);@hamza00234
 //app.use("/api/v1/user", userRouter); //public route no authentication required
 ///app.use(authenticationMiddleware); //any route after this line will be protected by the authentication middleware but otherwise it will be public
