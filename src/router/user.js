@@ -1,72 +1,167 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user");
 const userController = require("../controllers/userController");
-const auth = require("../middleware/authenticationMiddleware");
-
-router.get("/test", (req, res) => {
-  res.send("testing");
-});
+const eventController = require("../controllers/eventController");
+const bookingController = require("../controllers/bookingController");
+const authenticationMiddleware = require("../middleware/authenticationMiddleware");
+const authorizationMiddleware = require("../middleware/authorizationMiddleware");
 
 // Public routes
+// POST /api/v1/register - Register a new user
 router.post("/register", async (req, res) => {
-  userController.register(req, res);
+  try {
+    await userController.register(req, res);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
+// POST /api/v1/login - Authenticate user and return token
 router.post("/login", async (req, res) => {
-  userController.login(req, res);
+  try {
+    await userController.login(req, res);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
+// PUT /api/v1/forgetPassword - Update user password
 router.put("/forgetPassword", async (req, res) => {
-  userController.forgotPassword(req, res);
+  try {
+    await userController.forgotPassword(req, res);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-// get all users as admin only
-// Update the route to use the middleware from controller
-router.get("/users", async (req, res) => {
-  userController.getAllUsers(req, res);
-});
+// Admin-only routes
+// GET /api/v1/users - Get a list of all users
+router.get(
+  "/users",
+  authenticationMiddleware,
+  authorizationMiddleware(["System Admin"]),
+  async (req, res) => {
+    try {
+      await userController.getAllUsers(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 
-//temporary
-router.delete("/users", async (req, res) => {
-  userController.deleteAllUsers(req, res);
-});
+// Protected routes (Authenticated Users)
+// GET /api/v1/users/profile - Get current user’s profile
+router.get(
+  "/users/profile",
+  authenticationMiddleware,
+  async (req, res) => {
+    try {
+      await userController.getCurrentUser(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 
-//get user profile and put user profile
-router.get("/users/profile", async (req, res) => {
-  userController.getCurrentUser(req, res);
-});
-//update user profile
-router.put("/users/profile", async (req, res) => {
-  userController.updateUser(req, res);
-});
-//get user by id
-router.get("/users/:id", async (req, res) => {
-  userController.getUser(req, res);
-});
+// PUT /api/v1/users/profile - Update current user’s profile
+router.put(
+  "/users/profile",
+  authenticationMiddleware,
+  async (req, res) => {
+    try {
+      await userController.updateUser(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 
-//update
-router.put("/users/:id", async (req, res) => {
-  userController.updateRole(req, res);
-});
-//delete
-router.delete("/users/:id", async (req, res) => {
-  userController.deleteUser(req, res);
-});
-//user 3ady
-//Admin access
-router.get("/users/bookings", async (req, res) => {
-  userController.getUserBookings(req, res);
-});
-//orgnizer
-//Admin access
-router.get("/users/events", async (req, res) => {
-  userController.getUserEvents(req, res);
-});
-//orgnizer
-//Admin access
-router.get("/users/events/analtyics", async (req, res) => {
-  userController.getUserEventsAnalytics(req, res);
-});
+// Route skipped at the end
+
+// PUT /api/v1/users/:id - Update user’s role
+router.put(
+  "/users/:id",
+  authenticationMiddleware,
+  authorizationMiddleware(["System Admin"]),
+  async (req, res) => {
+    try {
+      await userController.updateRole(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// DELETE /api/v1/users/:id - Delete a user
+router.delete(
+  "/users/:id",
+  authenticationMiddleware,
+  authorizationMiddleware(["System Admin"]),
+  async (req, res) => {
+    try {
+      await userController.deleteUser(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// Standard User routes
+// GET /api/v1/users/bookings - Get current user’s bookings
+router.get(
+  "/users/bookings",
+  authenticationMiddleware,
+  authorizationMiddleware(["Standard User"]),
+  async (req, res) => {
+    try {
+      await bookingController.getUserBookings(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// Event Organizer routes
+// GET /api/v1/users/events - Get current user’s events
+router.get(
+  "/users/events",
+  authenticationMiddleware,
+  authorizationMiddleware(["Organizer"]),
+  async (req, res) => {
+    try {
+      await eventController.getOrganizerEvents(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// GET /api/v1/users/events/analytics - Get the analytics of the current user’s events
+router.get(
+  "/users/events/analytics",
+  authenticationMiddleware,
+  authorizationMiddleware(["Organizer"]),
+  async (req, res) => {
+    try {
+      await eventController.getEventAnalytics(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// GET /api/v1/users/:id - Get details of a single user
+router.get(
+  "/users/:id",
+  authenticationMiddleware,
+  authorizationMiddleware(["System Admin"]),
+  async (req, res) => {
+    try {
+      await userController.getUser(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 
 module.exports = router;
