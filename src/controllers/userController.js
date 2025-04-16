@@ -85,6 +85,7 @@ const userController = {
       const id = req.user.userId; // Use req.user.userId to get the current user's ID
       const user = await User.findById(id);
       console.log(user)
+      console.log(user.password)
       if (!user) {
         return res.status(404).send("user not found");
       }
@@ -92,15 +93,19 @@ const userController = {
       if (password) {
         const compare = await bcrypt.compare(password, user.password);
         if (!compare) {
-          Object.assign(user, req.body);
           const hashedPassword = await bcrypt.hash(password, 8);
           user.password = hashedPassword;
           await user.save();
-          return res.status(200).send("updated successfully");
+          console.log(user.password)
         } else {
           return res.status(400).send("you must use a new password");
         }
+        delete req.body.password;
       }
+      Object.assign(user, req.body);
+      console.log(user.password)
+            await user.save();
+            return res.status(200).send("updated successfully")
     } catch (e) {
       return res.status(500).send(e);
     }
@@ -136,30 +141,45 @@ const userController = {
     res.send(req.user);
     console.log(req.user)
   },
-  forgotPassword: async (req, res) => {
-    try {
-      const { email,otp, password } = req.body;
-      const user = await User.findOne({ email });
-      if (!user) {
-        return res.status(404).send("User not found");
+  passwordResetOtp: async (req,res)=>{
+    try{
+      const {email}=req.body
+      const user=await User.findOne({email})
+      if(!user){
+        return res.status(404).send("user not found")
       }
-
-      await forgotpassword(email);
-      const verification = verify(email, otp);
-
-      if (!verification) {
-        return res.status(400).send("incorrect otp");
-      }
-
-      const newPassword = password;
-      const newHashed = await bcrypt.hash(newPassword, 8);
-      user.password = newHashed;
-      await user.save();
-      return res.status(201).send("new password set");
-    } catch (e) {
-      return res.status(500).send(e);
+      await forgotpassword(email)
+      return res.status(200).send("otp sent correctly")
+    }catch(e){
+      return res.status(500).send(e)
     }
+
   },
+  resetpassword:async (req,res)=>{
+    try{
+      const {email, otp, password}=req.body
+      const user=await User.findOne({email})
+      if(!user){
+        return res.status(404).send("user not found")
+      }
+      const verifyOtp=verify(email,otp)
+      console.log(verifyOtp)
+      if(!verifyOtp){
+        return res.status(400).send("incorrect otp")
+      }
+      const compare=await bcrypt.compare(password,user.password)
+      if(compare){
+        return res.status(400).send("you must enter a new password")
+      }
+      const hashPass=await bcrypt.hash(password,8)
+      user.password=hashPass
+      await user.save()
+      return res.status(200).send("updated successfully")
+    }catch(e){
+      return res.status(500).send(e.message)
+    }
+  }
+
 };
 
 module.exports = userController;

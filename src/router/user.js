@@ -25,10 +25,18 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/sendOtp", async (req, res) => {
+  try {
+    await userController.passwordResetOtp(req, res);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // PUT /api/v1/forgetPassword - Update user password
 router.put("/forgetPassword", async (req, res) => {
   try {
-    await userController.forgotPassword(req, res);
+    await userController.resetpassword(req, res);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
