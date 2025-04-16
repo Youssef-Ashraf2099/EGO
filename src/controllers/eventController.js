@@ -110,6 +110,16 @@ const updateEventStatus = async (req, res) => {
   }
 };
 
+// Organizer: Get all events created by the authenticated organizer
+const getOrganizerEvents = async (req, res) => {
+  try {
+    const events = await Event.find({ organizer: req.user.userId }).populate("organizer");
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getAllEvents,
   getEventById,
@@ -118,4 +128,5 @@ module.exports = {
   deleteEvent,
   getEventAnalytics,
   updateEventStatus,
+  getOrganizerEvents,
 };
