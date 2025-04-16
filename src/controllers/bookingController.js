@@ -1,11 +1,15 @@
 const Booking = require("../models/booking");
 const Event = require("../models/event");
 
-// View all bookings for the authenticated user
-const getUserBookings = async (req, res) => {
+// Get booking details by ID for the authenticated user
+const getBookingById = async (req, res) => {
   try {
-    const bookings = await Booking.find({ user: req.user._id }).populate("event");
-    res.status(200).json(bookings);
+    const { id } = req.params; // Extract booking ID from the request parameters
+    const booking = await Booking.findOne({ _id: id, user: req.user.userId }).populate("event");
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found or unauthorized" });
+    }
+    res.status(200).json(booking);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -29,7 +33,7 @@ const bookTickets = async (req, res) => {
 
     // Create a new booking
     const booking = new Booking({
-      user: req.user._id,
+      user: req.user.userId,
       event: eventId,
       numberOfTickets,
       totalPrice,
@@ -56,7 +60,7 @@ const cancelBooking = async (req, res) => {
     const { id } = req.params;
 
     // Find the booking
-    const booking = await Booking.findOne({ _id: id, user: req.user._id }).populate("event");
+    const booking = await Booking.findOne({ _id: id, user: req.user.userId }).populate("event");
     if (!booking) {
       return res.status(404).json({ error: "Booking not found" });
     }
@@ -75,8 +79,18 @@ const cancelBooking = async (req, res) => {
   }
 };
 
+const getUserBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ user: req.user.userId }).populate("event");
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
-  getUserBookings,
+  getBookingById,
   bookTickets,
   cancelBooking,
+  getUserBookings,
 };
