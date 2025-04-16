@@ -82,7 +82,7 @@ const userController = {
 
   updateUser: async (req, res) => {
     try {
-      const id = req.params.id;
+      const id = req.user.userId; // Use req.user.userId to get the current user's ID
       const user = await User.findById(id);
       console.log(user)
       if (!user) {
@@ -92,18 +92,15 @@ const userController = {
       if (password) {
         const compare = await bcrypt.compare(password, user.password);
         if (!compare) {
+          Object.assign(user, req.body);
           const hashedPassword = await bcrypt.hash(password, 8);
           user.password = hashedPassword;
+          await user.save();
           return res.status(200).send("updated successfully");
         } else {
           return res.status(400).send("you must use a new password");
         }
       }
-
-      Object.assign(user, req.body);
-      await user.save();
-      console.log(user)
-      return res.status(200).send("updated successfully");
     } catch (e) {
       return res.status(500).send(e);
     }
