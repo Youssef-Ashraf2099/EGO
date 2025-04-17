@@ -4,9 +4,9 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
-const userRouter = require("./src/router/user");
+const userRouter = require("./src/router/users");
 const eventRouter = require("./src/router/events");
-const bookingRouter = require("./src/router/booking");
+const bookingRouter = require("./src/router/bookings");
 //const authernticationMiddleware = require("./src/middleware/authenticationMiddleware");
 
 require("dotenv").config();
@@ -37,14 +37,3 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-mongoose
-  .connect(process.env.DATABASE_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB", err);
-  });
