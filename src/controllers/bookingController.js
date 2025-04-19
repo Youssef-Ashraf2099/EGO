@@ -1,9 +1,10 @@
 const Booking = require("../models/booking");
 const Event = require("../models/event");
 
+// Get booking details by ID for the authenticated user
 const getBookingById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; // Extract booking ID from the request parameters
     const booking = await Booking.findOne({ _id: id, user: req.user.userId }).populate("event");
     if (!booking) {
       return res.status(404).json({ error: "Booking not found or unauthorized" });
@@ -27,8 +28,10 @@ const bookTickets = async (req, res) => {
       return res.status(400).json({ error: "Not enough tickets available" });
     }
 
+    // Calculate total price
     const totalPrice = numberOfTickets * event.ticketPrice;
 
+    // Create a new booking
     const booking = new Booking({
       user: req.user.userId,
       event: eventId,
@@ -37,8 +40,10 @@ const bookTickets = async (req, res) => {
       status: "confirmed",
     });
 
+    // Save the booking
     await booking.save();
 
+    // Update the event's available tickets
     event.ticketAvailable -= numberOfTickets;
     event.ticketSold += numberOfTickets;
     await event.save();
@@ -49,23 +54,26 @@ const bookTickets = async (req, res) => {
   }
 };
 
+// Cancel a booking
 const cancelBooking = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Find the booking
     const booking = await Booking.findOne({ _id: id, user: req.user.userId }).populate("event");
     if (!booking) {
       return res.status(404).json({ error: "Booking not found" });
     }
 
+    // Update the event's available tickets
     const event = booking.event;
     event.ticketAvailable += booking.numberOfTickets;
     event.ticketSold -= booking.numberOfTickets;
     await event.save();
 
-    await Booking.findByIdAndDelete(id);
+    await Booking.findByIdAndDelete(id); //delete 
 
-    res.status(204).send();
+    res.status(204).send(); // No content
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
