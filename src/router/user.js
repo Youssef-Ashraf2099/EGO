@@ -55,3 +55,49 @@ router.get(
     }
   }
 );
+// Protected routes (Authenticated Users)
+// GET /api/v1/users/profile - Get current user’s profile
+router.get("/users/profile", authenticationMiddleware, async (req, res) => {
+  try {
+    await userController.getCurrentUser(req, res);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT /api/v1/users/profile - Update current user’s profile
+router.put("/users/profile", authenticationMiddleware, async (req, res) => {
+  try {
+    await userController.updateUser(req, res);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT /api/v1/users/:id - Update user’s role
+router.put(
+  "/users/:id",
+  authenticationMiddleware,
+  authorizationMiddleware(["System Admin"]),
+  async (req, res) => {
+    try {
+      await userController.updateRole(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// DELETE /api/v1/users/:id - Delete a user
+router.delete(
+  "/users/:id",
+  authenticationMiddleware,
+  authorizationMiddleware(["System Admin"]),
+  async (req, res) => {
+    try {
+      await userController.deleteUser(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
