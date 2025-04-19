@@ -36,6 +36,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       enum: ["Standard User", "Organizer", "System Admin"],
       default: "Standard User",
+      required: true
     },
   },
   {
@@ -49,30 +50,6 @@ UserSchema.virtual("events", {
   localField: "_id",
   foreignField: "organizer",
 });
-
-
-UserSchema.statics.findByCredentials= async(email, password)=>{
-  const user= await User.findOne({email})
-  if(!user){
-      throw new Error('unable to find email')
-  }
-  const isMatch= await bcrypt.compare(password, user.password)
-
-  if(!isMatch){
-      throw new Error('unable to login')
-  }
-  return user
-}
-
-UserSchema.pre('save',async function(next){
-  const user= this
-
-  if(user.isModified('password')){
-      user.password= await bcrypt.hash(user.password,8)
-  }
-
-  next()
-})
 
 
 const User = mongoose.model("User", UserSchema);
