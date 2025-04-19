@@ -116,3 +116,47 @@ router.get(
     }
   }
 );
+// Event Organizer routes
+// GET /api/v1/users/events - Get current user’s events
+router.get(
+  "/users/events",
+  authenticationMiddleware,
+  authorizationMiddleware(["Organizer"]),
+  async (req, res) => {
+    try {
+      await eventController.getOrganizerEvents(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// GET /api/v1/users/events/analytics - Get the analytics of the current user’s events
+router.get(
+  "/users/events/analytics",
+  authenticationMiddleware,
+  authorizationMiddleware(["Organizer"]),
+  async (req, res) => {
+    try {
+      await eventController.getEventAnalytics(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// GET /api/v1/users/:id - Get details of a single user
+router.get(
+  "/users/:id",
+  authenticationMiddleware,
+  authorizationMiddleware(["System Admin"]),
+  async (req, res) => {
+    try {
+      await userController.getUser(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+module.exports = router;
