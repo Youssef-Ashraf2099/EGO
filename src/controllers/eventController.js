@@ -99,10 +99,33 @@ const editEvent = async (req, res) => {
   }
 };
 
+// Event Organizer or Admin: Delete an event
+const deleteEvent = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Build the filter object dynamically
+    const filter = { _id: id };
+    if (req.user.role === "Organizer") {
+      filter.organizer = req.user._id; // Add organizer filter only for organizers
+    }
+
+    const event = await Event.findOneAndDelete(filter);
+    if (!event) {
+      return res.status(404).json({ error: "Event not found or unauthorized" });
+    }
+
+    res.status(200).json({ message: "Event deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createEvent,
   getApprovedEvents,
   getAllEvents,
   getEventById,
   editEvent,
+  deleteEvent,
 };
