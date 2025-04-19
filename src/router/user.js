@@ -101,3 +101,18 @@ router.delete(
     }
   }
 );
+
+// Standard User routes
+// GET /api/v1/users/bookings - Get current user’s bookings
+router.get(
+  "/users/bookings",
+  authenticationMiddleware,
+  authorizationMiddleware(["Standard User"]),
+  async (req, res) => {
+    try {
+      await bookingController.getUserBookings(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
