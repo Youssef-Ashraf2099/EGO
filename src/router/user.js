@@ -41,3 +41,17 @@ router.put("/forgetPassword", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// Admin-only routes
+// GET /api/v1/users - Get a list of all users
+router.get(
+  "/users",
+  authenticationMiddleware,
+  authorizationMiddleware(["System Admin"]),
+  async (req, res) => {
+    try {
+      await userController.getAllUsers(req, res);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
