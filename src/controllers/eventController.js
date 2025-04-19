@@ -20,7 +20,7 @@ const createEvent = async (req, res) => {
       category,
       ticketPrice,
       ticketAvailable,
-      organizer: req.user._id,
+      organizer: req.user.userId,
     });
     await event.save();
     res.status(201).json(event);
@@ -85,7 +85,7 @@ const editEvent = async (req, res) => {
 
     // For organizers, restrict updates to their own events
     const event = await Event.findOneAndUpdate(
-      { _id: id, organizer: req.user._id }, // Ensure the organizer owns the event
+      { _id: id, organizer: req.user.userId }, // Ensure the organizer owns the event
       updates,
       { new: true }
     );
@@ -107,7 +107,7 @@ const deleteEvent = async (req, res) => {
     // Build the filter object dynamically
     const filter = { _id: id };
     if (req.user.role === "Organizer") {
-      filter.organizer = req.user._id; // Add organizer filter only for organizers
+      filter.organizer = req.user.userId; // Add organizer filter only for organizers
     }
 
     const event = await Event.findOneAndDelete(filter);
@@ -124,7 +124,7 @@ const deleteEvent = async (req, res) => {
 // Event Organizer: View analytics for their events
 const getEventAnalytics = async (req, res) => {
   try {
-    const events = await Event.find({ organizer: req.user._id }); // Corrected to use req.user.userId
+    const events = await Event.find({ organizer: req.user.userId });
     const analytics = events.map((event) => ({
       title: event.title,
       percentageBooked:
@@ -142,7 +142,7 @@ const getEventAnalytics = async (req, res) => {
 // Organizer: Get all events created by the authenticated organizer(for user router)
 const getOrganizerEvents = async (req, res) => {
   try {
-    const events = await Event.find({ organizer: req.user._id }).populate(
+    const events = await Event.find({ organizer: req.user.userId }).populate(
       "organizer"
     );
     res.status(200).json(events);
