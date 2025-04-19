@@ -2,19 +2,28 @@ const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET_KEY; // Use your secret key here
 
 module.exports = function authenticationMiddleware(req, res, next) {
-  const cookie = req.cookie;
-  if (!cookie) {
-    return res.status(401).json({ message: "no cookie found" });
-  }
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "Authentication token is missing" });
+    }
 
-  const token = cookie.token;
-  if (!token) {
-    return res.status(401).json({ message: "no token found" });
+    // Verify the token
+    jwt.verify(token, secretKey, (error, payload) => {
+      if (error) {
+        return res.status(401).json({ message: "Invalid or expired token" });
+      }
+      req.user = payload.user; // Attach user data to the request object
+      next();
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Internal server error during authentication",
+        error: error.message,
+      });
   }
-
-  jwt.verify(token, secretKey, (error, user) => {
-    if (error) return res.status(401).json({ message: "invalid token" });
-    req.user = user;
-    next();
-  });
 };
