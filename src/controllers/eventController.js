@@ -121,6 +121,36 @@ const deleteEvent = async (req, res) => {
   }
 };
 
+// Event Organizer: View analytics for their events
+const getEventAnalytics = async (req, res) => {
+  try {
+    const events = await Event.find({ organizer: req.user._id }); // Corrected to use req.user.userId
+    const analytics = events.map((event) => ({
+      title: event.title,
+      percentageBooked:
+        (
+          (event.ticketSold / (event.ticketSold + event.ticketAvailable)) *
+          100
+        ).toFixed(2) + "%",
+    }));
+    res.status(200).json(analytics);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Organizer: Get all events created by the authenticated organizer(for user router)
+const getOrganizerEvents = async (req, res) => {
+  try {
+    const events = await Event.find({ organizer: req.user._id }).populate(
+      "organizer"
+    );
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createEvent,
   getApprovedEvents,
@@ -128,4 +158,6 @@ module.exports = {
   getEventById,
   editEvent,
   deleteEvent,
+  getEventAnalytics,
+  getOrganizerEvents,
 };
