@@ -36,6 +36,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       enum: ["Standard User", "Organizer", "System Admin"],
       default: "Standard User",
+      required: true
     },
   },
   {
