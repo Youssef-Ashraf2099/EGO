@@ -2,47 +2,73 @@ const Booking = require("../models/booking");
 const Event = require("../models/event");
 
 const getBookingById = async (req, res) => {
-  const { id } = req.params;
-  const booking = await Booking.findOne({ _id: id, user: req.user.userId }).populate("event");
-  if (!booking) {
-    return res.status(404).json({ error: "Not found" });
+  try {
+    const { id } = req.params;
+    const booking = await Booking.findOne({ _id: id, user: req.user.userId }).populate("event");
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found or unauthorized" });
+    }
+    res.status(200).json(booking);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  res.status(200).json(booking);
 };
 
 const bookTickets = async (req, res) => {
-  const { eventId, numberOfTickets } = req.body;
+  try {
+    const { eventId, numberOfTickets } = req.body;
 
-  const event = await Event.findById(eventId);
-  const booking = new Booking({
-    user: req.user.userId,
-    event: eventId,
-    numberOfTickets,
-    totalPrice: numberOfTickets * event.ticketPrice,
-    status: "confirmed",
-  });
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ error: "Event not found" });
+    }
 
-  await booking.save();
+    if (event.ticketAvailable < numberOfTickets) {
+      return res.status(400).json({ error: "Not enough tickets available" });
+    }
 
-  event.ticketAvailable -= numberOfTickets;
-  event.ticketSold += numberOfTickets;
-  await event.save();
+    const totalPrice = numberOfTickets * event.ticketPrice;
 
-  res.status(201).json(booking);
+    const booking = new Booking({
+      user: req.user.userId,
+      event: eventId,
+      numberOfTickets,
+      totalPrice,
+      status: "confirmed",
+    });
+
+    await booking.save();
+
+    event.ticketAvailable -= numberOfTickets;
+    event.ticketSold += numberOfTickets;
+    await event.save();
+
+    res.status(201).json(booking);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 const cancelBooking = async (req, res) => {
-  const { id } = req.params;
-  const booking = await Booking.findOne({ _id: id, user: req.user.userId }).populate("event");
-  const event = booking.event;
+  try {
+    const { id } = req.params;
 
-  event.ticketAvailable += booking.numberOfTickets;
-  event.ticketSold -= booking.numberOfTickets;
-  await event.save();
+    const booking = await Booking.findOne({ _id: id, user: req.user.userId }).populate("event");
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
 
-  await Booking.findByIdAndDelete(id);
+    const event = booking.event;
+    event.ticketAvailable += booking.numberOfTickets;
+    event.ticketSold -= booking.numberOfTickets;
+    await event.save();
 
-  res.status(204).send();
+    await Booking.findByIdAndDelete(id);
+
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 module.exports = {
