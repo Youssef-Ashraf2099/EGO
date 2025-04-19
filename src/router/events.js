@@ -5,8 +5,11 @@ const authenticationMiddleware = require("../middleware/authenticationMiddleware
 const authorizationMiddleware = require("../middleware/authorizationMiddleware");
 
 // Public Routes
+// Get list of all approved events
+router.get("/", EventController.getApprovedEvents);
+
 // Get list of all events
-router.get("/", EventController.getAllEvents);
+router.get("/all",authenticationMiddleware,authorizationMiddleware(["System Admin"]), EventController.getAllEvents);
 
 // Get details of a single event by ID
 router.get("/:id", EventController.getEventById);
