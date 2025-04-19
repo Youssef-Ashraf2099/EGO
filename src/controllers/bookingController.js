@@ -71,8 +71,18 @@ const cancelBooking = async (req, res) => {
   }
 };
 
+const getUserBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ user: req.user.userId }).populate("event");
+    res.status(200).json(bookings);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getBookingById,
   bookTickets,
   cancelBooking,
+  getUserBookings,
 };
