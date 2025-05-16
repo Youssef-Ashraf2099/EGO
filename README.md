@@ -50,7 +50,16 @@ node app.js #run javascript file
    npm install body-parser # read jason file to export into html views
    npm install --save-dev nodemon #for auto restart
    ```
-
+6. **FRONTEND CONFIGS**
+   ```
+   cd src/View
+   ```
+   ```
+   npm i
+   npm i axios
+   npm run dev #to run your frontend
+   ```
+ 
 ## Architecture
 ```
 EGO/
@@ -59,9 +68,10 @@ EGO/
 │   ├── controllers/
 │   ├── models/
 │   ├── middleware/
-│   └── database/
+│   ├── database/
+│   └── View/         # React frontend (Vite)
 ├── .env
 ├── .gitignore
-├── package.json
-└── index.js // our server
+├── package.json      # Backend dependencies
+└── index.js          # Server entry point
 ```
