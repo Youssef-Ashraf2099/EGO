@@ -10,5 +10,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: Number(process.env.VITE_PORT) || 5173,
+    Proxy: {
+      "/api": `http://localhost:${process.env.PORT}`,
+    },
   },
 });
