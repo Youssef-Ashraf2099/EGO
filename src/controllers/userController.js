@@ -149,7 +149,7 @@ const userController = {
         return res.status(404).send("user not found")
       }
       await forgotpassword(email)
-      return res.status(200).send("otp sent correctly")
+      return res.status(200).json({ message: "otp sent correctly" })
     }catch(e){
       return res.status(500).send(e)
     }
