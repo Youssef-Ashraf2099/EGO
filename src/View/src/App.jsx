@@ -7,6 +7,7 @@ import Register from "./register";
 import SendOTP from "./sendOtp";
 import ForgotPassword from "./forgotPassword";
 import Footer from "./footer";
+import AboutUs from "./AboutUs"; // make sure this path is correct
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/api/v1/register" element={<Register />} />
         <Route path="/api/v1/sendOtp" element={<SendOTP />} />
         <Route path="/api/v1/forgetPassword" element={<ForgotPassword />} />
+        <Route path="/aboutus" element={<AboutUs />} />
       </Routes>
     </>
   );

@@ -32,12 +32,7 @@ function Footer() {
         <a href="/privacy" className="text-muted">
           Privacy Policy
         </a>
-        <a
-          href="/aboutus.html"
-          className="text-muted"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="/aboutus" className="text-muted">
           About Us
         </a>
       </div>
