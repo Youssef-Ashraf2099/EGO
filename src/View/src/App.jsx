@@ -8,18 +8,19 @@ import SendOTP from "./sendOtp";
 import ForgotPassword from "./forgotPassword";
 import Footer from "./footer";
 import AboutUs from "./AboutUs"; // make sure this path is correct
-
+import Terms from "./Terms"; // make sure this path is correct
 function App() {
   return (
     <>
-      <Footer />
       <Routes>
         <Route path="/api/v1/login" element={<Login />} />
         <Route path="/api/v1/register" element={<Register />} />
         <Route path="/api/v1/sendOtp" element={<SendOTP />} />
         <Route path="/api/v1/forgetPassword" element={<ForgotPassword />} />
         <Route path="/aboutus" element={<AboutUs />} />
+        <Route path="/Terms" element={<Terms />} />
       </Routes>
+      <Footer />
     </>
   );
 }
