@@ -9,6 +9,7 @@ import ForgotPassword from "./forgotPassword";
 import Footer from "./footer";
 import AboutUs from "./AboutUs"; // make sure this path is correct
 import Terms from "./Terms"; // make sure this path is correct
+import Privacy from "./privacy";
 function App() {
   return (
     <>
@@ -19,6 +20,7 @@ function App() {
         <Route path="/api/v1/forgetPassword" element={<ForgotPassword />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/Terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
       </Routes>
       <Footer />
     </>
