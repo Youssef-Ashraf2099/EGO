@@ -193,7 +193,37 @@ const userController = {
     }catch(e){
       return res.status(500).send(e.message)
     }
+  },
+ logout: async (req, res) => {
+  try {
+    // If req.user only has userId and role (from JWT payload)
+    const userId = req.user.userId;
+
+    // Fetch full user document from DB
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    // If you don't have tokens field in schema, this will be undefined
+    if (!user.tokens) {
+      user.tokens = [];
+    }
+
+    // req.token should be set by your auth middleware to the current token
+    user.tokens = user.tokens.filter(tokenObj => tokenObj.token !== req.token);
+
+    await user.save();
+
+    res.send({ message: "Logout successful" });
+  } catch (e) {
+    console.error("Logout error:", e);
+    res.status(500).send({ error: 'Internal server error during logout' });
   }
+}
+
+
 
 };
 

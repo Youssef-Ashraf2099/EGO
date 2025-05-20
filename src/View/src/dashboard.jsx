@@ -64,6 +64,21 @@ const Dashboard = () => {
     }
   };
 
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(`http://localhost:${Port}/api/v1/logout`, {},{
+        withCredentials: true,
+      });
+      alert('Logged out successfully.');
+      console.log('logged out')
+      navigate('/api/v1/login'); // or wherever your login route is
+    } catch (err) {
+      console.error('Logout failed:', err.message);
+      alert('Logout failed. Please try again.');
+    }
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -76,6 +91,7 @@ const Dashboard = () => {
     <>
       <header>
         <h1>Welcome Back, {user.name}</h1>
+         <button onClick={handleLogout}>Logout</button>
       </header>
 
       <div>
