@@ -82,7 +82,7 @@ const userController = {
 
   updateUser: async (req, res) => {
     try {
-      const id = req.user.userId; // Use req.user.userId to get the current user's ID
+      const id = req.user.userId ; // Use req.user.userId to get the current user's ID
       const user = await User.findById(id);
       console.log(user)
       console.log(user.password)
@@ -107,7 +107,7 @@ const userController = {
             await user.save();
             return res.status(200).send("updated successfully")
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send(e.message);
     }
   },
   updateRole: async (req, res) => {
@@ -137,9 +137,24 @@ const userController = {
       return res.status(500).send(e);
     }
   },
-  getCurrentUser: (req, res) => {
-    res.send(req.user);
-    console.log(req.user)
+  getCurrentUser: async (req, res) => {
+      try {
+    console.log('Incoming cookies:', req.cookies);
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ message: 'No token in cookies' });
+  }
+  const decoded = jwt.verify(token, secretKey);
+  const user = await User.findById(decoded.user.userId).select('-password'); // exclude password
+  if (!user) return res.status(404).json({ message: 'User not found' });
+
+  res.json(user);
+} catch (error) {
+    console.error('Error fetching user details:', error);
+    res.status(500).json({ message: 'Internal server error' });
+}
+  
+  
   },
   passwordResetOtp: async (req,res)=>{
     try{
