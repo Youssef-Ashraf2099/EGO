@@ -74,6 +74,9 @@ router.put("/users/profile", authenticationMiddleware, async (req, res) => {
   }
 });
 
+//logout
+router.post('/logout', authenticationMiddleware, userController.logout);
+
 // PUT /api/v1/users/:id - Update user’s role
 router.put(
   "/users/:id",
