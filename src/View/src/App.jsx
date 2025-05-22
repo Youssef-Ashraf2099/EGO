@@ -10,7 +10,7 @@ import Footer from "./Footer";
 import AboutUs from "./AboutUs"; // make sure this path is correct
 import Terms from "./Terms"; // make sure this path is correct
 import Privacy from "./privacy";
-import Navbar from "./main page/navbar"
+import Navbar from "./main page/navbar";
 import HomePage from "./HomePage"; // make sure this path is correct
 import EventPage from "./EventPage"; // make sure this path is correct
 import Dashboard from "./dashboard"; // make sure this path is correct
@@ -20,8 +20,9 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/events" element={<EventPage />} />
         <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/events" element={<EventPage />} />
         <Route path="/api/v1/login" element={<Login />} />
         <Route path="/api/v1/register" element={<Register />} />
         <Route path="/api/v1/sendOtp" element={<SendOTP />} />
