@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Cookies from "js-cookie"; // You'll need to install this: npm install js-cookie
 
 function BookingEvent() {
   const { id } = useParams();
@@ -10,66 +9,203 @@ function BookingEvent() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // For booking functionality
+  const [event, setEvent] = useState(null);
+  const [numberOfTickets, setNumberOfTickets] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [bookingError, setBookingError] = useState(null);
+
   const PORT = 2099;
 
+  // Fetch event details if ID is provided
   useEffect(() => {
-    // Check if user is logged in using cookies instead of localStorage
-    const token = Cookies.get("token");
-    console.log("Token from cookies:", token ? "exists" : "not found");
-
-    if (!token) {
-      console.log("No token in cookies, redirecting to login");
-      navigate("/api/v1/login", { state: { from: window.location.pathname } });
-      return;
-    }
-
     console.log("useEffect running, id:", id);
-    let url = `http://localhost:${PORT}/api/v1/bookings`;
 
+    // If we have an ID, check if it's a booking ID or an event ID
     if (id) {
-      url = `http://localhost:${PORT}/api/v1/bookings/${id}`;
-    }
-
-    // Using axios withCredentials to send cookies automatically
-    axios
-      .get(url, {
-        withCredentials: true, // This ensures cookies are sent with the request
-      })
-      .then((res) => {
-        console.log("API response success:", res.status);
-        setData(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(
-          "API error:",
-          err.response ? err.response.status : err.message
-        );
-        if (err.response && err.response.status === 401) {
-          // Unauthorized - redirect to login
-          console.log("401 Unauthorized, clearing token cookie");
-          Cookies.remove("token");
-          navigate("/api/v1/login", {
-            state: { from: window.location.pathname },
-          });
-        } else {
+      // First try to get booking details
+      axios
+        .get(`http://localhost:${PORT}/api/v1/bookings/${id}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log("Found booking:", res.data);
+          setData(res.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          if (err.response && err.response.status === 404) {
+            // If booking not found, try to get event details for booking form
+            console.log("Booking not found, trying to fetch event details");
+            axios
+              .get(`http://localhost:${PORT}/api/v1/events/${id}`, {
+                withCredentials: true,
+              })
+              .then((eventRes) => {
+                console.log("Event found:", eventRes.data);
+                setEvent(eventRes.data);
+                setTotalPrice(eventRes.data.ticketPrice);
+                setLoading(false);
+              })
+              .catch((eventErr) => {
+                console.error("Event fetch error:", eventErr);
+                setError("Event not found");
+                setLoading(false);
+              });
+          } else {
+            setError(err.message || "Failed to load data");
+            setLoading(false);
+          }
+        });
+    } else {
+      // If no ID, fetch all user bookings
+      axios
+        .get(`http://localhost:${PORT}/api/v1/bookings`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log("All bookings:", res.data);
+          setData(res.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Failed to load bookings:", err);
           setError(err.message || "Failed to load bookings");
           setLoading(false);
-        }
-      });
+        });
+    }
   }, [id, navigate]);
+
+  // Handle ticket quantity change
+  const handleTicketChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (value > 0 && value <= (event?.ticketAvailable || 0)) {
+      setNumberOfTickets(value);
+      setTotalPrice(value * event.ticketPrice);
+    }
+  };
+
+  // Handle booking submission
+  const handleBooking = () => {
+    setBookingError(null);
+    setBookingSuccess(false);
+
+    axios
+      .post(
+        `http://localhost:${PORT}/api/v1/bookings`,
+        {
+          eventId: event._id,
+          numberOfTickets: numberOfTickets,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log("Booking successful:", res.data);
+        setBookingSuccess(true);
+        // Navigate to the booking details page after a short delay
+        setTimeout(() => {
+          navigate(`/api/v1/bookings/${res.data._id}`);
+        }, 2000);
+      })
+      .catch((err) => {
+        console.error("Booking error:", err);
+        setBookingError(err.response?.data?.error || "Failed to book tickets");
+      });
+  };
 
   if (loading)
     return (
       <div className="container mt-5 text-center">
         <div className="spinner-border" role="status"></div>
-        <p>Loading bookings...</p>
+        <p>Loading...</p>
       </div>
     );
+
   if (error)
     return (
       <div className="container mt-5 alert alert-danger">Error: {error}</div>
     );
+
+  // Render booking form if we have an event
+  if (event) {
+    return (
+      <div className="container mt-4">
+        <h2>Book Tickets for {event.name}</h2>
+        <div className="card mb-4">
+          <div className="card-body">
+            <h5 className="card-title">{event.name}</h5>
+            <p className="card-text">{event.description}</p>
+            <div className="row mb-3">
+              <div className="col-md-6">
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {new Date(event.date).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Time:</strong>{" "}
+                  {new Date(event.date).toLocaleTimeString()}
+                </p>
+                <p>
+                  <strong>Location:</strong> {event.location}
+                </p>
+              </div>
+              <div className="col-md-6">
+                <p>
+                  <strong>Category:</strong> {event.category}
+                </p>
+                <p>
+                  <strong>Price per Ticket:</strong> ${event.ticketPrice}
+                </p>
+                <p>
+                  <strong>Available Tickets:</strong> {event.ticketAvailable}
+                </p>
+              </div>
+            </div>
+
+            {bookingSuccess && (
+              <div className="alert alert-success">
+                Booking successful! Redirecting to booking details...
+              </div>
+            )}
+
+            {bookingError && (
+              <div className="alert alert-danger">Error: {bookingError}</div>
+            )}
+
+            <div className="form-group mb-3">
+              <label htmlFor="numberOfTickets">Number of Tickets:</label>
+              <input
+                type="number"
+                className="form-control"
+                id="numberOfTickets"
+                value={numberOfTickets}
+                onChange={handleTicketChange}
+                min="1"
+                max={event.ticketAvailable}
+              />
+            </div>
+
+            <div className="mb-3">
+              <strong>Total Price:</strong> ${totalPrice}
+            </div>
+
+            <button
+              className="btn btn-primary"
+              onClick={handleBooking}
+              disabled={bookingSuccess || event.ticketAvailable < 1}
+            >
+              Book Now
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If no data, show message
   if (!data)
     return (
       <div className="container mt-5 alert alert-info">
@@ -77,7 +213,7 @@ function BookingEvent() {
       </div>
     );
 
-  // Rest of your component remains the same
+  // Rest of your component remains the same...
   // Helper to render booking details
   const renderBooking = (booking) => (
     <div
