@@ -1,4 +1,5 @@
 import "./styles/Navbar.css"
+import "./EventListing"
 
 const Navbar = () => {
   return (
@@ -8,12 +9,14 @@ const Navbar = () => {
           <svg className="logo-icon" viewBox="0 0 24 24">
             <path d="M4 4h16v7H4zm0 9h16v7H4zm3-5h10M7 15h10"></path>
           </svg>
-          <span className="logo-text">E|GO</span>
+          <a href = "/">
+          <span className="logo-text">EGO</span>
+          </a>
         </div>
 
         <nav className="nav-menu">
-          <a href="#" className="nav-link">
-            Try me
+          <a href="/api/v1/login" className="nav-link">
+            Login
           </a>
           <a href="#" className="nav-link">
             Events
@@ -21,7 +24,7 @@ const Navbar = () => {
           <a href="#" className="nav-link">
             Contact
           </a>
-          <a href="#" className="nav-link nav-button">
+          <a href="/api/v1/register" className="nav-link nav-button">
             Get started
           </a>
         </nav>

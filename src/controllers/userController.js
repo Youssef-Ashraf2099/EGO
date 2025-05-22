@@ -26,17 +26,18 @@ const userController = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-
       const user = await User.findOne({ email });
+
       if (!user) {
         return res.status(404).send("email not found");
       }
-      console.log(user);
+      console.log(password);
       const passwordMatch = await bcrypt.compare(password, user.password);
+      console.log(passwordMatch);
       if (!passwordMatch) {
         return res.status(405).send("incorrect password");
       }
-
+      
       const currentDateTime = new Date();
       const expiresAt = new Date(+currentDateTime + 1800000);
 
@@ -59,6 +60,7 @@ const userController = {
         .status(200)
         .send(user);
     } catch (e) {
+      console.log(e);
       res.status(500).send(e);
     }
   },

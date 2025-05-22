@@ -6,7 +6,7 @@ const HomePage = () => {
   return (
     <>
       <Hero />
-      <EventListing />
+      <EventListing isHome={true} />
       <CreateEvent />
     </>
   )
