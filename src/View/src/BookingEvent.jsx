@@ -1,37 +1,83 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-
-const Port = import.meta.env.PORT || 2099;
+import Cookies from "js-cookie"; // You'll need to install this: npm install js-cookie
 
 function BookingEvent() {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const PORT = 2099;
 
   useEffect(() => {
-    console.log("useEffect running, id:", id);
-    let url = `http://localhost:${Port}/api/v1/bookings`;
-    if (id) {
-      url = `http://localhost:${Port}/api/v1/bookings/${id}`;
+    // Check if user is logged in using cookies instead of localStorage
+    const token = Cookies.get("token");
+    console.log("Token from cookies:", token ? "exists" : "not found");
+
+    if (!token) {
+      console.log("No token in cookies, redirecting to login");
+      navigate("/api/v1/login", { state: { from: window.location.pathname } });
+      return;
     }
+
+    console.log("useEffect running, id:", id);
+    let url = `http://localhost:${PORT}/api/v1/bookings`;
+
+    if (id) {
+      url = `http://localhost:${PORT}/api/v1/bookings/${id}`;
+    }
+
+    // Using axios withCredentials to send cookies automatically
     axios
-      .get(url)
+      .get(url, {
+        withCredentials: true, // This ensures cookies are sent with the request
+      })
       .then((res) => {
+        console.log("API response success:", res.status);
         setData(res.data);
         setLoading(false);
       })
       .catch((err) => {
-        setError(err.message);
-        setLoading(false);
+        console.error(
+          "API error:",
+          err.response ? err.response.status : err.message
+        );
+        if (err.response && err.response.status === 401) {
+          // Unauthorized - redirect to login
+          console.log("401 Unauthorized, clearing token cookie");
+          Cookies.remove("token");
+          navigate("/api/v1/login", {
+            state: { from: window.location.pathname },
+          });
+        } else {
+          setError(err.message || "Failed to load bookings");
+          setLoading(false);
+        }
       });
-  }, [id]);
+  }, [id, navigate]);
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!data) return <div>No booking(s) found.</div>;
+  if (loading)
+    return (
+      <div className="container mt-5 text-center">
+        <div className="spinner-border" role="status"></div>
+        <p>Loading bookings...</p>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="container mt-5 alert alert-danger">Error: {error}</div>
+    );
+  if (!data)
+    return (
+      <div className="container mt-5 alert alert-info">
+        No booking(s) found.
+      </div>
+    );
 
+  // Rest of your component remains the same
   // Helper to render booking details
   const renderBooking = (booking) => (
     <div
@@ -69,14 +115,18 @@ function BookingEvent() {
 
   if (Array.isArray(data)) {
     return (
-      <div>
-        <h2>All Bookings</h2>
-        {data.map(renderBooking)}
+      <div className="container mt-4">
+        <h2>Your Bookings</h2>
+        {data.length > 0 ? (
+          data.map(renderBooking)
+        ) : (
+          <p>You don't have any bookings yet.</p>
+        )}
       </div>
     );
   } else {
     return (
-      <div>
+      <div className="container mt-4">
         <h2>Booking Details</h2>
         {renderBooking(data)}
       </div>
