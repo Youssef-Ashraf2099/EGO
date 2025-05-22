@@ -11,14 +11,20 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      {/* ...same as before... */}
       <div className={`nav-menu${menuOpen ? " flex" : ""}`}>
         <Link to="/api/v1/events" className="nav-link" onClick={() => setMenuOpen(false)}>
           Events
         </Link>
-        <Link to="/api/v1/register" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
-          Get Started
-        </Link>
+        {/* Show "Get Started" only if not logged in, otherwise show Dashboard */}
+        {!role ? (
+          <Link to="/api/v1/register" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+            Get Started
+          </Link>
+        ) : (
+          <Link to="/api/v1/dashboard" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+            Dashboard
+          </Link>
+        )}
         {role === "Standard User" && (
           <Link to="/book-events" className="nav-link" onClick={() => setMenuOpen(false)}>
             Book Events
