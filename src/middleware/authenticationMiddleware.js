@@ -15,7 +15,7 @@ module.exports = function authenticationMiddleware(req, res, next) {
       if (error) {
         return res.status(401).json({ message: "Invalid or expired token" });
       }
-      req.user = payload.user; // Attach user data to the request object
+      req.user = payload.user ; // Attach user data to the request object
       next();
     });
   } catch (error) {

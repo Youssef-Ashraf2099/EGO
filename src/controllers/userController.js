@@ -84,7 +84,7 @@ const userController = {
 
   updateUser: async (req, res) => {
     try {
-      const id = req.user.userId; // Use req.user.userId to get the current user's ID
+      const id = req.user.userId ; // Use req.user.userId to get the current user's ID
       const user = await User.findById(id);
       console.log(user)
       console.log(user.password)
@@ -109,7 +109,7 @@ const userController = {
             await user.save();
             return res.status(200).send("updated successfully")
     } catch (e) {
-      return res.status(500).send(e);
+      return res.status(500).send(e.message);
     }
   },
   updateRole: async (req, res) => {
@@ -139,9 +139,24 @@ const userController = {
       return res.status(500).send(e);
     }
   },
-  getCurrentUser: (req, res) => {
-    res.send(req.user);
-    console.log(req.user)
+  getCurrentUser: async (req, res) => {
+      try {
+    console.log('Incoming cookies:', req.cookies);
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ message: 'No token in cookies' });
+  }
+  const decoded = jwt.verify(token, secretKey);
+  const user = await User.findById(decoded.user.userId).select('-password'); // exclude password
+  if (!user) return res.status(404).json({ message: 'User not found' });
+
+  res.json(user);
+} catch (error) {
+    console.error('Error fetching user details:', error);
+    res.status(500).json({ message: 'Internal server error' });
+}
+  
+  
   },
   passwordResetOtp: async (req,res)=>{
     try{
@@ -180,7 +195,60 @@ const userController = {
     }catch(e){
       return res.status(500).send(e.message)
     }
+  },
+ logout: async (req, res) => {
+  try {
+    // If req.user only has userId and role (from JWT payload)
+    const userId = req.user.userId;
+
+    // Fetch full user document from DB
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    // If you don't have tokens field in schema, this will be undefined
+    if (!user.tokens) {
+      user.tokens = [];
+    }
+
+    // req.token should be set by your auth middleware to the current token
+    user.tokens = user.tokens.filter(tokenObj => tokenObj.token !== req.token);
+
+    await user.save();
+
+    res.send({ message: "Logout successful" });
+  } catch (e) {
+    console.error("Logout error:", e);
+    res.status(500).send({ error: 'Internal server error during logout' });
   }
+},
+profilePicture: async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    // Fetch full user document from DB
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    console.log(user)
+    // Save the uploaded file path
+    user.profilePicture = `/uploads/${req.file.filename}`;
+    await user.save();
+
+    res.status(200).json({
+      message: 'Profile picture updated.',
+      profilePicture: user.profilePicture
+    });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: err.message });
+  }
+}
+
+
 
 };
 

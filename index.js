@@ -8,6 +8,12 @@ const userRouter = require("./src/router/users");
 const eventRouter = require("./src/router/events");
 const bookingRouter = require("./src/router/bookings");
 //const authernticationMiddleware = require("./src/middleware/authenticationMiddleware");
+const path = require('path');
+
+// Serve the uploads folder statically
+app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+
+
 
 require("dotenv").config();
 

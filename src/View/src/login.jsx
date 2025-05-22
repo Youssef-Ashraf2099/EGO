@@ -22,7 +22,7 @@ const Login=()=>{
                 withCredentials:true
             })
             console.log('response status ', res.status)
-            console.log('response body ', res.body)
+            console.log('response body ', res.data)
 
             if(res.status===200){
                 alert('login successfully')
@@ -55,6 +55,9 @@ const Login=()=>{
             <br></br>
              <button type='submit'>Login</button>
         </form>
+        
+        <br></br>
+        <a href='/api/v1/register'>Register</a>
         <br></br>
         <a href='/api/v1/sendOtp'>Forgot password</a>
        

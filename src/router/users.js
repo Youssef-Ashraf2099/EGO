@@ -5,6 +5,7 @@ const eventController = require("../controllers/eventController");
 const bookingController = require("../controllers/bookingController");
 const authenticationMiddleware = require("../middleware/authenticationMiddleware");
 const authorizationMiddleware = require("../middleware/authorizationMiddleware");
+const uploadMiddlewear=require("../middleware/uploadMiddleware")
 
 // Public routes
 // POST /api/v1/register - Register a new user
@@ -73,6 +74,9 @@ router.put("/users/profile", authenticationMiddleware, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+//logout
+router.post('/logout', authenticationMiddleware, userController.logout);
 
 // PUT /api/v1/users/:id - Update user’s role
 router.put(
@@ -157,6 +161,11 @@ router.get(
       res.status(500).json({ error: error.message });
     }
   }
+);
+router.put(
+  '/profile-picture',authenticationMiddleware,
+  uploadMiddlewear.single('profilePicture'), // NOT two middlewares
+  userController.profilePicture
 );
 
 module.exports = router;
