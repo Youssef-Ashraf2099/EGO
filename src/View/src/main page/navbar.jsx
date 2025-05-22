@@ -1,39 +1,47 @@
-import "./styles/Navbar.css"
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../AuthContext";
+import "../main page/styles/navbar.css";
 
 const Navbar = () => {
+  const { role } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => setMenuOpen(!menuOpen);
+
   return (
-    <header className="navbar">
-      <div className="container navbar-container">
-        <div className="logo">
-          <svg className="logo-icon" viewBox="0 0 24 24">
-            <path d="M4 4h16v7H4zm0 9h16v7H4zm3-5h10M7 15h10"></path>
-          </svg>
-          <span className="logo-text">E|GO</span>
-        </div>
-
-        <nav className="nav-menu">
-          <a href="#" className="nav-link">
-            Try me
-          </a>
-          <a href="#" className="nav-link">
-            Events
-          </a>
-          <a href="#" className="nav-link">
-            Contact
-          </a>
-          <a href="#" className="nav-link nav-button">
-            Get started
-          </a>
-        </nav>
-
-        <button className="mobile-menu-button">
-          <svg viewBox="0 0 24 24" width="24" height="24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
+    <nav className="navbar">
+      {/* ...same as before... */}
+      <div className={`nav-menu${menuOpen ? " flex" : ""}`}>
+        <Link to="/api/v1/events" className="nav-link" onClick={() => setMenuOpen(false)}>
+          Events
+        </Link>
+        <Link to="/api/v1/register" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+          Get Started
+        </Link>
+        {role === "Standard User" && (
+          <Link to="/book-events" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Book Events
+          </Link>
+        )}
+        {role === "Organizer" && (
+          <Link to="/manage-events" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Manage Events
+          </Link>
+        )}
+        {role === "System Admin" && (
+          <>
+            <Link to="/manage-users" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Manage Users
+            </Link>
+            <Link to="/manage-events" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Manage Events
+            </Link>
+          </>
+        )}
       </div>
-    </header>
-  )
-}
+    </nav>
+  );
+};
 
-export default Navbar
+export default Navbar;
