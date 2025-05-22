@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Port = import.meta.env.PORT || 2099;
+const Port = import.meta.env.PORT || 3001;
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -43,42 +43,46 @@ const Register = () => {
       alert(msg);
     }
   };
-  return (
-    <>
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <br></br>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <br></br>
-        <input
-          type="password"
-          placeholder="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <br></br>
-        <select value={role} onChange={(e) => setRole(e.target.value)} required>
-          <option value="Standard User">Standard User</option>
-          <option value="Organizer">Organizer</option>
-          <option value="System Admin">System Admin</option>
-        </select>
-        <br></br>
-        <button type="submit">Register</button>
-      </form>
-    </>
-  );
-};
+ return (
+  <div className="login-container">
+    <form className="login-form" onSubmit={handleRegister}>
+      <input
+        className="login-input"
+        type="text"
+        placeholder="Username"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      <input
+        className="login-input"
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <input
+        className="login-input"
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <select
+        className="login-input"
+        value={role}
+        onChange={(e) => setRole(e.target.value)}
+        required
+      >
+        <option value="Standard User">Standard User</option>
+        <option value="Organizer">Organizer</option>
+        <option value="System Admin">System Admin</option>
+      </select>
+      <button className="login-button" type="submit">Register</button>
+    </form>
+  </div>
+);
+}
 export default Register;

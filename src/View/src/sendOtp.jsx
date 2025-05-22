@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import "./main page/styles/form.css"
 
 const Port = import.meta.env.PORT || 3001;
 
@@ -32,21 +33,25 @@ const SendOTP = () => {
     }
   };
 
-  return (
-    <>
-      <form onSubmit={handleSendOtp}>
-        <input
-          type='email'
-          placeholder='Email'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <br />
-        <button type="submit">Send</button>
-      </form>
-    </>
-  );
+return (
+  <>
+  <div className="login-container">
+    <form onSubmit={handleSendOtp} className="login-form">
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        className="login-input"
+      />
+      <br />
+      <button type="submit" className="login-button">Send</button>
+    </form>
+    </div>
+  </>
+);
+
 };
 
 export default SendOTP;

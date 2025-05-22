@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Port = import.meta.env.PORT || 2099;
+const Port = import.meta.env.PORT || 3001;
+import "./main page/styles/form.css"
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -40,32 +41,32 @@ const Login = () => {
     }
   };
   return (
-    <>
-      <form onSubmit={handleLogin}>
+    <div className="login-container">
+      <form onSubmit={handleLogin} className="login-form">
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          className="login-input"
         />
-        <br></br>
         <input
           type="password"
-          placeholder="password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          className="login-input"
         />
-        <br></br>
-        <button type="submit">Login</button>
+        <button type="submit" className="login-button">Login</button>
       </form>
 
-      <br></br>
-      <a href="/api/v1/register">Register</a>
-      <br></br>
-      <a href="/api/v1/sendOtp">Forgot password</a>
-    </>
+      <div className="login-links">
+        <a href="/api/v1/register" className="login-link">Register</a>
+        <a href="/api/v1/sendOtp" className="login-link">Forgot password</a>
+      </div>
+    </div>
   );
-};
+}
 export default Login;
