@@ -1,0 +1,21 @@
+.create-event-section {
+  padding: 60px 0;
+  background-color: white;
+  color: #17181d;
+  text-align: center;
+}
+
+.create-event-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.create-event-title {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+.create-event-description {
+  color: #555;
+  margin-bottom: 24px;
+}
