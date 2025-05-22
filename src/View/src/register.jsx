@@ -1,80 +1,84 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-const Port = import.meta.env.PORT || 3001;
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+const Port = import.meta.env.PORT || 2099;
 
-const Register=()=>{
-    const [name, setName]=useState('')
-    const [email, setEmail]=useState('')
-    const [password, setPassword]=useState('')
-    const [role, setRole]=useState('Standard User')
-    const navigate=useNavigate()
+const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("Standard User");
+  const navigate = useNavigate();
 
-    const handleRegister=async (e)=>{
-        e.preventDefault()
-        console.log("register form submitted")
-        
-        const form={
-            name,
-            password,
-            email,
-            role
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    console.log("register form submitted");
+
+    const form = {
+      name,
+      password,
+      email,
+      role,
+    };
+    try {
+      const res = await axios.post(
+        `http://localhost:${Port}/api/v1/register`,
+        form,
+        {
+          withCredentials: true,
         }
-        try{
-            const res=await axios.post(`http://localhost:${Port}/api/v1/register`,form, {
-                withCredentials:true,
-            } )
-            console.log('response status ', res.status)
-            console.log('response body ', res.data)
+      );
+      console.log("response status ", res.status);
+      console.log("response body ", res.data);
 
-            if(res.status===201){
-                alert('Registeration successful')
-                navigate('/api/v1/login')
-            }else{
-                alert('Registeration failed')
-            }
-
-        }catch(err){
-           console.error('Error during register:', err);
-      const msg = err.response?.data || 'An error occurred during login';
+      if (res.status === 201) {
+        alert("Registeration successful");
+        navigate("/api/v1/login");
+      } else {
+        alert("Registeration failed");
+      }
+    } catch (err) {
+      console.error("Error during register:", err);
+      const msg = err.response?.data || "An error occurred during login";
       alert(msg);
-
-        }
     }
-    return(
-        <>
-        <form onSubmit={handleRegister}>
-            <input 
-            type="text"
-            placeholder='Username'
-            value={name}
-            onChange={(e)=>setName(e.target.value)}
-            required/>
-            <br></br>
-             <input 
-            type="email"
-            placeholder='Email'
-            value={email}
-            onChange={(e)=>setEmail(e.target.value)}
-            required/>
-            <br></br>
-               <input 
-            type="password"
-            placeholder='password'
-            value={password}
-            onChange={(e)=>setPassword(e.target.value)}
-            required/>
-            <br></br>
-            <select value={role} onChange={(e)=>setRole(e.target.value)} required>
-               <option value="Standard User">Standard User</option>
-               <option value="Organizer">Organizer</option>
-               <option value="System Admin">System Admin</option>
-            </select>
-            <br></br>
-            <button type="submit">Register</button>
-        </form>
-        
-        </>
-    )
-}
+  };
+  return (
+    <>
+      <form onSubmit={handleRegister}>
+        <input
+          type="text"
+          placeholder="Username"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <br></br>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <br></br>
+        <input
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <br></br>
+        <select value={role} onChange={(e) => setRole(e.target.value)} required>
+          <option value="Standard User">Standard User</option>
+          <option value="Organizer">Organizer</option>
+          <option value="System Admin">System Admin</option>
+        </select>
+        <br></br>
+        <button type="submit">Register</button>
+      </form>
+    </>
+  );
+};
 export default Register;

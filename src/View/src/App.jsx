@@ -14,7 +14,7 @@ import Navbar from "./main page/navbar";
 import HomePage from "./HomePage"; // make sure this path is correct
 import EventPage from "./EventPage"; // make sure this path is correct
 import Dashboard from "./dashboard"; // make sure this path is correct
-
+import BookingEvent from "./BookingEvent"; // make sure this path is correct
 function App() {
   return (
     <>
@@ -28,6 +28,8 @@ function App() {
         <Route path="/api/v1/sendOtp" element={<SendOTP />} />
         <Route path="/api/v1/forgetPassword" element={<ForgotPassword />} />
         <Route path="/api/v1/dashboard" element={<Dashboard />} />
+        <Route path="/api/v1/bookings" element={<BookingEvent />} />
+        <Route path="/api/v1/bookings/:id" element={<BookingEvent />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/Terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
