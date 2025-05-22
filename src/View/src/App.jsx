@@ -10,6 +10,7 @@ import Footer from "./footer";
 import AboutUs from "./AboutUs"; // make sure this path is correct
 import Terms from "./Terms"; // make sure this path is correct
 import Privacy from "./privacy";
+import Dashboard from "./dashboard"; // make sure this path is correct
 function App() {
   return (
     <>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/api/v1/register" element={<Register />} />
         <Route path="/api/v1/sendOtp" element={<SendOTP />} />
         <Route path="/api/v1/forgetPassword" element={<ForgotPassword />} />
+        <Route path="/api/v1/dashboard" element={<Dashboard />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/Terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
