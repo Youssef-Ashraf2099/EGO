@@ -1,10 +1,13 @@
 import "./styles/EventCard.css"
+import { CiGrid41 } from "react-icons/ci";
 
 const EventCard = ({ event }) => {
   const eventDate = new Date(event.date)
   const months = ["jan","feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+  const description = "khdfakjhakjhfakljhfakjhfkjdhafjkahfkjahkkhjkkjhNo description was written"
   return (
     <div className="event-card">
+      <a href={"/events/" + event._id}>
       <div className="event-image-container">
         <img src={event.image ? event.image : "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924"} alt={event.title} className="event-image" />
         <div className="event-date">
@@ -13,9 +16,14 @@ const EventCard = ({ event }) => {
         </div>
       </div>
       <div className="event-details">
-        <h3 className="event-title">{event.title + " (" + event.category + ") " +" - " + event.location}</h3>
-        <p className="event-description">{event.description?event.description:"No description was written"}</p>
+        <h3 className="event-title">{event.title  +" - " + event.location}</h3>
+        <p className="event-description">{event.description?event.description.length>46?event.description.slice(0,46)+"...":event.description:"No Description was given"}</p>
+        <div className="category-type">
+           <CiGrid41 className="event-icon"/><p className="category-text">Category: {event.category}</p>
+        </div>
+       
       </div>
+      </a>
     </div>
   )
 }

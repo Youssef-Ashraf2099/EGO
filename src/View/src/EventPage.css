@@ -1,0 +1,65 @@
+.input {
+  margin-right: 150px;
+  margin-top: 30px;
+  float: right;
+  align-content: end;
+  background: #2D2F39;
+  border: none;
+  outline: none;
+  max-width: 300px;
+  width: 100%; /* Ensure it adjusts to smaller screens */
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 9999px;
+  box-shadow: inset 2px 5px 10px rgb(239, 186, 26);
+  color: #fff;
+}
+.filter-container {
+  display: flex; /* Use flexbox to align items horizontally */
+  align-items: center; /* Vertically center the select and icon */
+  gap: 8px; /* Add spacing between the select and the icon */
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  width: 100%; 
+   margin-top:10px ;
+   background-color:#1a1d21; /* Ensure it takes full width */
+}
+
+.filter-select {
+  background-color: #efba1a;
+  color: #17181d;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-size: 14px;
+  outline: none;
+  appearance: none; /* Remove default browser styling */
+  cursor: pointer;
+  margin-top:10px ;
+}
+
+.dropdown-icon {
+  font-size: 14px; /* Adjust size to match the select */
+  color: #17181d;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .input {
+    margin-right: 20px; 
+    margin-top: 20px;
+    max-width: 150px;   
+    font-size: 14px; 
+  }
+}
+
+
+@media (max-width: 480px) {
+  .input {
+    margin-right: 10px; 
+    margin-top: 10px;
+    max-width: 100%; 
+    font-size: 12px; 
+    padding: 8px 16px
+  }
+}

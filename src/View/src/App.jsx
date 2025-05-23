@@ -14,14 +14,19 @@ import Navbar from "./main page/navbar";
 import HomePage from "./HomePage"; // make sure this path is correct
 import EventPage from "./EventPage"; // make sure this path is correct
 import Dashboard from "./dashboard"; // make sure this path is correct
+import EventDetails from "./EventDetails";
+import PageNotFound from "./pageNotFound";
 import BookingEvent from "./BookingEvent"; // make sure this path is correct
 import AllUsersPage from "./AllUsersPage"; // make sure this path is correct
 import AdminEvents from "./AdminEvents";
+
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
+        <Route path="/events/:id" element={<EventDetails />} />
+        <Route path="/events" element={<EventPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/events" element={<EventPage />} />
@@ -37,6 +42,7 @@ function App() {
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/Terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />
     </>

@@ -18,10 +18,10 @@ const Navbar = () => {
           <a href="/api/v1/login" className="nav-link">
             Login
           </a>
-          <a href="#" className="nav-link">
+          <a href="/events" className="nav-link">
             Events
           </a>
-          <a href="#" className="nav-link">
+          <a href="/aboutus" className="nav-link">
             Contact
           </a>
           <a href="/api/v1/register" className="nav-link nav-button">

@@ -6,8 +6,8 @@ import { PacmanLoader } from "react-spinners";
 const Port = import.meta.env.VITE_PORT || 3040;
 
 axios.defaults.withCredentials = true;
+const EventsListing = ({isHome , searchWord='', filterCategory = "category" , fiterLocation = "location"}) => {
 
-const EventsListing = ({ isHome }) => {
   // const events = [
   //   {
   //     id: 1,
@@ -80,6 +80,10 @@ const EventsListing = ({ isHome }) => {
       </div>
     );
   }
+ const isCategoryFilter = filterCategory !== "category";
+  const isLocationFilter = fiterLocation !== "location";
+  const isFilter = isCategoryFilter || isLocationFilter;
+  
 
   return (
     <section className="events-section">
@@ -92,12 +96,27 @@ const EventsListing = ({ isHome }) => {
 
         <div className="events-grid">
           {isHome
-            ? (Array.isArray(events) ? events.slice(0, 6) : []).map((event) => (
-                <EventCard key={event._id} event={event} />
-              ))
-            : (Array.isArray(events) ? events : []).map((event) => (
-                <EventCard key={event._id} event={event} />
-              ))}
+    ? events.slice(0, 6).map((event) => (
+        <EventCard key={event._id} event={event} />
+      ))
+    : events.filter(item => {
+  if (!isFilter) {
+    return true; // No filtering applied
+  }
+
+  const matchesCategory = isCategoryFilter
+    ? item.category.toLowerCase() === filterCategory.toLowerCase()
+    : true;
+
+  const matchesLocation = isLocationFilter
+    ? item.location.toLowerCase() === fiterLocation.toLowerCase()
+    : true;
+
+  return matchesCategory && matchesLocation;
+}).filter(item => searchWord.toLowerCase() === ''? item:item.title.toLowerCase().includes(searchWord.toLowerCase()))
+          .map((event) => (
+        <EventCard key={event._id} event={event} />
+      ))}
         </div>
 
         <div className="load-more">

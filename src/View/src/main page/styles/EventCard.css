@@ -10,7 +10,18 @@
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
-
+.event-icon{
+  font-size: 18px;
+  color: #efba1a;
+  margin-right: 2px;
+}
+.category-type{
+  display: flex;
+}
+.category-text{
+  font-size: 14px;
+  color: #555;
+}
 .event-image-container {
   position: relative;
 }
