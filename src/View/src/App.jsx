@@ -6,7 +6,7 @@ import Login from "./login"; // make sure this path is correct
 import Register from "./register";
 import SendOTP from "./sendOtp";
 import ForgotPassword from "./forgotPassword";
-import Footer from "./Footer";
+import Footer from "./footer";
 import AboutUs from "./AboutUs"; // make sure this path is correct
 import Terms from "./Terms"; // make sure this path is correct
 import Privacy from "./privacy";
@@ -14,12 +14,15 @@ import Navbar from "./main page/navbar"
 import HomePage from "./HomePage"; // make sure this path is correct
 import EventPage from "./EventPage"; // make sure this path is correct
 import Dashboard from "./dashboard"; // make sure this path is correct
+import EventDetails from "./EventDetails";
+import PageNotFound from "./pageNotFound";
 
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
+        <Route path="/events/:id" element={<EventDetails />} />
         <Route path="/events" element={<EventPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/api/v1/login" element={<Login />} />
@@ -30,6 +33,7 @@ function App() {
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/Terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />
     </>
