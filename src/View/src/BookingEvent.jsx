@@ -106,8 +106,12 @@ function BookingEvent() {
         console.log("Booking successful:", res.data);
         setBookingSuccess(true);
         // Navigate to the booking details page after a short delay
+        // setTimeout(() => {
+        //   navigate(`/api/v1/bookings/${res.data._id}`);
+        // }, 2000);
+
         setTimeout(() => {
-          navigate(`/api/v1/bookings/${res.data._id}`);
+          navigate(`/bookings/${res.data._id}`); // Remove the /api/v1/ prefix
         }, 2000);
       })
       .catch((err) => {
