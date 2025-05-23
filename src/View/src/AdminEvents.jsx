@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const Port = import.meta.env.VITE_API_PORT || 3040;
+import "./AdminEvents.css";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -90,10 +91,11 @@ const AdminEvents = () => {
     }
   };
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="admin-events-loading">Loading...</div>;
   }
+
   return (
-    <div>
+    <div className="admin-events-container">
       <h1>Admin Events</h1>
       <table>
         <thead>
@@ -111,22 +113,36 @@ const AdminEvents = () => {
               <td>{event.name}</td>
               <td>{event.organizer?.name || "Unknown organizer"}</td>
               <td>{new Date(event.date).toLocaleDateString()}</td>
-              <td>{event.status}</td>
+              <td className={`status-${event.status}`}>{event.status}</td>
               <td>
                 {event.status === "pending" && (
                   <>
-                    <button onClick={() => handleApprove(event._id)}>
+                    <button
+                      className="approve-btn"
+                      onClick={() => handleApprove(event._id)}
+                    >
                       Approve
                     </button>
-                    <button onClick={() => handleReject(event._id)}>
+                    <button
+                      className="reject-btn"
+                      onClick={() => handleReject(event._id)}
+                    >
                       Reject
                     </button>
                   </>
                 )}
                 {event.status === "approved" && (
                   <>
-                    <button onClick={() => handleEdit(event._id)}>Edit</button>
-                    <button onClick={() => handleDelete(event._id)}>
+                    <button
+                      className="edit-btn"
+                      onClick={() => handleEdit(event._id)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDelete(event._id)}
+                    >
                       Delete
                     </button>
                   </>

@@ -1,0 +1,207 @@
+/* Black and Yellow Theme for Admin Events */
+
+:root {
+  --primary-black: #121212;
+  --secondary-black: #1e1e1e;
+  --primary-yellow: #ffd700;
+  --hover-yellow: #ffea80;
+  --dark-yellow: #b8860b;
+  --text-light: #f5f5f5;
+  --text-gray: #aaaaaa;
+  --pending: #ff9800;
+  --approved: #4caf50;
+  --rejected: #f44336;
+}
+
+/* Main container styling - now scoped to a class */
+.admin-events-container {
+  background-color: var(--primary-black);
+  color: var(--text-light);
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Page title styling */
+.admin-events-container h1 {
+  color: var(--primary-yellow);
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border-bottom: 2px solid var(--dark-yellow);
+  padding-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Table styling */
+.admin-events-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15);
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: var(--secondary-black);
+}
+
+.admin-events-container thead {
+  background-color: var(--dark-yellow);
+}
+
+.admin-events-container th {
+  padding: 1.2rem 1rem;
+  font-weight: bold;
+  text-align: left;
+  color: var(--primary-black);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 1rem;
+}
+
+.admin-events-container tbody tr {
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  transition: background-color 0.3s ease;
+}
+
+.admin-events-container tbody tr:hover {
+  background-color: rgba(255, 215, 0, 0.1);
+}
+
+.admin-events-container td {
+  padding: 1rem;
+  font-size: 0.95rem;
+}
+
+/* Status cell styling */
+.admin-events-container td:nth-child(4) {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.admin-events-container td:nth-child(4)::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.admin-events-container td.status-pending {
+  color: var(--pending);
+}
+
+.admin-events-container td.status-approved {
+  color: var(--approved);
+}
+
+.admin-events-container td.status-rejected {
+  color: var(--rejected);
+}
+
+/* Button styling */
+.admin-events-container button {
+  padding: 0.6rem 1.2rem;
+  margin: 0.3rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+/* Approve button styling */
+.admin-events-container button.approve-btn {
+  background-color: var(--primary-yellow);
+  color: var(--primary-black);
+}
+
+.admin-events-container button.approve-btn:hover {
+  background-color: var(--hover-yellow);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+}
+
+/* Reject button styling */
+.admin-events-container button.reject-btn {
+  background-color: var(--primary-black);
+  color: var(--primary-yellow);
+  border: 1px solid var(--primary-yellow);
+}
+
+.admin-events-container button.reject-btn:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+}
+
+/* Edit button styling */
+.admin-events-container button.edit-btn {
+  background-color: var(--primary-yellow);
+  color: var(--primary-black);
+}
+
+.admin-events-container button.edit-btn:hover {
+  background-color: var(--hover-yellow);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.4);
+}
+
+/* Delete button styling */
+.admin-events-container button.delete-btn {
+  background-color: var(--primary-black);
+  color: var(--primary-yellow);
+  border: 1px solid var(--primary-yellow);
+}
+
+.admin-events-container button.delete-btn:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 215, 0, 0.2);
+}
+
+/* Loading message styling */
+.admin-events-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  color: var(--primary-yellow);
+  height: 100vh;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .admin-events-container table {
+    font-size: 0.9rem;
+  }
+
+  .admin-events-container th,
+  .admin-events-container td {
+    padding: 0.8rem 0.5rem;
+  }
+
+  .admin-events-container button {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.7rem;
+  }
+}
