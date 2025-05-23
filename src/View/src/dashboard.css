@@ -61,14 +61,19 @@ body {
   min-height: 100vh;
 }
 
-/* Sidebar */
+/* Sidebar - Desktop Version */
 .sidebar {
   width: 240px;
   background-color: var(--black);
   padding: 30px 0;
-  position: fixed;
   height: 100vh;
   border-right: 1px solid var(--light-gray);
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  z-index: 100;
+  transition: all 0.3s ease;
 }
 
 .logo {
@@ -117,7 +122,7 @@ body {
 /* Main Content */
 .main-content {
   flex: 1;
-  margin-left: 240px;
+  margin-left: 240px; /* Same as sidebar width */
   padding: 30px;
   background-color: var(--dark-gray);
 }
@@ -316,6 +321,25 @@ body {
   color: var(--black);
 }
 
+/* Mobile Navigation Button (only visible on small screens) */
+.mobile-nav-toggle {
+  display: none;
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+  background-color: var(--yellow);
+  color: var(--black);
+  border: none;
+  border-radius: 5px;
+  width: 45px;
+  height: 45px;
+  cursor: pointer;
+  font-size: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Responsive Styles */
 @media (max-width: 1024px) {
   .sidebar {
@@ -328,62 +352,27 @@ body {
 }
 
 @media (max-width: 768px) {
-  .dashboard {
-    flex-direction: column;
-  }
-
-  /* Completely redesigned mobile navigation */
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 240px;
-    height: 100vh;
-    background-color: var(--black);
-    padding: 30px 0;
-    overflow-y: auto;
-    border-right: 1px solid var(--light-gray);
-    z-index: 1000; /* ensures it stays on top */
-  }
-
-  .logo {
-    padding: 0 20px 10px;
-    border-bottom: none;
-  }
-
-  .logo h2 {
-    font-size: 24px;
-  }
-
-  .nav-menu ul {
+  .mobile-nav-toggle {
     display: flex;
-    justify-content: space-around;
-    padding: 10px 0 0;
   }
 
-  .nav-menu li {
-    flex-direction: row; /* Changed to row for horizontal layout */
-    padding: 8px 15px;
-    text-align: center;
-    font-size: 14px;
-    border-radius: 20px;
-    transition: all 0.2s;
+  /* On mobile, hide the sidebar by default */
+  .sidebar {
+    width: 100%;
+    max-width: 300px;
+    transform: translateX(-100%);
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.2);
   }
 
-  .nav-menu li.active {
-    border-left: none; /* Remove left border */
-    background-color: var(--yellow);
-    color: var(--black);
-  }
-
-  .nav-menu .icon {
-    margin-right: 8px;
-    margin-bottom: 0;
+  /* Class to show sidebar when menu button is clicked */
+  .sidebar.active {
+    transform: translateX(0);
   }
 
   .main-content {
     margin-left: 0;
-    padding: 0 20px 20px;
+    padding: 20px;
+    width: 100%;
   }
 
   .profile-card {
@@ -396,26 +385,51 @@ body {
     margin-bottom: 20px;
   }
 
-  /* Adjust header for mobile */
   .dashboard-header {
     flex-direction: column;
-    text-align: center;
+    align-items: flex-start;
     gap: 15px;
   }
 
   .dashboard-header h1 {
     font-size: 24px;
   }
+
+  /* For mobile, use vertical border on menu items instead of left border */
+  .nav-menu li.active {
+    border-left: none;
+    border-bottom: 2px solid var(--yellow);
+  }
 }
 
-/* Extra small devices */
 @media (max-width: 480px) {
-  .nav-menu .icon {
-    font-size: 16px;
+  .profile-picture {
+    width: 150px;
+    height: 150px;
   }
 
-  .nav-menu li {
-    padding: 5px;
-    font-size: 12px;
+  .detail-row {
+    flex-direction: column;
   }
+
+  .detail-label {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+}
+
+/* Overlay for when mobile menu is open */
+.menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 90;
+}
+
+.menu-overlay.active {
+  display: block;
 }
