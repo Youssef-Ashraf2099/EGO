@@ -61,7 +61,7 @@ function BookingEvent() {
     } else {
       // If no ID, fetch all user bookings
       axios
-        .get(`http://localhost:${PORT}/api/v1/bookings`, {
+        .get(`http://localhost:${PORT}/api/v1/users/bookings`, {
           withCredentials: true,
         })
         .then((res) => {
