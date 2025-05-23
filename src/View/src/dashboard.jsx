@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import "./dashboard.css"; // Ensure you have the correct path to your CSS file
 const Port = import.meta.env.VITE_API_PORT || 4000;
 
 const Dashboard = () => {
@@ -109,86 +109,130 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (!user) return <p>User not found.</p>;
+  if (loading) return <div className="loader"></div>;
+  if (!user) return <div className="not-found">User not found.</div>;
 
   return (
-    <>
-      <header>
-        <h1>Welcome Back, {user.name}</h1>
-        <button onClick={handleLogout}>Logout</button>
-      </header>
-
-      <div style={{ margin: "20px 0" }}>
-        <div
-          onClick={() => fileInputRef.current.click()}
-          style={{
-            width: "150px",
-            height: "150px",
-            borderRadius: "50%",
-            overflow: "hidden",
-            cursor: "pointer",
-            border: "2px solid #ccc",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#f0f0f0",
-          }}
-        >
-          {user.profilePicture ? (
-            <img
-              src={`http://localhost:${Port}${user.profilePicture}`}
-              alt="Profile"
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          ) : (
-            <span style={{ fontSize: "2em", color: "#888" }}>📷</span>
-          )}
+    <div className="dashboard">
+      <div className="sidebar">
+        <div className="logo">
+          <h2>EGO</h2>
         </div>
-
-        <input
-          type="file"
-          accept="image/*"
-          style={{ display: "none" }}
-          ref={fileInputRef}
-          onChange={handleFileChange}
-        />
+        <nav className="nav-menu">
+          <ul>
+            <li className="active">
+              <span className="icon">🏠</span> Dashboard
+            </li>
+            <li>
+              <span className="icon">👤</span> Profile
+            </li>
+            <li>
+              <span className="icon">⚙️</span> Settings
+            </li>
+            <li onClick={handleLogout}>
+              <span className="icon">🚪</span> Logout
+            </li>
+          </ul>
+        </nav>
       </div>
 
-      <div>
-        <h2>Details:</h2>
-        <p>
-          <strong>Username:</strong>{" "}
-          {isEditing ? (
+      <div className="main-content">
+        <header className="dashboard-header">
+          <h1>Welcome Back, {user.name}</h1>
+          <div className="user-badge">
+            <div className="profile-pic-small">
+              {user.profilePicture ? (
+                <img
+                  src={`http://localhost:${Port}${user.profilePicture}`}
+                  alt="Profile"
+                />
+              ) : (
+                <span>👤</span>
+              )}
+            </div>
+            <span>{user.name}</span>
+          </div>
+        </header>
+
+        <div className="profile-section">
+          <div className="profile-card">
+            <div
+              className="profile-picture"
+              onClick={() => fileInputRef.current.click()}
+            >
+              {user.profilePicture ? (
+                <img
+                  src={`http://localhost:${Port}${user.profilePicture}`}
+                  alt="Profile"
+                />
+              ) : (
+                <div className="no-profile">
+                  <span>📷</span>
+                  <p>Upload Photo</p>
+                </div>
+              )}
+              <div className="overlay">
+                <span>Change</span>
+              </div>
+            </div>
+
             <input
-              type="text"
-              name="name"
-              value={editData.name}
-              onChange={handleChange}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              ref={fileInputRef}
+              onChange={handleFileChange}
             />
-          ) : (
-            user.name
-          )}
-        </p>
-        <p>
-          <strong>Email:</strong>{" "}
-          {isEditing ? (
-            <input
-              type="email"
-              name="email"
-              value={editData.email}
-              onChange={handleChange}
-            />
-          ) : (
-            user.email
-          )}
-        </p>
-        <p>
-          <strong>Role:</strong> {user.role}
-        </p>
-        <button onClick={handleEditClick}>{isEditing ? "Save" : "Edit"}</button>
+
+            <div className="user-details">
+              <h2>Your Profile</h2>
+              <div className="detail-row">
+                <div className="detail-label">Username:</div>
+                <div className="detail-value">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="name"
+                      value={editData.name}
+                      onChange={handleChange}
+                      className="edit-input"
+                    />
+                  ) : (
+                    user.name
+                  )}
+                </div>
+              </div>
+              <div className="detail-row">
+                <div className="detail-label">Email:</div>
+                <div className="detail-value">
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      name="email"
+                      value={editData.email}
+                      onChange={handleChange}
+                      className="edit-input"
+                    />
+                  ) : (
+                    user.email
+                  )}
+                </div>
+              </div>
+              <div className="detail-row">
+                <div className="detail-label">Role:</div>
+                <div className="detail-value">{user.role}</div>
+              </div>
+              <button
+                className={`edit-button ${isEditing ? "save" : ""}`}
+                onClick={handleEditClick}
+              >
+                {isEditing ? "Save Changes" : "Edit Profile"}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
