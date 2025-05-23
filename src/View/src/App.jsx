@@ -16,6 +16,7 @@ import EventPage from "./EventPage"; // make sure this path is correct
 import Dashboard from "./dashboard"; // make sure this path is correct
 import BookingEvent from "./BookingEvent"; // make sure this path is correct
 import AllUsersPage from "./AllUsersPage"; // make sure this path is correct
+import AdminEvents from "./AdminEvents";
 function App() {
   return (
     <>
@@ -31,6 +32,7 @@ function App() {
         <Route path="/api/v1/dashboard" element={<Dashboard />} />
         <Route path="/api/v1/bookings" element={<BookingEvent />} />
         <Route path="/api/v1/bookings/:id" element={<BookingEvent />} />
+        <Route path="/api/v1/events/all" element={<AdminEvents />} />
         <Route path="/api/v1/users" element={<AllUsersPage />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/Terms" element={<Terms />} />
