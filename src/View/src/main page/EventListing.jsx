@@ -92,10 +92,10 @@ const EventsListing = ({ isHome }) => {
 
         <div className="events-grid">
           {isHome
-            ? events
-                .slice(0, 6)
-                .map((event) => <EventCard key={event._id} event={event} />)
-            : events.map((event) => (
+            ? (Array.isArray(events) ? events.slice(0, 6) : []).map((event) => (
+                <EventCard key={event._id} event={event} />
+              ))
+            : (Array.isArray(events) ? events : []).map((event) => (
                 <EventCard key={event._id} event={event} />
               ))}
         </div>
