@@ -16,7 +16,7 @@ function BookingEvent() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingError, setBookingError] = useState(null);
 
-  const PORT = 2099;
+  const PORT = import.meta.env.VITE_API_PORT || 4000;
 
   // Fetch event details if ID is provided
   useEffect(() => {

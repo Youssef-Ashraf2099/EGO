@@ -6,7 +6,7 @@ import Login from "./login"; // make sure this path is correct
 import Register from "./register";
 import SendOTP from "./sendOtp";
 import ForgotPassword from "./forgotPassword";
-import Footer from "./Footer";
+import Footer from "./footer";
 import AboutUs from "./AboutUs"; // make sure this path is correct
 import Terms from "./Terms"; // make sure this path is correct
 import Privacy from "./privacy";

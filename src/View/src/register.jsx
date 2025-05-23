@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Port = import.meta.env.PORT || 3001;
+const Port = import.meta.env.VITE_API_PORT || 5000;
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -43,46 +43,48 @@ const Register = () => {
       alert(msg);
     }
   };
- return (
-  <div className="login-container">
-    <form className="login-form" onSubmit={handleRegister}>
-      <input
-        className="login-input"
-        type="text"
-        placeholder="Username"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-      />
-      <input
-        className="login-input"
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <input
-        className="login-input"
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <select
-        className="login-input"
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-        required
-      >
-        <option value="Standard User">Standard User</option>
-        <option value="Organizer">Organizer</option>
-        <option value="System Admin">System Admin</option>
-      </select>
-      <button className="login-button" type="submit">Register</button>
-    </form>
-  </div>
-);
-}
+  return (
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleRegister}>
+        <input
+          className="login-input"
+          type="text"
+          placeholder="Username"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <input
+          className="login-input"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <input
+          className="login-input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <select
+          className="login-input"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          required
+        >
+          <option value="Standard User">Standard User</option>
+          <option value="Organizer">Organizer</option>
+          <option value="System Admin">System Admin</option>
+        </select>
+        <button className="login-button" type="submit">
+          Register
+        </button>
+      </form>
+    </div>
+  );
+};
 export default Register;

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const Port = import.meta.env.PORT || 3001;
+const Port = import.meta.env.VITE_API_PORT || 4000;
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Port = import.meta.env.PORT || 3001;
-import "./main page/styles/form.css"
+const Port = import.meta.env.VITE_API_PORT || 4000;
+import "./main page/styles/form.css";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -59,14 +59,20 @@ const Login = () => {
           required
           className="login-input"
         />
-        <button type="submit" className="login-button">Login</button>
+        <button type="submit" className="login-button">
+          Login
+        </button>
       </form>
 
       <div className="login-links">
-        <a href="/api/v1/register" className="login-link">Register</a>
-        <a href="/api/v1/sendOtp" className="login-link">Forgot password</a>
+        <a href="/api/v1/register" className="login-link">
+          Register
+        </a>
+        <a href="/api/v1/sendOtp" className="login-link">
+          Forgot password
+        </a>
       </div>
     </div>
   );
-}
+};
 export default Login;

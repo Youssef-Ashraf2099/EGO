@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Port = import.meta.env.PORT || 3001;
-import "./main page/styles/form.css"
+const Port = import.meta.env.PORT || 2099;
+import "./main page/styles/form.css";
 
 const ForgotPassword = () => {
   const [otp, setOtp] = useState("");
@@ -34,37 +34,39 @@ const ForgotPassword = () => {
       alert(msg);
     }
   };
-return (
-  <>
-  <div className="login-container">
-    <form onSubmit={handleForgotPassword} className="login-form">
-      <input type="hidden" value={email} name="email" />
-      
-      <input
-        type="text"
-        placeholder="otp code"
-        value={otp}
-        onChange={(e) => setOtp(e.target.value)}
-        required
-        className="login-input"
-      />
-      <br />
-      
-      <input
-        type="password"
-        placeholder="new password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-        required
-        className="login-input"
-      />
-      <br />
-      
-      <button type="submit" className="login-button">Change</button>
-    </form>
-    </div>
-  </>
-);
-}
+  return (
+    <>
+      <div className="login-container">
+        <form onSubmit={handleForgotPassword} className="login-form">
+          <input type="hidden" value={email} name="email" />
+
+          <input
+            type="text"
+            placeholder="otp code"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            required
+            className="login-input"
+          />
+          <br />
+
+          <input
+            type="password"
+            placeholder="new password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+            className="login-input"
+          />
+          <br />
+
+          <button type="submit" className="login-button">
+            Change
+          </button>
+        </form>
+      </div>
+    </>
+  );
+};
 
 export default ForgotPassword;
