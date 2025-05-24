@@ -1,5 +1,6 @@
 import "./styles/EventCard.css"
 import { CiGrid41 } from "react-icons/ci";
+import { FaMoneyBill1Wave } from "react-icons/fa6";
 
 const EventCard = ({ event }) => {
   const eventDate = new Date(event.date)
@@ -19,8 +20,9 @@ const EventCard = ({ event }) => {
         <h3 className="event-title">{event.title  +" - " + event.location}</h3>
         <p className="event-description">{event.description?event.description.length>46?event.description.slice(0,46)+"...":event.description:"No Description was given"}</p>
         <div className="category-type">
-           <CiGrid41 className="event-icon"/><p className="category-text">Category: {event.category}</p>
+           <CiGrid41 className="event-icon"/><p className="category-text">Category: {event.category}</p><FaMoneyBill1Wave className="money-icon" /><p className="ticket-price-text">Ticket price: ${event.ticketPrice}</p>
         </div>
+        
        
       </div>
       </a>
