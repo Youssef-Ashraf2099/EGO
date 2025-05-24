@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Port = import.meta.env.VITE_API_PORT || 5000;
+const Port = import.meta.env.VITE_API_PORT || 3500;
 
 const Register = () => {
   const [name, setName] = useState("");

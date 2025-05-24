@@ -3,7 +3,7 @@ import EventCard from "./EventCard";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { PacmanLoader } from "react-spinners";
-const Port = import.meta.env.VITE_PORT || 3040;
+const Port = import.meta.env.VITE_API_PORT || 3500;
 
 axios.defaults.withCredentials = true;
 const EventsListing = ({isHome , searchWord='', filterCategory = "category" , fiterLocation = "location"}) => {
@@ -55,24 +55,27 @@ const EventsListing = ({isHome , searchWord='', filterCategory = "category" , fi
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:{VITE_PORT}/api/v1/events/`
-        );
-        console.log(response.data);
-        setEvents(response.data);
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+useEffect(() => {
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:${Port}/api/v1/events/`
+      );
+      console.log(response.data);
+      // Ensure events is always an array
+      setEvents(Array.isArray(response.data) ? response.data : 
+                response.data?.events || // Check if events is a property
+                response.data?.data || // Common API pattern
+                []);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchEvents();
-  }, []);
-
+  fetchEvents();
+}, []);
   if (isLoading) {
     return (
       <div className="loader-container">

@@ -11,7 +11,7 @@ const bookingRouter = require("./src/router/bookings");
 const path = require('path');
 
 // Serve the uploads folder statically
-app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 
@@ -24,7 +24,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: process.env.ORIGIN || "http://localhost:5173",
+    origin: process.env.ORIGIN || "http://localhost:3001",
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })

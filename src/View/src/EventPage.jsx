@@ -2,7 +2,7 @@ import EventsListing from "./main page/EventListing";
 import { useEffect, useState } from "react";
 import "./EventPage.css";
 import axios from "axios";
-const Port = import.meta.env.VITE_PORT || 3040;
+const Port = import.meta.env.VITE_API_PORT || 3500;
 
 const EventPage = () => {
   const [search, setSearch] = useState("");
@@ -14,7 +14,7 @@ const EventPage = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:{VITE_PORT}/api/v1/events`
+          `http://localhost:${Port}/api/v1/events`
         );
         setEvents(response.data);
       } catch (error) {
