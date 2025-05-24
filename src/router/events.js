@@ -9,7 +9,13 @@ const authorizationMiddleware = require("../middleware/authorizationMiddleware")
 router.get("/", EventController.getApprovedEvents);
 
 // Get list of all events
-router.get("/all",authenticationMiddleware,authorizationMiddleware(["System Admin"]), EventController.getAllEvents);
+// api/v1/events/all
+router.get(
+  "/all",
+  authenticationMiddleware,
+  authorizationMiddleware(["System Admin"]),
+  EventController.getAllEvents
+);
 
 // Get details of a single event by ID
 router.get("/:id", EventController.getEventById);

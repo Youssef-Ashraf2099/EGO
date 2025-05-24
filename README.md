@@ -57,6 +57,7 @@ node app.js #run javascript file
    ```
    npm i
    npm i axios
+   npm install react-icons
    npm run dev #to run your frontend
    ```
  

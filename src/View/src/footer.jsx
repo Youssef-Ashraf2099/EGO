@@ -1,4 +1,4 @@
-import "./Footer.css"
+import "./Footer.css";
 
 const Footer = () => {
   return (
@@ -13,8 +13,9 @@ const Footer = () => {
               <span className="footer-logo-text">EIGO</span>
             </div>
             <p className="footer-description">
-              Eventick is a global self-service ticketing platform for live experiences that allows anyone to create,
-              share, find and attend events that fuel their passions and enrich their lives.
+              Eventick is a global self-service ticketing platform for live
+              experiences that allows anyone to create, share, find and attend
+              events that fuel their passions and enrich their lives.
             </p>
             <div className="social-icons">
               <a href="#" className="social-icon facebook">
@@ -83,10 +84,15 @@ const Footer = () => {
           <div className="footer-column">
             <h3 className="footer-title">Stay In The Loop</h3>
             <p className="footer-newsletter-text">
-              Join our mailing list to stay in the loop with our newest for Event and concert
+              Join our mailing list to stay in the loop with our newest for
+              Event and concert
             </p>
             <div className="newsletter-form">
-              <input type="email" placeholder="Enter your email address..." className="newsletter-input" />
+              <input
+                type="email"
+                placeholder="Enter your email address..."
+                className="newsletter-input"
+              />
               <button className="newsletter-button">Subscribe Now</button>
             </div>
           </div>
@@ -95,11 +101,13 @@ const Footer = () => {
 
       <div className="footer-bottom">
         <div className="container">
-          <p className="copyright">Copyright © 2023 All Rights Reserved</p>
+          <p className="copyright">
+            Copyright © {new Date().getFullYear()} All Rights Reserved
+          </p>
         </div>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

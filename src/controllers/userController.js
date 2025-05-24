@@ -26,17 +26,18 @@ const userController = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-
       const user = await User.findOne({ email });
+
       if (!user) {
         return res.status(404).send("email not found");
       }
-      console.log(user);
+      console.log(password);
       const passwordMatch = await bcrypt.compare(password, user.password);
+      console.log(passwordMatch);
       if (!passwordMatch) {
         return res.status(405).send("incorrect password");
       }
-
+      
       const currentDateTime = new Date();
       const expiresAt = new Date(+currentDateTime + 1800000);
 
@@ -59,6 +60,7 @@ const userController = {
         .status(200)
         .send(user);
     } catch (e) {
+      console.log(e);
       res.status(500).send(e);
     }
   },
@@ -216,10 +218,36 @@ const userController = {
 
     await user.save();
 
+    // Clear the cookie (adjust options to match your login cookie)
+    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "none" });
+
     res.send({ message: "Logout successful" });
   } catch (e) {
     console.error("Logout error:", e);
     res.status(500).send({ error: 'Internal server error during logout' });
+  }
+},
+profilePicture: async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    // Fetch full user document from DB
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+    console.log(user)
+    // Save the uploaded file path
+    user.profilePicture = `/uploads/${req.file.filename}`;
+    await user.save();
+
+    res.status(200).json({
+      message: 'Profile picture updated.',
+      profilePicture: user.profilePicture
+    });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ message: err.message });
   }
 }
 

@@ -10,43 +10,72 @@ const Navbar = () => {
   const handleMenuToggle = () => setMenuOpen(!menuOpen);
 
   return (
-    <nav className="navbar">
-      <div className={`nav-menu${menuOpen ? " flex" : ""}`}>
-        <Link to="/api/v1/events" className="nav-link" onClick={() => setMenuOpen(false)}>
-          Events
-        </Link>
-        {/* Show "Get Started" only if not logged in, otherwise show Dashboard */}
-        {!role ? (
-          <Link to="/api/v1/register" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
-            Get Started
+    <header className="navbar">
+      <div className="container navbar-container">
+        <div className="logo">
+          <svg className="logo-icon" viewBox="0 0 24 24">
+            <path d="M4 4h16v7H4zm0 9h16v7H4zm3-5h10M7 15h10"></path>
+          </svg>
+          <a href="/">
+            <span className="logo-text">EGO</span>
+          </a>
+        </div>
+
+        <nav className={`nav-menu${menuOpen ? " flex" : ""}`}>
+          {/* Always show Events */}
+          <Link to="/api/v1/events" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Events
           </Link>
-        ) : (
-          <Link to="/api/v1/dashboard" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
-            Dashboard
-          </Link>
-        )}
-        {role === "Standard User" && (
-          <Link to="/book-events" className="nav-link" onClick={() => setMenuOpen(false)}>
-            Book Events
-          </Link>
-        )}
-        {role === "Organizer" && (
-          <Link to="/manage-events" className="nav-link" onClick={() => setMenuOpen(false)}>
-            Manage Events
-          </Link>
-        )}
-        {role === "System Admin" && (
-          <>
-            <Link to="/manage-users" className="nav-link" onClick={() => setMenuOpen(false)}>
-              Manage Users
+          {/* Show "Get Started" only if not logged in, otherwise show Dashboard */}
+          {!role ? (
+            <Link to="/api/v1/register" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+              Get Started
             </Link>
+          ) : (
+            <Link to="/api/v1/dashboard" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+              Dashboard
+            </Link>
+          )}
+          {/* Role-based links */}
+          {role === "Standard User" && (
+            <Link to="/book-events" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Book Events
+            </Link>
+          )}
+          {role === "Organizer" && (
             <Link to="/manage-events" className="nav-link" onClick={() => setMenuOpen(false)}>
               Manage Events
             </Link>
-          </>
-        )}
+          )}
+          {role === "System Admin" && (
+            <>
+              <Link to="/api/v1/users" className="nav-link" onClick={() => setMenuOpen(false)}>
+                Manage Users
+              </Link>
+              <Link to="/manage-events" className="nav-link" onClick={() => setMenuOpen(false)}>
+                Manage Events
+              </Link>
+            </>
+          )}
+          
+          {/* Additional static links */}
+          {!role && (
+            <a href="/api/v1/login" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Login
+            </a>
+          )}
+          <a href="/aboutus" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Contact
+          </a>
+        </nav>
+
+        <button className="mobile-menu-button" onClick={handleMenuToggle}>
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
       </div>
-    </nav>
+    </header>
   );
 };
 

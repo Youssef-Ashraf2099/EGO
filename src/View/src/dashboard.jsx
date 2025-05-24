@@ -1,26 +1,31 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
-const Port = import.meta.env.PORT || 3001;
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "./AuthContext"; // <-- Import AuthContext
+import "./dashboard.css";
+const Port = import.meta.env.VITE_API_PORT || 4000;
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ name: '', email: '' });
+  const [editData, setEditData] = useState({ name: "", email: "" });
+  const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
-
+  const { fetchProfile } = useAuth(); // <-- Use fetchProfile instead of setRole
+  
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const res = await axios.get(`http://localhost:${Port}/api/v1/users/profile`, {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          `http://localhost:${Port}/api/v1/users/profile`,
+          {
+            withCredentials: true,
+          }
+        );
 
-        // Check if user data is valid
-        if (!res.data || typeof res.data !== 'object' || !res.data.email) {
+        if (!res.data || typeof res.data !== "object" || !res.data.email) {
           throw new Error("Invalid user data received");
         }
 
@@ -29,7 +34,6 @@ const Dashboard = () => {
         console.log("User details fetched:", res.data);
       } catch (error) {
         console.error("Error while fetching user:", error.message);
-        // navigate('/api/v1/login');
       } finally {
         setLoading(false);
       }
@@ -45,87 +49,194 @@ const Dashboard = () => {
 
   const handleEditClick = () => {
     if (isEditing) {
-      // Save changes
-      axios.put(`http://localhost:${Port}/api/v1/users/profile`, editData, {
-        withCredentials: true,
-      })
+      axios
+        .put(`http://localhost:${Port}/api/v1/users/profile`, editData, {
+          withCredentials: true,
+        })
         .then(() => {
           setUser((prev) => ({ ...prev, ...editData }));
           setIsEditing(false);
           console.log("User details updated:", editData);
-          alert('Changes saved successfully.');
+          alert("Changes saved successfully.");
         })
         .catch((err) => {
-          console.error('Failed to update user:', err);
-          alert('Failed to save changes.');
+          console.error("Failed to update user:", err);
+          alert("Failed to save changes.");
         });
     } else {
       setIsEditing(true);
     }
   };
 
-
   const handleLogout = async () => {
     try {
-      await axios.post(`http://localhost:${Port}/api/v1/logout`, {},{
-        withCredentials: true,
-      });
-      alert('Logged out successfully.');
-      console.log('logged out')
-      navigate('/api/v1/login'); // or wherever your login route is
+      await axios.post(
+        `http://localhost:${Port}/api/v1/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      await fetchProfile(); // <-- Update auth context so Navbar re-renders
+      alert("Logged out successfully.");
+      console.log("Logged out");
+      navigate("/api/v1/login");
     } catch (err) {
-      console.error('Logout failed:', err.message);
-      alert('Logout failed. Please try again.');
+      console.error("Logout failed:", err.message);
+      alert("Logout failed. Please try again.");
     }
   };
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
-  if (!user) {
-    return <p>User not found.</p>;
-  }
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profilePicture", file);
+
+    try {
+      const res = await axios.put(
+        `http://localhost:${Port}/api/v1/profile-picture`,
+        formData,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      setUser((prev) => ({ ...prev, profilePicture: res.data.profilePicture }));
+      alert("Profile picture updated.");
+    } catch (error) {
+      console.error("Error uploading profile picture:", error.message);
+      alert("Upload failed. Please try again.");
+    }
+  };
+
+  if (loading) return <div className="loader"></div>;
+  if (!user) return <div className="not-found">User not found.</div>;
 
   return (
-    <>
-      <header>
-        <h1>Welcome Back, {user.name}</h1>
-         <button onClick={handleLogout}>Logout</button>
-      </header>
-
-      <div>
-        <h2>Details:</h2>
-        <p>
-          <strong>Username:</strong>{' '}
-          {isEditing ? (
-            <input
-              type="text"
-              name="name"
-              value={editData.name}
-              onChange={handleChange}
-            />
-          ) : (
-            user.name
-          )}
-        </p>
-        <p>
-          <strong>Email:</strong>{' '}
-          {isEditing ? (
-            <input
-              type="email"
-              name="email"
-              value={editData.email}
-              onChange={handleChange}
-            />
-          ) : (
-            user.email
-          )}
-        </p>
-        <p><strong>Role:</strong> {user.role}</p>
-        <button onClick={handleEditClick}>{isEditing ? 'Save' : 'Edit'}</button>
+    <div className="dashboard">
+      <div className="sidebar">
+        <div className="logo">
+          <h2>EGO</h2>
+        </div>
+        <nav className="nav-menu">
+          <ul>
+            <li className="active">
+              <span className="icon">🏠</span> Dashboard
+            </li>
+            <li>
+              <span className="icon">👤</span> Profile
+            </li>
+            <li>
+              <span className="icon">⚙️</span> Settings
+            </li>
+            <li onClick={handleLogout}>
+              <span className="icon">🚪</span> Logout
+            </li>
+          </ul>
+        </nav>
       </div>
-    </>
+
+      <div className="main-content">
+        <header className="dashboard-header">
+          <h1>Welcome Back, {user.name}</h1>
+          <div className="user-badge">
+            <div className="profile-pic-small">
+              {user.profilePicture ? (
+                <img
+                  src={`http://localhost:${Port}${user.profilePicture}`}
+                  alt="Profile"
+                />
+              ) : (
+                <span>👤</span>
+              )}
+            </div>
+            <span>{user.name}</span>
+          </div>
+        </header>
+
+        <div className="profile-section">
+          <div className="profile-card">
+            <div
+              className="profile-picture"
+              onClick={() => fileInputRef.current.click()}
+            >
+              {user.profilePicture ? (
+                <img
+                  src={`http://localhost:${Port}${user.profilePicture}`}
+                  alt="Profile"
+                />
+              ) : (
+                <div className="no-profile">
+                  <span>📷</span>
+                  <p>Upload Photo</p>
+                </div>
+              )}
+              <div className="overlay">
+                <span>Change</span>
+              </div>
+            </div>
+
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              ref={fileInputRef}
+              onChange={handleFileChange}
+            />
+
+            <div className="user-details">
+              <h2>Your Profile</h2>
+              <div className="detail-row">
+                <div className="detail-label">Username:</div>
+                <div className="detail-value">
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="name"
+                      value={editData.name}
+                      onChange={handleChange}
+                      className="edit-input"
+                    />
+                  ) : (
+                    user.name
+                  )}
+                </div>
+              </div>
+              <div className="detail-row">
+                <div className="detail-label">Email:</div>
+                <div className="detail-value">
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      name="email"
+                      value={editData.email}
+                      onChange={handleChange}
+                      className="edit-input"
+                    />
+                  ) : (
+                    user.email
+                  )}
+                </div>
+              </div>
+              <div className="detail-row">
+                <div className="detail-label">Role:</div>
+                <div className="detail-value">{user.role}</div>
+              </div>
+              <button
+                className={`edit-button ${isEditing ? "save" : ""}`}
+                onClick={handleEditClick}
+              >
+                {isEditing ? "Save Changes" : "Edit Profile"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

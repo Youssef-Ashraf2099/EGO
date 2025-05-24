@@ -5,6 +5,47 @@ const eventController = require("../controllers/eventController");
 const bookingController = require("../controllers/bookingController");
 const authenticationMiddleware = require("../middleware/authenticationMiddleware");
 const authorizationMiddleware = require("../middleware/authorizationMiddleware");
+const uploadMiddlewear=require("../middleware/uploadMiddleware")
+
+const sayHelloMiddleware = (req, res, next) => {
+  // Numbered by route path and method
+  if (req.path === "/register" && req.method === "POST") {
+    console.log("1. Hello from sayHelloMiddleware! (POST /register)");
+  } else if (req.path === "/login" && req.method === "POST") {
+    console.log("2. Hello from sayHelloMiddleware! (POST /login)");
+  } else if (req.path === "/sendOtp" && req.method === "POST") {
+    console.log("3. Hello from sayHelloMiddleware! (POST /sendOtp)");
+  } else if (req.path === "/forgetPassword" && req.method === "PUT") {
+    console.log("4. Hello from sayHelloMiddleware! (PUT /forgetPassword)");
+  } else if (req.path === "/users" && req.method === "GET") {
+    console.log("5. Hello from sayHelloMiddleware! (GET /users)");
+  } else if (req.path === "/users/profile" && req.method === "GET") {
+    console.log("6. Hello from sayHelloMiddleware! (GET /users/profile)");
+  } else if (req.path === "/users/profile" && req.method === "PUT") {
+    console.log("7. Hello from sayHelloMiddleware! (PUT /users/profile)");
+  } else if (req.path === "/logout" && req.method === "POST") {
+    console.log("8. Hello from sayHelloMiddleware! (POST /logout)");
+  } else if (req.path.match(/^\/users\/[^/]+$/) && req.method === "PUT") {
+    console.log("9. Hello from sayHelloMiddleware! (PUT /users/:id)");
+  } else if (req.path.match(/^\/users\/[^/]+$/) && req.method === "DELETE") {
+    console.log("10. Hello from sayHelloMiddleware! (DELETE /users/:id)");
+  } else if (req.path === "/users/bookings" && req.method === "GET") {
+    console.log("11. Hello from sayHelloMiddleware! (GET /users/bookings)");
+  } else if (req.path === "/users/events" && req.method === "GET") {
+    console.log("12. Hello from sayHelloMiddleware! (GET /users/events)");
+  } else if (req.path === "/users/events/analytics" && req.method === "GET") {
+    console.log("13. Hello from sayHelloMiddleware! (GET /users/events/analytics)");
+  } else if (req.path.match(/^\/users\/[^/]+$/) && req.method === "GET") {
+    console.log("14. Hello from sayHelloMiddleware! (GET /users/:id)");
+  } else if (req.path === "/profile-picture" && req.method === "PUT") {
+    console.log("15. Hello from sayHelloMiddleware! (PUT /profile-picture)");
+  } else {
+    console.log("?. Hello from sayHelloMiddleware! (Unknown route)", req.method, req.path);
+  }
+  next();
+};
+// Apply globally to all routes in this router
+router.use(sayHelloMiddleware);
 
 // Public routes
 // POST /api/v1/register - Register a new user
@@ -49,6 +90,7 @@ router.get(
   authorizationMiddleware(["System Admin"]),
   async (req, res) => {
     try {
+      console.log("Fetching all users");
       await userController.getAllUsers(req, res);
     } catch (error) {
       res.status(500).json({ error: error.message });
@@ -161,5 +203,12 @@ router.get(
     }
   }
 );
+router.put(
+  '/profile-picture',authenticationMiddleware,
+  uploadMiddlewear.single('profilePicture'), // NOT two middlewares
+  userController.profilePicture
+);
+
+
 
 module.exports = router;
