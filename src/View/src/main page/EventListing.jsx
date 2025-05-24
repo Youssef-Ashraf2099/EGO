@@ -3,7 +3,7 @@ import EventCard from "./EventCard";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { PacmanLoader } from "react-spinners";
-const Port = import.meta.env.VITE_PORT || 3040;
+const Port = import.meta.env.VITE_API_PORT || 3040;
 
 axios.defaults.withCredentials = true;
 const EventsListing = ({isHome , searchWord='', filterCategory = "category" , fiterLocation = "location"}) => {
@@ -59,7 +59,7 @@ const EventsListing = ({isHome , searchWord='', filterCategory = "category" , fi
     const fetchEvents = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:{VITE_PORT}/api/v1/events/`
+          `http://localhost:${Port}/api/v1/events/`
         );
         console.log(response.data);
         setEvents(response.data);
