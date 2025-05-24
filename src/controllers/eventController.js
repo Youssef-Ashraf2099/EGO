@@ -9,18 +9,19 @@ const createEvent = async (req, res) => {
     const {
       title,
       description,
-      date, // Now this should be a full ISO string from frontend
-      time, // you may not need this now, frontend sends combined dateTime
+      date,
       location,
       category,
       ticketPrice,
       ticketAvailable,
+      organizer, // Get organizer from request body
     } = req.body;
 
-    // If date is already combined datetime string, parse it directly
+    // Parse the date
     const dateTime = new Date(date);
-
-    const organizerId = new mongoose.Types.ObjectId(); // replace with real user ID later
+    console.log(organizer, "Organizer ID from request body");
+    // Use the organizer ID from request instead of creating a new one
+    const organizerId = new mongoose.Types.ObjectId(organizer);
 
     // Save image path relative to server URL
     let imagePath = "";
@@ -37,7 +38,7 @@ const createEvent = async (req, res) => {
       ticketPrice: parseFloat(ticketPrice),
       ticketAvailable: parseInt(ticketAvailable),
       image: imagePath,
-      organizer: organizerId,
+      organizer: organizerId, // Use the organizer ID from request
     });
 
     await event.save();
@@ -193,13 +194,26 @@ const getEventAnalytics = async (req, res) => {
 };
 
 // Organizer: Get all events created by the authenticated organizer(for user router)
+// Organizer: Get all events created by the authenticated organizer
 const getOrganizerEvents = async (req, res) => {
   try {
-    const events = await Event.find({ organizer: req.user.userId }).populate(
-      "organizer"
-    );
+    // Get the userId from the correct path in the decoded token
+    const userId = req.user.user?.userId || req.user.userId;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID not found in token" });
+    }
+
+    // Do not filter by status, return all events for this organizer
+    const events = await Event.find({ organizer: userId }).populate("organizer");
+    //print all the states of the incoming events
+    console.log(events.length, " events found for organizer:", userId);
+    if (events.length === 0) {
+      return res.status(404).json({ message: "No events found for this organizer" });
+    }
     res.status(200).json(events);
   } catch (error) {
+    console.error("Error in getOrganizerEvents:", error);
     res.status(500).json({ error: error.message });
   }
 };

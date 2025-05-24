@@ -53,18 +53,24 @@ router.post(
 // Update an event by ID
 router.put(
   "/:id",
-  //authenticationMiddleware,
+ // authenticationMiddleware,
  // authorizationMiddleware(["Organizer", "System Admin"]),
     upload.single("image"),
   EventController.editEvent
-);
-
+); 
 // Delete an event by ID
 router.delete(
   "/:id",
   //authenticationMiddleware,
- // authorizationMiddleware(["Organizer", "System Admin"]),
+  ///authorizationMiddleware(["Organizer", "System Admin"]),
   EventController.deleteEvent
+);
+
+router.get(
+  "/organizer/events", 
+  authenticationMiddleware,
+  authorizationMiddleware(["Organizer"]),
+  EventController.getOrganizerEvents
 );
 
 module.exports = router;

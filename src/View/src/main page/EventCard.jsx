@@ -2,19 +2,32 @@ import "./styles/EventCard.css"
 import { CiGrid41 } from "react-icons/ci";
 import { FaEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Import auth context
  
 const Port = import.meta.env.VITE_API_PORT || 3500;
 
 const EventCard = ({ event }) => {
+  const { user } = useAuth(); // Get current user
+  
+  // Check if current user is the creator of this event
+  const isCreator = user && event.organizer != null && 
+                   String(user._id) === String(event.organizer._id);
+  
   // Create proper date object from event date
   const eventDate = new Date(event.date);
   
   // Month names array (all lowercase to match original)
   const months = ["jan","feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
   
- 
   return (
     <div className="event-card">
+      {/* State indicator - only shown if user is the creator */}
+      {isCreator && (
+        <div className="event-state-indicator">
+          <span className="event-state">{event.status || "Active"}</span>
+        </div>
+      )}
+      
       <Link to={`/events/${event._id}`}>
         <div className="event-image-container">
           <img 
@@ -46,8 +59,6 @@ const EventCard = ({ event }) => {
           </div>
         </div>
       </Link>
-      
-    
     </div>
   );
 };

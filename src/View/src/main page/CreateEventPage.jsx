@@ -1,13 +1,15 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./styles/CreateEventPage.css";
+import { useAuth } from "../context/AuthContext";
 
-const Port = import.meta.env.PORT || 3500;
+const Port = import.meta.env.VITE_API_PORT || 3500;
 
 function CreateEventPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const { user, loading: authLoading } = useAuth(); // Get user from auth context
 
   const [formData, setFormData] = useState({
     title: "",
@@ -27,6 +29,18 @@ function CreateEventPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const [validationErrors, setValidationErrors] = useState({});
 
+  // Check if user is organizer and redirect if not
+  useEffect(() => {
+    if (!authLoading) {
+      if (!user && user.role !== "Organizer") {
+        setError("Only organizers can create events");
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      }
+    }
+  }, [user, authLoading, navigate]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setValidationErrors((prev) => ({ ...prev, [e.target.name]: "" }));
@@ -44,6 +58,19 @@ function CreateEventPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+
+    // Check if user is authenticated and has organizer role
+    if (!user) {
+      setError("You must be logged in to create events");
+      setLoading(false);
+      return;
+    }
+
+    if (user.role !== "Organizer") {
+      setError("Only organizers can create events");
+      setLoading(false);
+      return;
+    }
 
     const errors = {};
     if (!formData.title.trim()) errors.title = "Title is required";
@@ -74,15 +101,19 @@ function CreateEventPage() {
       data.append("category", formData.category);
       data.append("ticketPrice", formData.ticketPrice);
       data.append("ticketAvailable", formData.ticketAvailable);
-
+      data.append("organizer", user._id ); // Include organizer ID from user context
       if (file) {
         data.append("image", file);
       }
+      console.log(user._id , "Organizer ID");
+      console.log (data.organizer, "Organizer ID in form data");
 
-      await axios.post(`http://localhost:${Port}/api/v1/events`, data, {
+      const response = await axios.post(`http://localhost:${Port}/api/v1/events`, data, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
+
+      console.log("Event created successfully:", response.data);
 
       setFormData({
         title: "",
@@ -102,15 +133,21 @@ function CreateEventPage() {
       }
 
       setSuccessMessage("Event successfully created!");
-      setTimeout(() => setSuccessMessage(""), 7000);
-
-      navigate("/events/Create/new");
+      setTimeout(() => {
+        setSuccessMessage("");
+        navigate("/events");
+      }, 2000);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create event");
+      console.error("Error creating event:", err);
+      setError(err.response?.data?.error || "Failed to create event. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (authLoading) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
     <div className="create-event-page">
@@ -269,7 +306,12 @@ function CreateEventPage() {
               )}
             </div>
 
-            <button type="submit" disabled={loading} className="submit-btn">
+            <button 
+              type="submit" 
+              disabled={loading || !user || user.role !== "Organizer"} 
+              className="submit-btn"
+              title={!user ? "Please login first" : user.role !== "Organizer" ? "Only organizers can create events" : ""}
+            >
               {loading ? "Creating..." : "Create Event"}
             </button>
           </form>

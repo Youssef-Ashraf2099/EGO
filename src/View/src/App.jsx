@@ -21,8 +21,12 @@ import AllUsersPage from "./AllUsersPage"; // make sure this path is correct
 import AdminEvents from "./AdminEvents";
 import CreateEventPage from "./main page/CreateEventPage";
 import EditEventPage from "./EditEventPage";
+
+import { AuthProvider } from "./context/AuthContext";
+
 function App() {
   return (
+        <AuthProvider>
     <>
       <Navbar />
       <Routes>
@@ -49,6 +53,7 @@ function App() {
       </Routes>
       <Footer />
     </>
+    </AuthProvider>
   );
 }
 

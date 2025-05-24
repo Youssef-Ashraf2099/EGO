@@ -3,79 +3,51 @@ import EventCard from "./EventCard";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { PacmanLoader } from "react-spinners";
+import { useAuth } from "../context/AuthContext"; // Import auth context
+
 const Port = import.meta.env.VITE_API_PORT || 3500;
 
 axios.defaults.withCredentials = true;
-const EventsListing = ({isHome , searchWord='', filterCategory = "category" , fiterLocation = "location"}) => {
-
-  // const events = [
-  //   {
-  //     id: 1,
-  //     date: { day: 14, month: "JUN" },
-  //     title: "Wonder Girls 2010 Wonder Girls World Tour San Francisco",
-  //     description: "We'll get you directly seated and inside for you to enjoy the show.",
-  //     image: "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924",
-  //   },
-  //   {
-  //     id: 2,
-  //     date: { day: 20, month: "JUL" },
-  //     title: "JYJ 2011 JYJ Worldwide Concert Barcelona",
-  //     description: "Directly seated and inside for you to enjoy the show.",
-  //     image: "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924",
-  //   },
-  //   {
-  //     id: 3,
-  //     date: { day: 18, month: "AUG" },
-  //     title: "2011 Super Junior SM Town Live '10 World Tour New York City",
-  //     description: "Directly seated and inside for you to enjoy the show.",
-  //     image: "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924",
-  //   },
-  //   {
-  //     id: 4,
-  //     date: { day: 14, month: "JUN" },
-  //     title: "Wonder Girls 2010 Wonder Girls World Tour San Francisco",
-  //     description: "We'll get you directly seated and inside for you to enjoy the show.",
-  //     image: "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924",
-  //   },
-  //   {
-  //     id: 5,
-  //     date: { day: 20, month: "JUL" },
-  //     title: "JYJ 2011 JYJ Worldwide Concert Barcelona",
-  //     description: "Directly seated and inside for you to enjoy the show.",
-  //     image: "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924",
-  //   },
-  //   {
-  //     id: 6,
-  //     date: { day: 18, month: "AUG" },
-  //     title: "2011 Super Junior SM Town Live '10 World Tour New York City",
-  //     description: "Directly seated and inside for you to enjoy the show.",
-  //     image: "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924",
-  //   },
-  // ]
+const EventsListing = ({isHome, searchWord='', filterCategory = "category", fiterLocation = "location"}) => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth(); // Get user from auth context
+  
+  // Check if user is an organizer
+  const isOrganizer = user && user.role === "Organizer";
 
-useEffect(() => {
-  const fetchEvents = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:${Port}/api/v1/events/`
-      );
-      console.log(response.data);
-      // Ensure events is always an array
-      setEvents(Array.isArray(response.data) ? response.data : 
-                response.data?.events || // Check if events is a property
-                response.data?.data || // Common API pattern
-                []);
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        // Different endpoint based on user role
+        let endpoint = `http://localhost:${Port}/api/v1/events/`;
+        
+        // If user is organizer and we're not on the home page, show only their events
+        if (isOrganizer && !isHome) {
+          // Use the route as defined in your router
+          endpoint = `http://localhost:${Port}/api/v1/events/organizer/events`;
+        }
+        
+        const response = await axios.get(endpoint, {
+          withCredentials: true // Ensure credentials are sent with the request
+        });
+        console.log(response.data);
+        // Ensure events is always an array
+        setEvents(Array.isArray(response.data) ? response.data : 
+                  response.data?.events || // Check if events is a property
+                  response.data?.data || // Common API pattern
+                  []);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        console.error("Response:", error.response);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  fetchEvents();
-}, []);
+    fetchEvents();
+  }, [isOrganizer, isHome]); // Re-fetch when organizer status or page type changes
+  
   if (isLoading) {
     return (
       <div className="loader-container">
@@ -83,50 +55,70 @@ useEffect(() => {
       </div>
     );
   }
- const isCategoryFilter = filterCategory !== "category";
+  
+  const isCategoryFilter = filterCategory !== "category";
   const isLocationFilter = fiterLocation !== "location";
   const isFilter = isCategoryFilter || isLocationFilter;
-  
 
   return (
     <section className="events-section">
       <div className="container">
         <div className="events-header">
           <h2 className="section-title">
-            {isHome ? "Featured Events" : "All Events"}
+            {isHome ? "Featured Events" : isOrganizer ? "My Events" : "All Events"}
           </h2>
+          {isOrganizer && !isHome && (
+            <div className="organizer-controls">
+              <p className="organizer-note"></p>
+              <button 
+                className="btn btn-primary create-event-btn"
+                onClick={() => window.location.href = "/events/create/new"}
+              >
+                <i className="fas fa-plus-circle"></i> Create Event
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="events-grid">
-          {isHome
-    ? events.slice(0, 6).map((event) => (
-        <EventCard key={event._id} event={event} />
-      ))
-    : events.filter(item => {
-  if (!isFilter) {
-    return true; // No filtering applied
-  }
+          {events.length === 0 ? (
+            <div className="no-events-message">
+              {isOrganizer && !isHome ? 
+                "You haven't created any events yet. Use the 'Create Event' button to get started!" : 
+                "No events found matching your criteria."}
+            </div>
+          ) : (
+            isHome
+              ? events.slice(0, 6).map((event) => (
+                  <EventCard key={event._id} event={event} />
+                ))
+              : events.filter(item => {
+                  if (!isFilter) {
+                    return true; // No filtering applied
+                  }
 
-  const matchesCategory = isCategoryFilter
-    ? item.category.toLowerCase() === filterCategory.toLowerCase()
-    : true;
+                  const matchesCategory = isCategoryFilter
+                    ? item.category.toLowerCase() === filterCategory.toLowerCase()
+                    : true;
 
-  const matchesLocation = isLocationFilter
-    ? item.location.toLowerCase() === fiterLocation.toLowerCase()
-    : true;
+                  const matchesLocation = isLocationFilter
+                    ? item.location.toLowerCase() === fiterLocation.toLowerCase()
+                    : true;
 
-  return matchesCategory && matchesLocation;
-}).filter(item => searchWord.toLowerCase() === ''? item:item.title.toLowerCase().includes(searchWord.toLowerCase()))
-          .map((event) => (
-        <EventCard key={event._id} event={event} />
-      ))}
+                  return matchesCategory && matchesLocation;
+                })
+                .filter(item => searchWord.toLowerCase() === '' ? item : item.title.toLowerCase().includes(searchWord.toLowerCase()))
+                .map((event) => (
+                  <EventCard key={event._id} event={event} />
+                ))
+          )}
         </div>
 
         <div className="load-more">
           {isHome ? (
             <a href="/events">
               <button className="btn btn-outline load-more-button">
-                Show All
+                {isOrganizer ? "View My Events" : "Show All Events"}
               </button>
             </a>
           ) : (
