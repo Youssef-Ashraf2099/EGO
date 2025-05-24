@@ -218,6 +218,9 @@ const userController = {
 
     await user.save();
 
+    // Clear the cookie (adjust options to match your login cookie)
+    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "none" });
+
     res.send({ message: "Logout successful" });
   } catch (e) {
     console.error("Logout error:", e);

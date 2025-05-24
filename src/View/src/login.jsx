@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const Port = import.meta.env.VITE_API_PORT || 4000;
 import "./main page/styles/form.css";
+import { useAuth } from "./AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { fetchProfile } = useAuth(); // Fetch profile function from AuthContext to update navbar
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,6 +32,7 @@ const Login = () => {
 
       if (res.status === 200) {
         alert("login successfully");
+        await fetchProfile(); // <-- update navbar immediately
         navigate("/api/v1/dashboard");
       } else {
         alert("login failed");

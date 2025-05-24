@@ -96,34 +96,30 @@ const AllUsersPage = () => {
     },
   };
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem("token");
+useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
 
-        if (!token) {
-          throw new Error("Authentication required. Please login.");
-        }
+      const response = await axios.get("/api/v1/users", {
+        withCredentials: true,
+      });
+      console.log("Response data:", response.data);
+      // Ensure users is always an array
+      setUsers(Array.isArray(response.data) ? response.data : []);
+      setLoading(false);
+    } catch (err) {
+      setError(
+        err.response?.data?.error || err.message || "Failed to fetch users"
+      );
+      setUsers([]); // fallback to empty array on error
+      setLoading(false);
+    }
+  };
 
-        const response = await axios.get("/api/v1/users", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        setUsers(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(
-          err.response?.data?.error || err.message || "Failed to fetch users"
-        );
-        setLoading(false);
-      }
-    };
-
-    fetchUsers();
-  }, []);
+  fetchUsers();
+  console.log("Users fetched:", users);
+}, []);
 
   if (loading) {
     return (

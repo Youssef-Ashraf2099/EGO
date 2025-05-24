@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./dashboard.css"; // Ensure you have the correct path to your CSS file
+import { useAuth } from "./AuthContext"; // <-- Import AuthContext
+import "./dashboard.css";
 const Port = import.meta.env.VITE_API_PORT || 4000;
 
 const Dashboard = () => {
@@ -12,7 +13,8 @@ const Dashboard = () => {
   const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
-
+  const { fetchProfile } = useAuth(); // <-- Use fetchProfile instead of setRole
+  
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -75,6 +77,7 @@ const Dashboard = () => {
           withCredentials: true,
         }
       );
+      await fetchProfile(); // <-- Update auth context so Navbar re-renders
       alert("Logged out successfully.");
       console.log("Logged out");
       navigate("/api/v1/login");
@@ -83,6 +86,7 @@ const Dashboard = () => {
       alert("Logout failed. Please try again.");
     }
   };
+
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];

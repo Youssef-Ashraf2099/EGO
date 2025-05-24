@@ -20,6 +20,7 @@ import BookingEvent from "./BookingEvent"; // make sure this path is correct
 import AllUsersPage from "./AllUsersPage"; // make sure this path is correct
 import AdminEvents from "./AdminEvents";
 
+
 function App() {
   return (
     <>
@@ -28,7 +29,6 @@ function App() {
         <Route path="/events/:id" element={<EventDetails />} />
         <Route path="/events" element={<EventPage />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/home" element={<HomePage />} />
         <Route path="/events" element={<EventPage />} />
         <Route path="/api/v1/login" element={<Login />} />
         <Route path="/api/v1/register" element={<Register />} />
