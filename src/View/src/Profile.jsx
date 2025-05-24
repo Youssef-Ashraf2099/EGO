@@ -5,7 +5,7 @@ import { useAuth } from "./AuthContext"; // <-- Import AuthContext
 import "./dashboard.css";
 const Port = import.meta.env.VITE_API_PORT || 4000;
 
-const Dashboard = () => {
+const Profile = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -240,4 +240,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Profile;

@@ -13,7 +13,7 @@ import Privacy from "./privacy";
 import Navbar from "./main page/navbar";
 import HomePage from "./HomePage"; // make sure this path is correct
 import EventPage from "./EventPage"; // make sure this path is correct
-import Dashboard from "./dashboard"; // make sure this path is correct
+import Profile from "./Profile"; // make sure this path is correct
 import EventDetails from "./EventDetails";
 import PageNotFound from "./pageNotFound";
 import BookingEvent from "./BookingEvent"; // make sure this path is correct
@@ -34,7 +34,7 @@ function App() {
         <Route path="/api/v1/register" element={<Register />} />
         <Route path="/api/v1/sendOtp" element={<SendOTP />} />
         <Route path="/api/v1/forgetPassword" element={<ForgotPassword />} />
-        <Route path="/api/v1/dashboard" element={<Dashboard />} />
+        <Route path="/api/v1/profile" element={<Profile />} />
         <Route path="/api/v1/bookings" element={<BookingEvent />} />
         <Route path="/api/v1/bookings/:id" element={<BookingEvent />} />
         <Route path="/api/v1/events/all" element={<AdminEvents />} />

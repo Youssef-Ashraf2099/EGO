@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-const Port = import.meta.env.VITE_API_PORT || 4000;
 import "./main page/styles/form.css";
 import { useAuth } from "./AuthContext";
+import { Link } from "react-router-dom";
+const Port = import.meta.env.VITE_API_PORT;
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -33,7 +34,7 @@ const Login = () => {
       if (res.status === 200) {
         alert("login successfully");
         await fetchProfile(); // <-- update navbar immediately
-        navigate("/api/v1/dashboard");
+        navigate("/api/v1/profile");
       } else {
         alert("login failed");
       }
@@ -68,12 +69,8 @@ const Login = () => {
       </form>
 
       <div className="login-links">
-        <a href="/api/v1/register" className="login-link">
-          Register
-        </a>
-        <a href="/api/v1/sendOtp" className="login-link">
-          Forgot password
-        </a>
+        <Link to="/api/v1/register" className="login-link">Register</Link>
+        <Link to="/api/v1/sendOtp" className="login-link">ForgetPassword</Link>
       </div>
     </div>
   );

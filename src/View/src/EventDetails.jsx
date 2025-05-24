@@ -3,6 +3,7 @@ import "./EventDetails.css";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { PacmanLoader } from "react-spinners"
+const Port = import.meta.env.VITE_API_PORT || 5000;
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const EventDetails = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/events/${id}`
+          `http://localhost:${Port}/api/v1/events/${id}`
         );
         console.log(response.data);
         setEvent(response.data);

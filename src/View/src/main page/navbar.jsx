@@ -32,7 +32,7 @@ const Navbar = () => {
               Get Started
             </Link>
           ) : (
-            <Link to="/api/v1/dashboard" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+            <Link to="/api/v1/profile" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
               Dashboard
             </Link>
           )}
@@ -60,9 +60,9 @@ const Navbar = () => {
           
           {/* Additional static links */}
           {!role && (
-            <a href="/api/v1/login" className="nav-link" onClick={() => setMenuOpen(false)}>
+            <Link to="/api/v1/login" className="nav-link" onClick={() => setMenuOpen(false)}>
               Login
-            </a>
+            </Link>
           )}
           <a href="/aboutus" className="nav-link" onClick={() => setMenuOpen(false)}>
             Contact
