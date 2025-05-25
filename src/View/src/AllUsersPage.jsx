@@ -8,6 +8,8 @@ const AllUsersPage = () => {
   const [error, setError] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [updatingRole, setUpdatingRole] = useState(false);
 
   useEffect(() => {
     fetchUsers();
@@ -49,6 +51,37 @@ const AllUsersPage = () => {
         err.response?.data?.error || err.message || "Failed to delete user"
       );
       setDeleteLoading(false);
+    }
+  };
+
+  const handleUpdateRole = async () => {
+    if (!editingUser) return;
+
+    try {
+      setUpdatingRole(true);
+      const response = await axios.put(
+        `/api/v1/users/${editingUser.id}/role`,
+        { role: editingUser.newRole },
+        { withCredentials: true }
+      );
+
+      // Update the users array with the updated user
+      setUsers(
+        users.map((user) =>
+          user._id === editingUser.id
+            ? { ...user, role: editingUser.newRole }
+            : user
+        )
+      );
+
+      // Clear editing state
+      setEditingUser(null);
+      setUpdatingRole(false);
+    } catch (err) {
+      setError(
+        err.response?.data?.error || err.message || "Failed to update user role"
+      );
+      setUpdatingRole(false);
     }
   };
 
@@ -122,6 +155,60 @@ const AllUsersPage = () => {
         </div>
       )}
 
+      {editingUser && (
+        <div className="edit-role-overlay">
+          <div className="edit-role-modal">
+            <h3>Update User Role</h3>
+            <p>
+              Change role for user <strong>{editingUser.name}</strong>
+            </p>
+
+            <div className="role-select-container">
+              <label htmlFor="role-select">Select new role:</label>
+              <select
+                id="role-select"
+                className="role-select"
+                value={editingUser.newRole}
+                onChange={(e) =>
+                  setEditingUser({ ...editingUser, newRole: e.target.value })
+                }
+              >
+                <option value="Standard User">Standard User</option>
+                <option value="Organizer">Organizer</option>
+                <option value="System Admin">System Admin</option>
+              </select>
+            </div>
+
+            <div className="edit-actions">
+              <button
+                className="cancel-button"
+                onClick={() => setEditingUser(null)}
+                disabled={updatingRole}
+              >
+                Cancel
+              </button>
+              <button
+                className="save-button"
+                onClick={handleUpdateRole}
+                disabled={
+                  updatingRole ||
+                  editingUser.currentRole === editingUser.newRole
+                }
+              >
+                {updatingRole ? (
+                  <span>
+                    <div className="update-spinner"></div>
+                    Updating...
+                  </span>
+                ) : (
+                  "Update Role"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="users-header">
         <h1 className="users-title">User Management</h1>
         <p className="users-subtitle">
@@ -184,20 +271,38 @@ const AllUsersPage = () => {
                   </span>
                 </td>
                 <td className="users-td action-cell">
-                  <button
-                    className="delete-user-btn"
-                    onClick={() =>
-                      setDeleteConfirm({
-                        id: user._id,
-                        name:
-                          `${user.firstName || ""} ${
-                            user.lastName || ""
-                          }`.trim() || user.email,
-                      })
-                    }
-                  >
-                    Delete
-                  </button>
+                  <div className="action-buttons">
+                    <button
+                      className="edit-role-btn"
+                      onClick={() =>
+                        setEditingUser({
+                          id: user._id,
+                          name:
+                            `${user.firstName || ""} ${
+                              user.lastName || ""
+                            }`.trim() || user.email,
+                          currentRole: user.role,
+                          newRole: user.role,
+                        })
+                      }
+                    >
+                      Edit Role
+                    </button>
+                    <button
+                      className="delete-user-btn"
+                      onClick={() =>
+                        setDeleteConfirm({
+                          id: user._id,
+                          name:
+                            `${user.firstName || ""} ${
+                              user.lastName || ""
+                            }`.trim() || user.email,
+                        })
+                      }
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))
