@@ -14,10 +14,10 @@ const CreateEvent = () => {
     } else if (!role) {
       // If not logged in, redirect to login
       alert("Please login first to create events!");
-      navigate("/login");
+      navigate("/api/v1/login");
     } else {
       // If logged in but not an organizer
-      alert("Only organizers can create events! Please contact admin to upgrade your account.");
+      alert("Only organizers can create events!");
     }
   };
 
@@ -27,7 +27,7 @@ const CreateEvent = () => {
         <div className="create-event-content">
           <h2 className="create-event-title">Make your own Event</h2>
           <p className="create-event-description">
-            Create and manage your own events—from private meetups to large-scale experiences. Set your pricing, and
+            {isOrganizer ? "Create":"Sign in as organizer to create"} and manage your own events—from private meetups to large-scale experiences. Set your pricing, and
             start selling tickets today.
           </p>
           <button 
