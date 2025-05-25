@@ -138,7 +138,128 @@
   color: #f44336;
   margin-top: 0;
 }
+/* Add to AllUsersPage.css */
+.action-cell {
+  text-align: center;
+}
 
+.delete-user-btn {
+  background-color: #333;
+  color: #ffcc00;
+  border: 1px solid #ffcc00;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.delete-user-btn:hover {
+  background-color: #ffcc00;
+  color: #000;
+}
+
+.delete-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete-confirm-modal {
+  background-color: #222;
+  border: 2px solid #ffcc00;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.delete-confirm-modal h3 {
+  color: #ffcc00;
+  margin-top: 0;
+  font-size: 24px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 12px;
+}
+
+.delete-warning {
+  color: #ff6b6b;
+  font-weight: bold;
+  margin: 16px 0;
+}
+
+.delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.cancel-button {
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+  background-color: #555;
+}
+
+.delete-button {
+  background-color: #ff3b30;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.delete-button:hover {
+  background-color: #cc2f26;
+}
+
+.delete-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 2px solid #fff;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+.retry-button {
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg);

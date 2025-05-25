@@ -6,28 +6,51 @@ const AllUsersPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get("/api/v1/users", {
-          withCredentials: true,
-        });
-        console.log("Response data:", response.data);
-        setUsers(Array.isArray(response.data) ? response.data : []);
-        setLoading(false);
-      } catch (err) {
-        setError(
-          err.response?.data?.error || err.message || "Failed to fetch users"
-        );
-        setUsers([]);
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/api/v1/users", {
+        withCredentials: true,
+      });
+      console.log("Response data:", response.data);
+      setUsers(Array.isArray(response.data) ? response.data : []);
+      setLoading(false);
+    } catch (err) {
+      setError(
+        err.response?.data?.error || err.message || "Failed to fetch users"
+      );
+      setUsers([]);
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteUser = async (userId) => {
+    try {
+      setDeleteLoading(true);
+      await axios.delete(`/api/v1/users/${userId}`, {
+        withCredentials: true,
+      });
+
+      // Update users list after deletion
+      setUsers(users.filter((user) => user._id !== userId));
+
+      // Clear confirmation dialog
+      setDeleteConfirm(null);
+      setDeleteLoading(false);
+    } catch (err) {
+      setError(
+        err.response?.data?.error || err.message || "Failed to delete user"
+      );
+      setDeleteLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -46,6 +69,15 @@ const AllUsersPage = () => {
         <div className="error-container">
           <h3>Error</h3>
           <p>{error}</p>
+          <button
+            className="retry-button"
+            onClick={() => {
+              setError(null);
+              fetchUsers();
+            }}
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
@@ -53,6 +85,43 @@ const AllUsersPage = () => {
 
   return (
     <div className="users-container">
+      {deleteConfirm && (
+        <div className="delete-confirm-overlay">
+          <div className="delete-confirm-modal">
+            <h3>Confirm User Deletion</h3>
+            <p>
+              Are you sure you want to delete the user{" "}
+              <strong>{deleteConfirm.name}</strong>?
+            </p>
+            <p className="delete-warning">This action cannot be undone!</p>
+
+            <div className="delete-actions">
+              <button
+                className="cancel-button"
+                onClick={() => setDeleteConfirm(null)}
+                disabled={deleteLoading}
+              >
+                Cancel
+              </button>
+              <button
+                className="delete-button"
+                onClick={() => handleDeleteUser(deleteConfirm.id)}
+                disabled={deleteLoading}
+              >
+                {deleteLoading ? (
+                  <span>
+                    <div className="delete-spinner"></div>
+                    Deleting...
+                  </span>
+                ) : (
+                  "Delete User"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="users-header">
         <h1 className="users-title">User Management</h1>
         <p className="users-subtitle">
@@ -68,6 +137,7 @@ const AllUsersPage = () => {
             <th className="users-th">Role</th>
             <th className="users-th">Created At</th>
             <th className="users-th">Status</th>
+            <th className="users-th">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -113,11 +183,27 @@ const AllUsersPage = () => {
                     {user.isActive ? "Active" : "Inactive"}
                   </span>
                 </td>
+                <td className="users-td action-cell">
+                  <button
+                    className="delete-user-btn"
+                    onClick={() =>
+                      setDeleteConfirm({
+                        id: user._id,
+                        name:
+                          `${user.firstName || ""} ${
+                            user.lastName || ""
+                          }`.trim() || user.email,
+                      })
+                    }
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: "center", padding: "20px" }}>
+              <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
                 No users found
               </td>
             </tr>
