@@ -19,13 +19,16 @@ import PageNotFound from "./pageNotFound";
 import BookingEvent from "./BookingEvent"; // make sure this path is correct
 import AllUsersPage from "./AllUsersPage"; // make sure this path is correct
 import AdminEvents from "./AdminEvents";
-
-
+import EditEventPage from "./EditEventPage"; // make sure this path is correct
+import CreateEventPage from "./main page/CreateEventPage"; // make sure this path is correct
 function App() {
   return (
     <>
       <Navbar />
       <Routes>
+        <Route path="/events/edit/:id" element={<EditEventPage />} />
+        <Route path="/events/create/new" element={<CreateEventPage />} />
+
         <Route path="/events/:id" element={<EventDetails />} />
         <Route path="/events" element={<EventPage />} />
         <Route path="/" element={<HomePage />} />

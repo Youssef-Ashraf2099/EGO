@@ -1,6 +1,9 @@
+const mongoose = require("mongoose");
 const Event = require("../models/event");
+const path = require("path");
+const fs = require("fs");
 
-// Event Organizer: Create a new event
+// Create event
 const createEvent = async (req, res) => {
   try {
     const {
@@ -11,20 +14,40 @@ const createEvent = async (req, res) => {
       category,
       ticketPrice,
       ticketAvailable,
+      organizer,
     } = req.body;
+
+    // Parse the date
+    const dateTime = new Date(date);
+    console.log(organizer, "Organizer ID from request body");
+    // Use the organizer ID from request
+    const organizerId = new mongoose.Types.ObjectId(organizer);
+
+    // Save image path as uploads/filename instead of full path
+    let imagePath = "";
+    if (req.file) {
+      // Extract just the filename from the full path
+      const filename = path.basename(req.file.path);
+      // Store as "uploads/filename" to match express.static middleware
+      imagePath = `uploads/${filename}`;
+    }
+
     const event = new Event({
       title,
       description,
-      date,
+      date: dateTime,
       location,
       category,
-      ticketPrice,
-      ticketAvailable,
-      organizer: req.user.userId,
+      ticketPrice: parseFloat(ticketPrice),
+      ticketAvailable: parseInt(ticketAvailable),
+      image: imagePath,
+      organizer: organizerId,
     });
+
     await event.save();
     res.status(201).json(event);
   } catch (error) {
+    console.error("Error creating event:", error.message);
     res.status(400).json({ error: error.message });
   }
 };
@@ -69,32 +92,54 @@ const getEventById = async (req, res) => {
 const editEvent = async (req, res) => {
   try {
     const { id } = req.params;
-    const updates = req.body;
-
-    // Check if the user is an admin
-    if (req.user.role === "System Admin") {
-      // Allow admin to update any field, including status
-      const event = await Event.findByIdAndUpdate(id, updates, { new: true });
-      if (!event) {
-        return res.status(404).json({ error: "Event not found" });
-      }
-      return res.status(200).json(event);
+    const updates = { ...req.body };
+    
+    // Handle the image upload if there is one
+    if (req.file) {
+      // Extract just the filename from the full path
+      const filename = path.basename(req.file.path);
+      // Store as "uploads/filename" to match express.static middleware
+      updates.image = `uploads/${filename}`;
     }
 
-    delete updates.status; // Prevent organizers from changing the status field
+    // Process date field if provided
+    if (updates.date) {
+      try {
+        // If time is also provided, combine them
+        if (updates.time) {
+          const dateTime = new Date(`${updates.date}T${updates.time}`);
+          updates.date = dateTime;
+        } else {
+          // Just use the date directly
+          updates.date = new Date(updates.date);
+        }
+      } catch (dateError) {
+        console.error("Error parsing date:", dateError);
+        // Keep the original date if parsing fails
+      }
+    }
 
-    // For organizers, restrict updates to their own events
-    const event = await Event.findOneAndUpdate(
-      { _id: id, organizer: req.user.userId }, // Ensure the organizer owns the event
-      updates,
-      { new: true }
-    );
+    // Convert numeric fields
+    if (updates.ticketPrice) {
+      updates.ticketPrice = parseFloat(updates.ticketPrice);
+    }
+    if (updates.ticketAvailable) {
+      updates.ticketAvailable = parseInt(updates.ticketAvailable);
+    }
+
+    // Remove time field as it's not in the model
+    delete updates.time;
+
+    // Update the event
+    const event = await Event.findByIdAndUpdate(id, updates, { new: true });
+    
     if (!event) {
-      return res.status(404).json({ error: "Event not found or unauthorized" });
+      return res.status(404).json({ error: "Event not found" });
     }
 
     res.status(200).json(event);
   } catch (error) {
+    console.error("Error updating event:", error);
     res.status(400).json({ error: error.message });
   }
 };
@@ -104,19 +149,34 @@ const deleteEvent = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Build the filter object dynamically
-    const filter = { _id: id };
-    if (req.user.role === "Organizer") {
-      filter.organizer = req.user.userId; // Add organizer filter only for organizers
-    }
-
-    const event = await Event.findOneAndDelete(filter);
+    // First find the event to get its image path
+    const event = await Event.findById(id);
+    
     if (!event) {
-      return res.status(404).json({ error: "Event not found or unauthorized" });
+      return res.status(404).json({ error: "Event not found" });
     }
 
+    // Delete the image file if it exists
+    if (event.image) {
+      try {
+        // For images stored as uploads/filename, prepend src/ to get physical location
+        const imagePath = path.join(process.cwd(), 'src', event.image);
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+          console.log(`Deleted image file: ${imagePath}`);
+        }
+      } catch (fileError) {
+        console.error("Error deleting image file:", fileError);
+        // Continue with event deletion even if file deletion fails
+      }
+    }
+
+    // Now delete the event from the database
+    await Event.findByIdAndDelete(id);
+    
     res.status(200).json({ message: "Event deleted successfully" });
   } catch (error) {
+    console.error("Error deleting event:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -139,14 +199,25 @@ const getEventAnalytics = async (req, res) => {
   }
 };
 
-// Organizer: Get all events created by the authenticated organizer(for user router)
+// Organizer: Get all events created by the authenticated organizer
 const getOrganizerEvents = async (req, res) => {
   try {
-    const events = await Event.find({ organizer: req.user.userId }).populate(
-      "organizer"
-    );
+    // Get the userId from the correct path in the decoded token
+    const userId = req.user.user?.userId || req.user.userId;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID not found in token" });
+    }
+
+    // Do not filter by status, return all events for this organizer
+    const events = await Event.find({ organizer: userId }).populate("organizer");
+    console.log(events.length, " events found for organizer:", userId);
+    if (events.length === 0) {
+      return res.status(404).json({ message: "No events found for this organizer" });
+    }
     res.status(200).json(events);
   } catch (error) {
+    console.error("Error in getOrganizerEvents:", error);
     res.status(500).json({ error: error.message });
   }
 };

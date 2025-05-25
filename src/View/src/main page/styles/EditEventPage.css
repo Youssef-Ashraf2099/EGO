@@ -1,0 +1,359 @@
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Full-page container */
+.edit-event-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Main form container */
+.edit-event-container form {
+  background-color: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Form title */
+.edit-event-container h2 {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 10px;
+  color: rgb(255, 255, 255);
+}
+
+/* Error message */
+.error-message {
+  color: #d32f2f;
+  background-color: #ffe0e0;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Group container */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: black;
+}
+
+/* Inputs and textarea */
+input,
+select,
+textarea {
+  padding: 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #f9f9f9;
+  transition: border 0.3s;
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #00684a;
+  outline: none;
+}
+
+/* Image preview */
+.image-preview, .current-image {
+  margin-top: 10px;
+}
+
+.image-preview img, .current-image img {
+  max-width: 240px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.image-preview p, .current-image p {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* Button group */
+.button-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* Save button */
+.save-button {
+  flex: 1;
+  padding: 14px;
+  background-color: #efba1a;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.save-button:disabled {
+  background-color: #a8a8a8;
+  cursor: not-allowed;
+}
+
+.save-button:hover:not(:disabled) {
+  background-color: #F6D779;
+}
+
+/* Cancel button */
+.cancel-button {
+  flex: 1;
+  padding: 14px;
+  background-color: #f1f1f1;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.cancel-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .edit-event-container {
+    padding: 20px;
+  }
+
+  .edit-event-container form {
+    padding: 20px;
+  }
+
+  .edit-event-container h2 {
+    font-size: 24px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+/* Add these styles to your existing CSS file */
+
+/* Delete confirmation overlay */
+.delete-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete-confirm-dialog {
+  background-color: white;
+  padding: 32px;
+  border-radius: 16px;
+  width: 400px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  color: black;
+  font-size: 20px;
+}
+
+.delete-confirm-dialog p {
+  margin-bottom: 28px;
+  font-size: 20px;
+  color: black;
+}
+
+.delete-confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.confirm-yes-btn, .confirm-cancel-btn {
+  padding: 14px 32px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.confirm-yes-btn {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.confirm-yes-btn:hover {
+  background-color: #b71c1c;
+}
+
+.confirm-cancel-btn {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.confirm-cancel-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* Delete button */
+.delete-button {
+  flex: 1;
+  padding: 18px;
+  background-color: #d32f2f;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 14px;
+}
+
+.delete-button:hover {
+  background-color: #b71c1c;
+}
+
+/* Update button group for 3 buttons */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+@media (min-width: 768px) {
+  .button-group {
+    flex-direction: row;
+  }
+}
+/* Button group - simplified layout */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+  width: 100%;
+}
+
+/* Simple, modern buttons with consistent sizing */
+.save-button, .cancel-button, .delete-button {
+  flex: 1;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  margin-top: 0; /* Remove any margin that might affect height */
+  height: 56px; /* Set a fixed height for all buttons */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Save button - primary action */
+.save-button {
+  background-color: #efba1a;
+  color: white;
+}
+
+.save-button:hover:not(:disabled) {
+  background-color: #F6D779;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.save-button:disabled {
+  background-color: #a8a8a8;
+  cursor: not-allowed;
+}
+
+/* Cancel button - secondary action */
+.cancel-button {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Delete button - danger action */
+.delete-button {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.delete-button:hover {
+  background-color: #b71c1c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive layout */
+@media (min-width: 768px) {
+  .button-group {
+    flex-direction: row;
+  }
+}
