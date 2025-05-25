@@ -111,7 +111,7 @@ function BookingEvent() {
         // }, 2000);
 
         setTimeout(() => {
-          navigate(`/bookings/${res.data._id}`); // Remove the /api/v1/ prefix
+          window.location.href = `/bookings/${res.data._id}`;
         }, 2000);
       })
       .catch((err) => {
@@ -219,39 +219,39 @@ function BookingEvent() {
 
   // Rest of your component remains the same...
   // Helper to render booking details
-  const renderBooking = (booking) => (
-    <div
-      key={booking._id || booking.id}
-      style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}
-    >
-      <div>
-        <strong>Booking ID:</strong> {booking._id || booking.id}
-      </div>
-      <div>
-        <strong>User:</strong> {booking.user}
-      </div>
-      <div>
-        <strong>Event:</strong> {booking.event}
-      </div>
-      <div>
-        <strong>Number of Tickets:</strong> {booking.numberOfTickets}
-      </div>
-      <div>
-        <strong>Total Price:</strong> {booking.totalPrice}
-      </div>
-      <div>
-        <strong>Status:</strong> {booking.status}
-      </div>
-      <div>
-        <strong>Created At:</strong>{" "}
-        {booking.createdAt ? new Date(booking.createdAt).toLocaleString() : ""}
-      </div>
-      <div>
-        <strong>Updated At:</strong>{" "}
-        {booking.updatedAt ? new Date(booking.updatedAt).toLocaleString() : ""}
-      </div>
+const renderBooking = (booking) => (
+  <div
+    key={booking._id || booking.id}
+    style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}
+  >
+    <div>
+      <strong>Booking ID:</strong> {booking._id || booking.id}
     </div>
-  );
+    <div>
+      <strong>User:</strong> {typeof booking.user === 'object' ? booking.user.name || booking.user._id : booking.user}
+    </div>
+    <div>
+      <strong>Event:</strong> {typeof booking.event === 'object' ? booking.event.title || booking.event.name : booking.event}
+    </div>
+    <div>
+      <strong>Number of Tickets:</strong> {booking.numberOfTickets}
+    </div>
+    <div>
+      <strong>Total Price:</strong> {booking.totalPrice}
+    </div>
+    <div>
+      <strong>Status:</strong> {booking.status}
+    </div>
+    <div>
+      <strong>Created At:</strong>{" "}
+      {booking.createdAt ? new Date(booking.createdAt).toLocaleString() : ""}
+    </div>
+    <div>
+      <strong>Updated At:</strong>{" "}
+      {booking.updatedAt ? new Date(booking.updatedAt).toLocaleString() : ""}
+    </div>
+  </div>
+);
 
   if (Array.isArray(data)) {
     return (

@@ -94,6 +94,10 @@ const EventDetails = () => {
     { name: 'Sold', tickets: event.ticketSold }
   ];
   
+  const handleBooking = () => {
+  // Navigate to the booking page with this event's ID
+  navigate(`/bookings/${id}`);
+};
   return (
     <>
       <div className="detailsBody">
@@ -144,21 +148,20 @@ const EventDetails = () => {
                     <p className="availability"></p>
                   </div>
                 </div>
-
                 <div className="action-buttons">
-                  {! isEventCreator && (
-                    <button className="book-now">Book Now</button>
-                  )}
-                  {canEditEvent && (
-                    <button 
-                      onClick={handleEditEvent} 
-                      className="edit-event"
-                      title="Edit this event"
-                    >
-                      Edit Event
-                    </button>
-                  )}
-                </div>
+                    {!isOrganizer && (
+                      <button className="book-now" onClick={handleBooking}>Book Now</button>
+                    )}
+                    {canEditEvent && (
+                      <button 
+                        onClick={handleEditEvent} 
+                        className="edit-event"
+                        title="Edit this event"
+                      >
+                        Edit Event
+                      </button>
+                    )}
+                  </div>
               </div>
               
                            {/* Event Analytics Section - Only visible to organizers */}

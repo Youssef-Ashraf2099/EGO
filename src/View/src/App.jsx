@@ -38,8 +38,8 @@ function App() {
         <Route path="/api/v1/sendOtp" element={<SendOTP />} />
         <Route path="/api/v1/forgetPassword" element={<ForgotPassword />} />
         <Route path="/api/v1/profile" element={<Profile />} />
-        <Route path="/api/v1/bookings" element={<BookingEvent />} />
-        <Route path="/api/v1/bookings/:id" element={<BookingEvent />} />
+        <Route path="/bookings" element={<BookingEvent />} />
+        <Route path="/bookings/:id" element={<BookingEvent />} />
         <Route path="/api/v1/events/all" element={<AdminEvents />} />
         <Route path="/api/v1/users" element={<AllUsersPage />} />
         <Route path="/aboutus" element={<AboutUs />} />
