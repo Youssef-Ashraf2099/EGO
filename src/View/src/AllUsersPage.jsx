@@ -1,131 +1,95 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./AllUsersPage.css"; // Import the CSS file
 
 const AllUsersPage = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+  const [updatingRole, setUpdatingRole] = useState(false);
 
-  // CSS styles object
-  const styles = {
-    container: {
-      maxWidth: "1200px",
-      margin: "20px auto",
-      padding: "20px",
-      fontFamily: "Arial, sans-serif",
-    },
-    header: {
-      marginBottom: "30px",
-      borderBottom: "2px solid #eaeaea",
-      paddingBottom: "15px",
-    },
-    title: {
-      color: "#333",
-      fontSize: "28px",
-      marginBottom: "10px",
-    },
-    subtitle: {
-      color: "#666",
-      fontSize: "16px",
-    },
-    loading: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "300px",
-      fontSize: "18px",
-      color: "#666",
-    },
-    spinner: {
-      border: "4px solid rgba(0, 0, 0, 0.1)",
-      borderLeft: "4px solid #3498db",
-      borderRadius: "50%",
-      width: "30px",
-      height: "30px",
-      animation: "spin 1s linear infinite",
-      marginRight: "10px",
-    },
-    error: {
-      padding: "20px",
-      backgroundColor: "#ffebee",
-      color: "#d32f2f",
-      borderRadius: "4px",
-      border: "1px solid #ffcdd2",
-      margin: "20px 0",
-    },
-    table: {
-      width: "100%",
-      borderCollapse: "collapse",
-      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-      borderRadius: "5px",
-      overflow: "hidden",
-    },
-    th: {
-      backgroundColor: "#f5f5f5",
-      color: "#333",
-      fontWeight: "bold",
-      padding: "12px 15px",
-      textAlign: "left",
-      borderBottom: "2px solid #ddd",
-    },
-    td: {
-      padding: "12px 15px",
-      borderBottom: "1px solid #ddd",
-    },
-    tr: {
-      transition: "background-color 0.3s",
-    },
-    trHover: {
-      backgroundColor: "#f9f9f9",
-    },
-    active: {
-      backgroundColor: "#e8f5e9",
-      color: "#2e7d32",
-      padding: "5px 10px",
-      borderRadius: "4px",
-      fontWeight: "bold",
-      display: "inline-block",
-    },
-    inactive: {
-      backgroundColor: "#ffebee",
-      color: "#c62828",
-      padding: "5px 10px",
-      borderRadius: "4px",
-      fontWeight: "bold",
-      display: "inline-block",
-    },
-  };
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-useEffect(() => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-
       const response = await axios.get("/api/v1/users", {
         withCredentials: true,
       });
       console.log("Response data:", response.data);
-      // Ensure users is always an array
       setUsers(Array.isArray(response.data) ? response.data : []);
       setLoading(false);
     } catch (err) {
       setError(
         err.response?.data?.error || err.message || "Failed to fetch users"
       );
-      setUsers([]); // fallback to empty array on error
+      setUsers([]);
       setLoading(false);
     }
   };
 
-  fetchUsers();
-  console.log("Users fetched:", users);
-}, []);
+  const handleDeleteUser = async (userId) => {
+    try {
+      setDeleteLoading(true);
+      await axios.delete(`/api/v1/users/${userId}`, {
+        withCredentials: true,
+      });
 
+      // Update users list after deletion
+      setUsers(users.filter((user) => user._id !== userId));
+
+      // Clear confirmation dialog
+      setDeleteConfirm(null);
+      setDeleteLoading(false);
+    } catch (err) {
+      setError(
+        err.response?.data?.error || err.message || "Failed to delete user"
+      );
+      setDeleteLoading(false);
+    }
+  };
+
+  const handleUpdateRole = async () => {
+    if (!editingUser) return;
+
+    try {
+      setUpdatingRole(true);
+      // Updated endpoint to match the router configuration
+      const response = await axios.put(
+        `/api/v1/users/${editingUser.id}`,
+        { role: editingUser.newRole },
+        { withCredentials: true }
+      );
+
+      // Update the users array with the updated user
+      setUsers(
+        users.map((user) =>
+          user._id === editingUser.id
+            ? { ...user, role: editingUser.newRole }
+            : user
+        )
+      );
+
+      // Clear editing state
+      setEditingUser(null);
+      setUpdatingRole(false);
+    } catch (err) {
+      setError(
+        err.response?.data?.error || err.message || "Failed to update user role"
+      );
+      setUpdatingRole(false);
+    }
+  };
   if (loading) {
     return (
-      <div style={styles.container}>
-        <div style={styles.loading}>
-          <div style={styles.spinner}></div>
+      <div className="users-container">
+        <div className="loading-container">
+          <div className="spinner"></div>
           <span>Loading users...</span>
         </div>
       </div>
@@ -134,107 +98,223 @@ useEffect(() => {
 
   if (error) {
     return (
-      <div style={styles.container}>
-        <div style={styles.error}>
+      <div className="users-container">
+        <div className="error-container">
           <h3>Error</h3>
           <p>{error}</p>
+          <button
+            className="retry-button"
+            onClick={() => {
+              setError(null);
+              fetchUsers();
+            }}
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h1 style={styles.title}>User Management</h1>
-        <p style={styles.subtitle}>
+    <div className="users-container">
+      {deleteConfirm && (
+        <div className="delete-confirm-overlay">
+          <div className="delete-confirm-modal">
+            <h3>Confirm User Deletion</h3>
+            <p>
+              Are you sure you want to delete the user{" "}
+              <strong>{deleteConfirm.name}</strong>?
+            </p>
+            <p className="delete-warning">This action cannot be undone!</p>
+
+            <div className="delete-actions">
+              <button
+                className="cancel-button"
+                onClick={() => setDeleteConfirm(null)}
+                disabled={deleteLoading}
+              >
+                Cancel
+              </button>
+              <button
+                className="delete-button"
+                onClick={() => handleDeleteUser(deleteConfirm.id)}
+                disabled={deleteLoading}
+              >
+                {deleteLoading ? (
+                  <span>
+                    <div className="delete-spinner"></div>
+                    Deleting...
+                  </span>
+                ) : (
+                  "Delete User"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {editingUser && (
+        <div className="edit-role-overlay">
+          <div className="edit-role-modal">
+            <h3>Update User Role</h3>
+            <p>
+              Change role for user <strong>{editingUser.name}</strong>
+            </p>
+
+            <div className="role-select-container">
+              <label htmlFor="role-select">Select new role:</label>
+              <select
+                id="role-select"
+                className="role-select"
+                value={editingUser.newRole}
+                onChange={(e) =>
+                  setEditingUser({ ...editingUser, newRole: e.target.value })
+                }
+              >
+                <option value="Standard User">Standard User</option>
+                <option value="Organizer">Organizer</option>
+                <option value="System Admin">System Admin</option>
+              </select>
+            </div>
+
+            <div className="edit-actions">
+              <button
+                className="cancel-button"
+                onClick={() => setEditingUser(null)}
+                disabled={updatingRole}
+              >
+                Cancel
+              </button>
+              <button
+                className="save-button"
+                onClick={handleUpdateRole}
+                disabled={
+                  updatingRole ||
+                  editingUser.currentRole === editingUser.newRole
+                }
+              >
+                {updatingRole ? (
+                  <span>
+                    <div className="update-spinner"></div>
+                    Updating...
+                  </span>
+                ) : (
+                  "Update Role"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="users-header">
+        <h1 className="users-title">User Management</h1>
+        <p className="users-subtitle">
           Total of {users.length} registered users in the system
         </p>
       </div>
 
-      <table style={styles.table}>
+      <table className="users-table">
         <thead>
           <tr>
-            <th style={styles.th}>Name</th>
-            <th style={styles.th}>Email</th>
-            <th style={styles.th}>Role</th>
-            <th style={styles.th}>Created At</th>
-            <th style={styles.th}>Status</th>
+            <th className="users-th">Name</th>
+            <th className="users-th">Email</th>
+            <th className="users-th">Role</th>
+            <th className="users-th">Created At</th>
+            <th className="users-th">Status</th>
+            <th className="users-th">Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.length > 0 ? (
             users.map((user) => (
-              <tr
-                key={user._id}
-                style={styles.tr}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = "#f5f5f5";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = "";
-                }}
-              >
-                <td style={styles.td}>
+              <tr key={user._id} className="users-tr">
+                <td className="users-td">
                   <div style={{ fontWeight: "bold" }}>
                     {`${user.firstName || ""} ${user.lastName || ""}`}
                   </div>
                 </td>
-                <td style={styles.td}>
-                  <a
-                    href={`mailto:${user.email}`}
-                    style={{ color: "#1976d2", textDecoration: "none" }}
-                  >
+                <td className="users-td">
+                  <a href={`mailto:${user.email}`} className="user-email">
                     {user.email}
                   </a>
                 </td>
-                <td style={styles.td}>
+                <td className="users-td">
                   <span
-                    style={{
-                      backgroundColor:
-                        user.role === "System Admin"
-                          ? "#e3f2fd"
-                          : user.role === "Organizer"
-                          ? "#fff8e1"
-                          : "#f1f8e9",
-                      padding: "5px 10px",
-                      borderRadius: "20px",
-                      fontSize: "14px",
-                    }}
+                    className={`role-badge ${
+                      user.role === "System Admin"
+                        ? "role-admin"
+                        : user.role === "Organizer"
+                        ? "role-organizer"
+                        : "role-user"
+                    }`}
                   >
                     {user.role}
                   </span>
                 </td>
-                <td style={styles.td}>
+                <td className="users-td">
                   {new Date(user.createdAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "short",
                     day: "numeric",
                   })}
                 </td>
-                <td style={styles.td}>
-                  <span style={user.isActive ? styles.active : styles.inactive}>
+                <td className="users-td">
+                  <span
+                    className={`user-status ${
+                      user.isActive ? "status-active" : "status-inactive"
+                    }`}
+                  >
                     {user.isActive ? "Active" : "Inactive"}
                   </span>
+                </td>
+                <td className="users-td action-cell">
+                  <div className="action-buttons">
+                    <button
+                      className="edit-role-btn"
+                      onClick={() =>
+                        setEditingUser({
+                          id: user._id,
+                          name:
+                            `${user.firstName || ""} ${
+                              user.lastName || ""
+                            }`.trim() || user.email,
+                          currentRole: user.role,
+                          newRole: user.role,
+                        })
+                      }
+                    >
+                      Edit Role
+                    </button>
+                    <button
+                      className="delete-user-btn"
+                      onClick={() =>
+                        setDeleteConfirm({
+                          id: user._id,
+                          name:
+                            `${user.firstName || ""} ${
+                              user.lastName || ""
+                            }`.trim() || user.email,
+                        })
+                      }
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5" style={{ textAlign: "center", padding: "20px" }}>
+              <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
                 No users found
               </td>
             </tr>
           )}
         </tbody>
       </table>
-
-      <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 };

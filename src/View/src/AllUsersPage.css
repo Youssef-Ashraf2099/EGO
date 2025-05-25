@@ -1,0 +1,393 @@
+.users-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: #111;
+  color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.users-header {
+  margin-bottom: 30px;
+  border-bottom: 2px solid #ffcc00;
+  padding-bottom: 15px;
+}
+
+.users-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffcc00;
+  margin-bottom: 10px;
+}
+
+.users-subtitle {
+  font-size: 16px;
+  color: #ccc;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #222;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.users-th {
+  text-align: left;
+  padding: 16px;
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+.users-tr {
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #333;
+}
+
+.users-tr:hover {
+  background-color: #333 !important;
+}
+
+.users-td {
+  padding: 16px;
+  vertical-align: middle;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.role-admin {
+  background-color: #ffcc00;
+  color: #000;
+}
+
+.role-organizer {
+  background-color: #ffd740;
+  color: #000;
+}
+
+.role-user {
+  background-color: #fff59d;
+  color: #000;
+}
+
+.user-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.status-active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status-inactive {
+  background-color: #f44336;
+  color: white;
+}
+
+.user-email {
+  color: #ffcc00;
+  text-decoration: none;
+}
+
+.user-email:hover {
+  text-decoration: underline;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border: 4px solid rgba(255, 204, 0, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #ffcc00;
+  animation: spin 1s linear infinite;
+}
+
+.error-container {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 5px solid #f44336;
+  margin: 20px 0;
+}
+
+.error-container h3 {
+  color: #f44336;
+  margin-top: 0;
+}
+/* Add to AllUsersPage.css */
+.action-cell {
+  text-align: center;
+}
+
+.delete-user-btn {
+  background-color: #333;
+  color: #ffcc00;
+  border: 1px solid #ffcc00;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.delete-user-btn:hover {
+  background-color: #ffcc00;
+  color: #000;
+}
+
+.delete-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.delete-confirm-modal {
+  background-color: #222;
+  border: 2px solid #ffcc00;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.delete-confirm-modal h3 {
+  color: #ffcc00;
+  margin-top: 0;
+  font-size: 24px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 12px;
+}
+
+.delete-warning {
+  color: #ff6b6b;
+  font-weight: bold;
+  margin: 16px 0;
+}
+
+.delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.cancel-button {
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.cancel-button:hover {
+  background-color: #555;
+}
+
+.delete-button {
+  background-color: #ff3b30;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.delete-button:hover {
+  background-color: #cc2f26;
+}
+
+.delete-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 2px solid #fff;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+.retry-button {
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.edit-role-btn {
+  background-color: #333;
+  color: #ffcc00;
+  border: 1px solid #ffcc00;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.edit-role-btn:hover {
+  background-color: #ffcc00;
+  color: #000;
+}
+
+.edit-role-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.edit-role-modal {
+  background-color: #222;
+  border: 2px solid #ffcc00;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.edit-role-modal h3 {
+  color: #ffcc00;
+  margin-top: 0;
+  font-size: 24px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 12px;
+}
+
+.role-select-container {
+  margin: 24px 0;
+}
+
+.role-select-container label {
+  display: block;
+  margin-bottom: 8px;
+  color: #ccc;
+  font-weight: bold;
+}
+
+.role-select {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #333;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-size: 16px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFCC00%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px top 50%;
+  background-size: 12px auto;
+}
+
+.role-select:focus {
+  outline: none;
+  border-color: #ffcc00;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.save-button {
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.save-button:hover {
+  background-color: #e6b800;
+}
+
+.save-button:disabled {
+  background-color: #665200;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.update-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  border-top: 2px solid #000;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

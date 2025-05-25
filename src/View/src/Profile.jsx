@@ -14,7 +14,7 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const { fetchProfile } = useAuth(); // <-- Use fetchProfile instead of setRole
-  
+
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -87,7 +87,6 @@ const Profile = () => {
     }
   };
 
-
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -122,7 +121,7 @@ const Profile = () => {
         <div className="logo">
           <h2>EGO</h2>
         </div>
-        <nav className="nav-menu">
+        {/* <nav className="nav-menu">
           <ul>
             <li className="active">
               <span className="icon">🏠</span> Dashboard
@@ -137,7 +136,7 @@ const Profile = () => {
               <span className="icon">🚪</span> Logout
             </li>
           </ul>
-        </nav>
+        </nav> */}
       </div>
 
       <div className="main-content">
@@ -231,6 +230,10 @@ const Profile = () => {
                 onClick={handleEditClick}
               >
                 {isEditing ? "Save Changes" : "Edit Profile"}
+              </button>
+
+              <button className="logout-button" onClick={handleLogout}>
+                Logout
               </button>
             </div>
           </div>
