@@ -1,7 +1,7 @@
 /* Base styling with premium font import */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
-/* Container with enhanced background effects */
+/* Container with enhanced animated background */
 .login-container {
   position: relative;
   min-height: 100vh;
@@ -24,9 +24,50 @@
   font-family: "Poppins", sans-serif;
   color: #f5f5f5;
   overflow: hidden;
+  animation: backgroundPulse 15s infinite alternate ease-in-out;
 }
 
-/* Decorative elements */
+/* Animated background effect */
+@keyframes backgroundPulse {
+  0% {
+    background-image: radial-gradient(
+        circle at 10% 20%,
+        rgba(255, 204, 0, 0.05) 0%,
+        transparent 40%
+      ),
+      radial-gradient(
+        circle at 90% 80%,
+        rgba(255, 204, 0, 0.05) 0%,
+        transparent 40%
+      );
+  }
+  50% {
+    background-image: radial-gradient(
+        circle at 30% 50%,
+        rgba(255, 204, 0, 0.08) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 70% 30%,
+        rgba(255, 204, 0, 0.08) 0%,
+        transparent 50%
+      );
+  }
+  100% {
+    background-image: radial-gradient(
+        circle at 80% 10%,
+        rgba(255, 204, 0, 0.07) 0%,
+        transparent 45%
+      ),
+      radial-gradient(
+        circle at 20% 90%,
+        rgba(255, 204, 0, 0.07) 0%,
+        transparent 45%
+      );
+  }
+}
+
+/* Floating light orbs */
 .login-container::before {
   content: "";
   position: absolute;
@@ -37,7 +78,9 @@
   border-radius: 50%;
   background: rgba(255, 204, 0, 0.03);
   filter: blur(80px);
-  animation: float 15s infinite ease-in-out alternate;
+  animation: float 15s infinite ease-in-out alternate,
+    glowPulse 8s infinite ease-in-out;
+  z-index: -1;
 }
 
 .login-container::after {
@@ -50,7 +93,24 @@
   border-radius: 50%;
   background: rgba(255, 204, 0, 0.03);
   filter: blur(80px);
-  animation: float 15s infinite ease-in-out alternate-reverse;
+  animation: float 18s infinite ease-in-out alternate-reverse,
+    glowPulse 10s infinite ease-in-out;
+  z-index: -1;
+}
+
+@keyframes glowPulse {
+  0% {
+    opacity: 0.5;
+    filter: blur(80px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(100px);
+  }
+  100% {
+    opacity: 0.5;
+    filter: blur(80px);
+  }
 }
 
 /* Premium logo styling */
@@ -82,7 +142,7 @@
   position: relative;
   width: 100%;
   max-width: 420px;
-  background-color: rgba(20, 20, 20, 0.9);
+  background-color: rgba(20, 20, 20, 0.85);
   backdrop-filter: blur(10px);
   border-radius: 16px;
   padding: 40px;
@@ -94,6 +154,7 @@
   flex-direction: column;
   gap: 24px;
   transition: transform 0.3s, box-shadow 0.3s;
+  z-index: 1;
 }
 
 .login-form:hover {
@@ -115,7 +176,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: shine 3s linear infinite;
-  text-shadow: 0 5px 15px rgba(255, 204, 0, 0.1);
 }
 
 /* Enhanced subtitle */
@@ -322,10 +382,10 @@
   width: 100%;
 }
 
-/* Add decorative element to form */
+/* Enhanced decorative elements */
 .login-decoration {
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   width: 100%;
   height: 100%;
   top: 0;
@@ -334,6 +394,7 @@
   overflow: hidden;
 }
 
+/* Animated floating particles */
 .login-decoration::before {
   content: "";
   position: absolute;
@@ -345,6 +406,42 @@
   border: 1px solid rgba(255, 204, 0, 0.1);
   border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
   animation: morphBlob 15s infinite alternate ease-in-out;
+}
+
+/* Light streaks */
+.login-decoration::after {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 204, 0, 0.2),
+    transparent
+  );
+  animation: lightStreak 8s infinite ease-in-out;
+  transform: rotate(45deg);
+  top: 40%;
+  left: -100%;
+}
+
+/* Light beam animation */
+@keyframes lightStreak {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.3;
+  }
+  70% {
+    opacity: 0.2;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
 }
 
 /* Autofill styling */
@@ -388,7 +485,7 @@ input:-webkit-autofill:focus {
   }
 }
 
-/* Animations */
+/* Additional animations */
 @keyframes formGlow {
   0% {
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(0, 0, 0, 0.3),
