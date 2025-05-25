@@ -59,8 +59,9 @@ const AllUsersPage = () => {
 
     try {
       setUpdatingRole(true);
+      // Updated endpoint to match the router configuration
       const response = await axios.put(
-        `/api/v1/users/${editingUser.id}/role`,
+        `/api/v1/users/${editingUser.id}`,
         { role: editingUser.newRole },
         { withCredentials: true }
       );
@@ -84,7 +85,6 @@ const AllUsersPage = () => {
       setUpdatingRole(false);
     }
   };
-
   if (loading) {
     return (
       <div className="users-container">
