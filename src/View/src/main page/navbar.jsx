@@ -33,23 +33,24 @@ const Navbar = () => {
               Get Started
             </Link>
           ) : (
-            <Link to="profile" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+            <Link to="/profile" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
               Dashboard
             </Link>
           )}
-          {/* Always show Events */}
-          <Link to="/events" className="nav-link" onClick={() => setMenuOpen(false)}>
-            Events
-          </Link>
-          {/* Role-based links */}
-          {role === "Standard User" && (
-            <Link to="/book-events" className="nav-link" onClick={() => setMenuOpen(false)}>
-              Book Events
+          {/* Always show Events, but show "My Events" if Organizer */}
+          {role === "Organizer" ? (
+            <Link to="/events" className="nav-link" onClick={() => setMenuOpen(false)}>
+              My Events
+            </Link>
+          ) : (
+            <Link to="/events" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Events
             </Link>
           )}
-          {role === "Organizer" && (
-            <Link to="/manage-events" className="nav-link" onClick={() => setMenuOpen(false)}>
-              Manage Events
+          {/* Role-based links */}
+          {role === "Standard User" && (
+            <Link to="/bookings" className="nav-link" onClick={() => setMenuOpen(false)}>
+              My Bookings
             </Link>
           )}
           {role === "System Admin" && (
