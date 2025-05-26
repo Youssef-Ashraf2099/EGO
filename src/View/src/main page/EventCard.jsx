@@ -5,6 +5,7 @@ import { useState,useEffect } from "react";
 const port = import.meta.env.VITE_API_PORT || 3500;
 
 const EventCard = ({ event }) => {
+  
   const eventDate = new Date(event.date)
   const months = ["jan","feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
   const [isEventEnded, setIsEventEnded] = useState(false);
@@ -25,8 +26,8 @@ const EventCard = ({ event }) => {
       <div className="event-image-container">
         <img src={isEventEnded?"https://ik.imagekit.io/wuxgiazko/hero-img-01%20(2).jpg?updatedAt=1748259740583":event.image ? `http://localhost:${port}/${event.image}` : "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924"} alt={event.title} className="event-image" />
         <div className="event-date">
-          <span className="event-month">{months[eventDate.getMonth()-1]}</span>
-          <span className="event-day">{eventDate.getDay()}</span>
+          <span className="event-month">{months[eventDate.getMonth()]}</span>
+          <span className="event-day">{eventDate.getDate()}</span>
         </div>
       </div>
       <div className="event-details">

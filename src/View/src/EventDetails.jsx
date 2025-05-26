@@ -18,6 +18,7 @@ import {
 const port = import.meta.env.VITE_API_PORT || 3500;
 
 const EventDetails = () => {
+  
   const { id } = useParams();
   const navigate = useNavigate();
   const [event, setEvent] = useState(null);
