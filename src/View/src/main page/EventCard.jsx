@@ -1,30 +1,31 @@
 import "./styles/EventCard.css"
 import { CiGrid41 } from "react-icons/ci";
-import { FaEdit } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useAuth } from "../AuthContext"; // Import auth context
- 
-const Port = import.meta.env.VITE_API_PORT || 3500;
+import { FaMoneyBill1Wave } from "react-icons/fa6";
+import { useState,useEffect } from "react";
 
 const EventCard = ({ event }) => {
-  const { user } = useAuth(); // Get current user
-  
-  // Check if current user is the creator of this event
-  const isCreator = user && event.organizer != null && 
-                   String(user._id) === String(event.organizer._id);
-  
-  // Create proper date object from event date
-  const eventDate = new Date(event.date);
-  
-  // Month names array (all lowercase to match original)
-  const months = ["jan","feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-  
+  const eventDate = new Date(event.date)
+  const months = ["jan","feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+  const [isEventEnded, setIsEventEnded] = useState(false);
+   useEffect(() => {
+    if (eventDate < new Date()) {
+      setIsEventEnded(true);
+    }
+  }, [eventDate]);
+
   return (
     <div className="event-card">
-      {/* State indicator - only shown if user is the creator */}
-      {isCreator && (
-        <div className="event-state-indicator">
-          <span className="event-state">{event.status || "Active"}</span>
+      <a href={!isEventEnded?"/events/" + event._id:"#"} onClick={e=>{
+        if (isEventEnded) {
+          e.preventDefault();
+          alert("This event has ended.");
+        }
+      }}>
+      <div className="event-image-container">
+        <img src={isEventEnded?"https://ik.imagekit.io/wuxgiazko/hero-img-01%20(2).jpg?updatedAt=1748259740583":event.image ? event.image : "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924"} alt={event.title} className="event-image" />
+        <div className="event-date">
+          <span className="event-month">{months[eventDate.getMonth()-1]}</span>
+          <span className="event-day">{eventDate.getDay()}</span>
         </div>
       )}
       
