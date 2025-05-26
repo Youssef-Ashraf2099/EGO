@@ -78,14 +78,100 @@ body {
 
 .logo {
   display: flex;
+  content: center;
   align-items: center;
+
+  width: 100%;
+  position: relative;
+  padding: 10px 0;
 }
 
 .logo h2 {
   color: var(--yellow);
-  font-size: 28px;
+  font-size: 32px;
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  text-align: center;
+  text-transform: uppercase;
+  position: relative;
+  padding: 0 15px;
+
+  /* Text glow effect */
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.7), 0 0 20px rgba(255, 215, 0, 0.5),
+    0 0 30px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.1);
+
+  /* Metallic gradient text effect */
+  background: linear-gradient(to bottom, #fff6a9 0%, #ffdd00 50%, #ffb700 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Add a subtle border/outline */
+  -webkit-text-stroke: 1px rgba(255, 215, 0, 0.3);
+
+  /* Animation for pulsing glow */
+  animation: logoPulse 2s infinite alternate ease-in-out,
+    logoShimmer 3s infinite linear;
+
+  /* Hover effect */
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.logo h2:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+/* Pulsing animation */
+@keyframes logoPulse {
+  0% {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7),
+      0 0 20px rgba(255, 215, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.3);
+  }
+  100% {
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.9),
+      0 0 25px rgba(255, 215, 0, 0.7), 0 0 35px rgba(255, 215, 0, 0.5),
+      0 0 45px rgba(255, 215, 0, 0.3);
+  }
+}
+
+/* Shimmering effect animation */
+@keyframes logoShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Add this optional glow behind the logo */
+.logo::before {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 40px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 215, 0, 0.3) 0%,
+    rgba(255, 215, 0, 0) 70%
+  );
+  border-radius: 50%;
+  filter: blur(10px);
+  z-index: -1;
+  opacity: 0.7;
+  animation: logoGlowPulse 2s infinite alternate ease-in-out;
+}
+
+@keyframes logoGlowPulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1.2);
+  }
 }
 
 .nav-links {
