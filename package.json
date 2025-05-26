@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "cd src/View && npm install && npm run build",
+    "build": "cd src/View && npm install --omit=dev && npm run build",
     "start": "npm install && cd src/View && npm install && cd ../.. && node index.js",
     "dev": "nodemon index.js",
     "deploy": "npm run build && vercel --prod"
