@@ -9,7 +9,7 @@ import ForgotPassword from "./forgotPassword";
 import Footer from "./footer";
 import AboutUs from "./AboutUs";
 import Terms from "./Terms";
-import Privacy from "./privacy";
+import Privacy from "./Privacy";
 import Navbar from "./main page/navbar";
 import HomePage from "./HomePage";
 import EventPage from "./EventPage";
@@ -66,7 +66,9 @@ function App() {
         <Route
           path="profile"
           element={
-            <ProtectedRoute allowedRoles={["Standard User", "Organizer", "System Admin"]}>
+            <ProtectedRoute
+              allowedRoles={["Standard User", "Organizer", "System Admin"]}
+            >
               <Profile />
             </ProtectedRoute>
           }
