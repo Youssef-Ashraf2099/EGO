@@ -15,13 +15,11 @@ function BookingEvent() {
 
   const PORT = import.meta.env.VITE_API_PORT || 4000;
 
-  // Fetch event details if ID is provided
   useEffect(() => {
     console.log("useEffect running, id:", id);
 
-    // If we have an ID, check if it's a booking ID or an event ID
     if (id) {
-      // First try to get booking details
+      // Try to fetch booking first
       axios
         .get(`http://localhost:${PORT}/api/v1/bookings/${id}`, {
           withCredentials: true,
@@ -33,7 +31,7 @@ function BookingEvent() {
         })
         .catch((err) => {
           if (err.response && err.response.status === 404) {
-            // If booking not found, try to get event details for booking form
+            // Fallback to event data
             console.log("Booking not found, trying to fetch event details");
             axios
               .get(`http://localhost:${PORT}/api/v1/events/${id}`, {
@@ -55,7 +53,7 @@ function BookingEvent() {
           }
         });
     } else {
-      // If no ID, fetch all user bookings
+      // Fetch all bookings
       axios
         .get(`http://localhost:${PORT}/api/v1/users/bookings`, {
           withCredentials: true,
@@ -77,6 +75,15 @@ function BookingEvent() {
     window.location.href = `/bookings/${bookingId}`;
   };
 
+  // ✅ Add this function to remove cancelled booking
+  const handleCancel = (cancelledId) => {
+    if (Array.isArray(data)) {
+      setData(data.filter((booking) => booking._id !== cancelledId));
+    } else if (data && data._id === cancelledId) {
+      setData(null); // For single booking view
+    }
+  };
+
   if (loading)
     return (
       <div className="loading-container">
@@ -90,21 +97,19 @@ function BookingEvent() {
       <div className="error-container alert alert-danger">Error: {error}</div>
     );
 
-  // Render booking form if we have an event
   if (event) {
     return (
       <EventBookingForm event={event} navigateToBooking={navigateToBooking} />
     );
   }
 
-  // If no data, show message
   if (!data) return <div className="no-data-message">No booking(s) found.</div>;
 
-  // Render booking details
   return (
     <BookingDetails
       data={data}
       onBookingClick={(id) => navigate(`/bookings/${id}`)}
+      onCancel={handleCancel} // ✅ Now cancellations update the UI
     />
   );
 }
