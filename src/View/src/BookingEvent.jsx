@@ -4,6 +4,7 @@ import axios from "axios";
 import EventBookingForm from "./EventBookingForm";
 import BookingDetails from "./BookingDetails";
 import "./BookingEvent.css";
+
 function BookingEvent() {
   const { id } = useParams();
   const [data, setData] = useState(null);
@@ -78,7 +79,7 @@ function BookingEvent() {
 
   if (loading)
     return (
-      <div className="container mt-5 text-center">
+      <div className="loading-container">
         <div className="spinner-border" role="status"></div>
         <p>Loading...</p>
       </div>
@@ -86,7 +87,7 @@ function BookingEvent() {
 
   if (error)
     return (
-      <div className="container mt-5 alert alert-danger">Error: {error}</div>
+      <div className="error-container alert alert-danger">Error: {error}</div>
     );
 
   // Render booking form if we have an event
@@ -97,12 +98,7 @@ function BookingEvent() {
   }
 
   // If no data, show message
-  if (!data)
-    return (
-      <div className="container mt-5 alert alert-info">
-        No booking(s) found.
-      </div>
-    );
+  if (!data) return <div className="no-data-message">No booking(s) found.</div>;
 
   // Render booking details
   return (

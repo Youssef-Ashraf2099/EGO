@@ -1,57 +1,47 @@
 import React from "react";
+import "./BookingDetails.css";
 
 function BookingDetails({ data, onBookingClick }) {
   // Helper to render booking details
   const renderBooking = (booking, onClick) => (
     <div
       key={booking._id || booking.id}
-      style={{
-        border: "2px solid gold",
-        margin: "10px",
-        padding: "16px",
-        cursor: onClick ? "pointer" : "default",
-        background: "#fff",
-        color: "#b8860b", // golden text
-        borderRadius: "8px",
-        boxShadow: "0 2px 8px rgba(218,165,32,0.08)",
-        fontWeight: 500,
-      }}
+      className={`booking-card ${onClick ? "clickable" : ""}`}
       onClick={onClick ? () => onClick(booking._id || booking.id) : undefined}
       title={onClick ? "View booking details" : undefined}
     >
-      <div>
-        <strong style={{ color: "#b8860b" }}>Booking ID:</strong>{" "}
+      <div className="booking-detail">
+        <span className="booking-label">Booking ID:</span>{" "}
         {booking._id || booking.id}
       </div>
-      <div>
-        <strong style={{ color: "#b8860b" }}>User:</strong>{" "}
+      <div className="booking-detail">
+        <span className="booking-label">User:</span>{" "}
         {typeof booking.user === "object"
           ? booking.user.name || booking.user._id
           : booking.user}
       </div>
-      <div>
-        <strong style={{ color: "#b8860b" }}>Event:</strong>{" "}
+      <div className="booking-detail">
+        <span className="booking-label">Event:</span>{" "}
         {typeof booking.event === "object"
           ? booking.event.title || booking.event.name
           : booking.event}
       </div>
-      <div>
-        <strong style={{ color: "#b8860b" }}>Number of Tickets:</strong>{" "}
+      <div className="booking-detail">
+        <span className="booking-label">Number of Tickets:</span>{" "}
         {booking.numberOfTickets}
       </div>
-      <div>
-        <strong style={{ color: "#b8860b" }}>Total Price:</strong>{" "}
-        {booking.totalPrice}
+      <div className="booking-detail">
+        <span className="booking-label">Total Price:</span> {booking.totalPrice}
       </div>
-      <div>
-        <strong style={{ color: "#b8860b" }}>Status:</strong> {booking.status}
+      <div className="booking-detail">
+        <span className="booking-label">Status:</span> {booking.status}
       </div>
-      <div>
-        <strong style={{ color: "#b8860b" }}>Created At:</strong>{" "}
+      <div className="booking-detail">
+        <span className="booking-label">Created At:</span>{" "}
         {booking.createdAt ? new Date(booking.createdAt).toLocaleString() : ""}
       </div>
-      <div>
-        <strong style={{ color: "#b8860b" }}>Updated At:</strong>{" "}
+      <div className="booking-detail">
+        <span className="booking-label">Updated At:</span>{" "}
         {booking.updatedAt ? new Date(booking.updatedAt).toLocaleString() : ""}
       </div>
     </div>
@@ -59,19 +49,21 @@ function BookingDetails({ data, onBookingClick }) {
 
   if (Array.isArray(data)) {
     return (
-      <div className="container mt-4">
-        <h2>Your Bookings</h2>
+      <div className="bookings-container container">
+        <h2 className="booking-title">Your Bookings</h2>
         {data.length > 0 ? (
           data.map((booking) => renderBooking(booking, onBookingClick))
         ) : (
-          <p>You don't have any bookings yet.</p>
+          <p className="no-bookings-message">
+            You don't have any bookings yet.
+          </p>
         )}
       </div>
     );
   } else {
     return (
-      <div className="container mt-4">
-        <h2>Booking Details</h2>
+      <div className="bookings-container container">
+        <h2 className="booking-title">Booking Details</h2>
         {renderBooking(data, null)}
       </div>
     );

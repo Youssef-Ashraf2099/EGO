@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./EventBookingForm.css";
 
 function EventBookingForm({ event, navigateToBooking }) {
   const [numberOfTickets, setNumberOfTickets] = useState(1);
@@ -48,54 +49,56 @@ function EventBookingForm({ event, navigateToBooking }) {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="event-booking-container container">
       <h2>Book Tickets for {event.name}</h2>
-      <div className="card mb-4">
+      <div className="event-card card">
         <div className="card-body">
-          <h5 className="card-title">{event.name}</h5>
-          <p className="card-text">{event.description}</p>
-          <div className="row mb-3">
-            <div className="col-md-6">
-              <p>
-                <strong>Date:</strong>{" "}
+          <h5 className="event-title">{event.name}</h5>
+          <p className="event-description">{event.description}</p>
+          <div className="event-details-row row">
+            <div className="event-details-column col-md-6">
+              <p className="event-detail">
+                <span className="detail-label">Date:</span>{" "}
                 {new Date(event.date).toLocaleDateString()}
               </p>
-              <p>
-                <strong>Time:</strong>{" "}
+              <p className="event-detail">
+                <span className="detail-label">Time:</span>{" "}
                 {new Date(event.date).toLocaleTimeString()}
               </p>
-              <p>
-                <strong>Location:</strong> {event.location}
+              <p className="event-detail">
+                <span className="detail-label">Location:</span> {event.location}
               </p>
             </div>
-            <div className="col-md-6">
-              <p>
-                <strong>Category:</strong> {event.category}
+            <div className="event-details-column col-md-6">
+              <p className="event-detail">
+                <span className="detail-label">Category:</span> {event.category}
               </p>
-              <p>
-                <strong>Price per Ticket:</strong> ${event.ticketPrice}
+              <p className="event-detail">
+                <span className="detail-label">Price per Ticket:</span> $
+                {event.ticketPrice}
               </p>
-              <p>
-                <strong>Available Tickets:</strong> {event.ticketAvailable}
+              <p className="event-detail">
+                <span className="detail-label">Available Tickets:</span>{" "}
+                {event.ticketAvailable}
               </p>
             </div>
           </div>
 
           {bookingSuccess && (
-            <div className="alert alert-success">
+            <div className="success-message">
               Booking successful! Redirecting to booking details...
             </div>
           )}
 
           {bookingError && (
-            <div className="alert alert-danger">Error: {bookingError}</div>
+            <div className="error-message">Error: {bookingError}</div>
           )}
 
-          <div className="form-group mb-3">
+          <div className="ticket-form-group form-group">
             <label htmlFor="numberOfTickets">Number of Tickets:</label>
             <input
               type="number"
-              className="form-control"
+              className="ticket-input form-control"
               id="numberOfTickets"
               value={numberOfTickets}
               onChange={handleTicketChange}
@@ -104,12 +107,12 @@ function EventBookingForm({ event, navigateToBooking }) {
             />
           </div>
 
-          <div className="mb-3">
+          <div className="total-price">
             <strong>Total Price:</strong> ${totalPrice}
           </div>
 
           <button
-            className="btn btn-primary"
+            className="book-button btn btn-primary"
             onClick={handleBooking}
             disabled={bookingSuccess || event.ticketAvailable < 1}
           >
