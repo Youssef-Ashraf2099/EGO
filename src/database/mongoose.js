@@ -1,14 +1,13 @@
 const mongoose = require("mongoose");
-const User = require("../models/User");
+const User = require("../models/user");
 const Event = require("../models/event");
 const Booking = require("../models/booking");
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
-
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 //mongoose connection
 const uri = process.env.DATABASE_URL;
-console.log(process.env.DATABASE_URL)
+console.log(process.env.DATABASE_URL);
 
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -92,9 +91,10 @@ mongoose
       console.log("Sample data inserted successfully");
 
       // Fetch and print organizer's events
-      const organizerWithEvents = await User.findById(organizer._id).populate('events').exec();
+      const organizerWithEvents = await User.findById(organizer._id)
+        .populate("events")
+        .exec();
       console.log("Organizer's Events:", organizerWithEvents.events);
-
     } catch (error) {
       console.error("Error inserting sample data:", error);
     }
