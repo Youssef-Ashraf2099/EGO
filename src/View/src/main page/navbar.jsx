@@ -28,15 +28,7 @@ const Navbar = () => {
 
         <nav className={`nav-menu${menuOpen ? " flex" : ""}`}>
           {/* Show "Get Started" only if not logged in, otherwise show Dashboard */}
-          {!role ? (
-            <Link to="/api/v1/register" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
-              Get Started
-            </Link>
-          ) : (
-            <Link to="/profile" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
-              Dashboard
-            </Link>
-          )}
+          
           {/* Always show Events, but show "My Events" if Organizer */}
           {role === "Organizer" ? (
             <Link to="/events" className="nav-link" onClick={() => setMenuOpen(false)}>
@@ -64,6 +56,11 @@ const Navbar = () => {
             </>
           )}
           {/* Login/Logout link */}
+          
+          {/* Additional static links */}
+          <a href="/aboutus" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Contact
+          </a>
           {!role ? (
             <Link to="/api/v1/login" className="nav-link" onClick={() => setMenuOpen(false)}>
               Login
@@ -82,10 +79,15 @@ const Navbar = () => {
               Logout
             </Link>
           )}
-          {/* Additional static links */}
-          <a href="/aboutus" className="nav-link" onClick={() => setMenuOpen(false)}>
-            Contact
-          </a>
+          {!role ? (
+            <Link to="/api/v1/register" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+              Get Started
+            </Link>
+          ) : (
+            <Link to="/profile" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+              Profile
+            </Link>
+          )}
         </nav>
 
         <button className="mobile-menu-button" onClick={handleMenuToggle}>

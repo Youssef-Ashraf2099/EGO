@@ -105,9 +105,7 @@ const Profile = () => {
   return (
     <div className="dashboard">
       <div className="sidebar">
-        <div className="logo">
-          <h2>EGO</h2>
-        </div>
+        
         {/* <nav className="nav-menu">
           <ul>
             <li className="active">

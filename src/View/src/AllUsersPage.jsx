@@ -233,7 +233,7 @@ const AllUsersPage = () => {
               <tr key={user._id} className="users-tr">
                 <td className="users-td">
                   <div style={{ fontWeight: "bold" }}>
-                    {`${user.firstName || ""} ${user.lastName || ""}`}
+                    {`${user.name || ""}`}
                   </div>
                 </td>
                 <td className="users-td">

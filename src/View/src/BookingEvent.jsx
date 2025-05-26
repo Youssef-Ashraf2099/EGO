@@ -137,10 +137,10 @@ function BookingEvent() {
   if (event) {
     return (
       <div className="container mt-4">
-        <h2>Book Tickets for {event.name}</h2>
+        <h2>Book Tickets for {event.title}</h2>
         <div className="card mb-4">
           <div className="card-body">
-            <h5 className="card-title">{event.name}</h5>
+            <h5 className="card-title">{event.title}</h5>
             <p className="card-text">{event.description}</p>
             <div className="row mb-3">
               <div className="col-md-6">

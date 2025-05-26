@@ -110,7 +110,7 @@ const AdminEvents = () => {
         <tbody>
           {events.map((event) => (
             <tr key={event._id}>
-              <td>{event.name}</td>
+              <td>{event.title}</td>
               <td>{event.organizer?.name || "Unknown organizer"}</td>
               <td>{new Date(event.date).toLocaleDateString()}</td>
               <td className={`status-${event.status}`}>{event.status}</td>

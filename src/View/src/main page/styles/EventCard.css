@@ -22,6 +22,7 @@
 .category-text{
   font-size: 14px;
   color: #555;
+  margin-right: 12px;
 }
 .event-image-container {
   position: relative;
@@ -95,6 +96,15 @@
 .event-state:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.money-icon {
+  font-size: 18px;
+  color: #efba1a;
+}
+.ticket-price-text{
+  font-size: 14px;
+  color: #555;
+  margin-left: 5px;
 }
 
  
