@@ -2,6 +2,7 @@ import "./styles/EventCard.css"
 import { CiGrid41 } from "react-icons/ci";
 import { FaMoneyBill1Wave } from "react-icons/fa6";
 import { useState,useEffect } from "react";
+const port = import.meta.env.VITE_API_PORT || 3500;
 
 const EventCard = ({ event }) => {
   const eventDate = new Date(event.date)
@@ -22,7 +23,7 @@ const EventCard = ({ event }) => {
         }
       }}>
       <div className="event-image-container">
-        <img src={isEventEnded?"https://ik.imagekit.io/wuxgiazko/hero-img-01%20(2).jpg?updatedAt=1748259740583":event.image ? event.image : "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924"} alt={event.title} className="event-image" />
+        <img src={isEventEnded?"https://ik.imagekit.io/wuxgiazko/hero-img-01%20(2).jpg?updatedAt=1748259740583":event.image ? `http://localhost:${port}/${event.image}` : "https://ik.imagekit.io/wuxgiazko/Rectangle%2012.svg?updatedAt=1747772816924"} alt={event.title} className="event-image" />
         <div className="event-date">
           <span className="event-month">{months[eventDate.getMonth()-1]}</span>
           <span className="event-day">{eventDate.getDay()}</span>

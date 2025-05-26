@@ -89,7 +89,7 @@ const EventsListing = ({isHome, searchWord='', filterCategory = "category", fite
             </div>
           ) : (
             isHome
-              ? events.slice(0, 6).map((event) => (
+              ? events.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 6).map((event) => (
                   <EventCard key={event._id} event={event} />
                 ))
               : events.filter(item => {
@@ -106,7 +106,7 @@ const EventsListing = ({isHome, searchWord='', filterCategory = "category", fite
                     : true;
 
                   return matchesCategory && matchesLocation;
-                })
+                }).sort((a, b) => new Date(b.date) - new Date(a.date))
                 .filter(item => searchWord.toLowerCase() === '' ? item : item.title.toLowerCase().includes(searchWord.toLowerCase()))
                 .map((event) => (
                   <EventCard key={event._id} event={event} />
@@ -118,7 +118,7 @@ const EventsListing = ({isHome, searchWord='', filterCategory = "category", fite
           {isHome ? (
             <a href="/events">
               <button className="btn btn-outline load-more-button">
-                {isOrganizer ? "View My Events" : "Show All Events"}
+                {isOrganizer ? "View My Events" : "Show All"}
               </button>
             </a>
           ) : (
