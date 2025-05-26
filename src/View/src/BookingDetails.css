@@ -1,0 +1,46 @@
+.bookings-container {
+  margin-top: 2rem;
+  max-width: 900px;
+}
+
+.booking-title {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.booking-card {
+  border: 2px solid #daa520; /* gold */
+  margin: 10px 0;
+  padding: 16px;
+  background: #fff;
+  color: #b8860b; /* golden text */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(218, 165, 32, 0.08);
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.booking-card.clickable {
+  cursor: pointer;
+}
+
+.booking-card.clickable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(218, 165, 32, 0.15);
+}
+
+.booking-detail {
+  margin-bottom: 0.5rem;
+}
+
+.booking-label {
+  color: #b8860b;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.no-bookings-message {
+  padding: 1rem;
+  text-align: center;
+  color: #666;
+}
