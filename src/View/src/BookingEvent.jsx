@@ -93,79 +93,79 @@ function BookingEvent() {
   // Render booking form if we have an event
   if (event) {
     return (
-
-      <div className="container mt-4">
-        <h2>Book Tickets for {event.title}</h2>
-        <div className="card mb-4">
-          <div className="card-body">
-            <h5 className="card-title">{event.title}</h5>
-            <p className="card-text">{event.description}</p>
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <p>
-                  <strong>Date:</strong>{" "}
-                  {new Date(event.date).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Time:</strong>{" "}
-                  {new Date(event.date).toLocaleTimeString()}
-                </p>
-                <p>
-                  <strong>Location:</strong> {event.location}
-                </p>
+      <>
+        <div className="container mt-4">
+          <h2>Book Tickets for {event.title}</h2>
+          <div className="card mb-4">
+            <div className="card-body">
+              <h5 className="card-title">{event.title}</h5>
+              <p className="card-text">{event.description}</p>
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <p>
+                    <strong>Date:</strong>{" "}
+                    {new Date(event.date).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>Time:</strong>{" "}
+                    {new Date(event.date).toLocaleTimeString()}
+                  </p>
+                  <p>
+                    <strong>Location:</strong> {event.location}
+                  </p>
+                </div>
+                <div className="col-md-6">
+                  <p>
+                    <strong>Category:</strong> {event.category}
+                  </p>
+                  <p>
+                    <strong>Price per Ticket:</strong> ${event.ticketPrice}
+                  </p>
+                  <p>
+                    <strong>Available Tickets:</strong> {event.ticketAvailable}
+                  </p>
+                </div>
               </div>
-              <div className="col-md-6">
-                <p>
-                  <strong>Category:</strong> {event.category}
-                </p>
-                <p>
-                  <strong>Price per Ticket:</strong> ${event.ticketPrice}
-                </p>
-                <p>
-                  <strong>Available Tickets:</strong> {event.ticketAvailable}
-                </p>
+
+              {bookingSuccess && (
+                <div className="alert alert-success">
+                  Booking successful! Redirecting to booking details...
+                </div>
+              )}
+
+              {bookingError && (
+                <div className="alert alert-danger">Error: {bookingError}</div>
+              )}
+
+              <div className="form-group mb-3">
+                <label htmlFor="numberOfTickets">Number of Tickets:</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="numberOfTickets"
+                  value={numberOfTickets}
+                  onChange={handleTicketChange}
+                  min="1"
+                  max={event.ticketAvailable}
+                />
               </div>
-            </div>
 
-            {bookingSuccess && (
-              <div className="alert alert-success">
-                Booking successful! Redirecting to booking details...
+              <div className="mb-3">
+                <strong>Total Price:</strong> ${totalPrice}
               </div>
-            )}
 
-            {bookingError && (
-              <div className="alert alert-danger">Error: {bookingError}</div>
-            )}
-
-            <div className="form-group mb-3">
-              <label htmlFor="numberOfTickets">Number of Tickets:</label>
-              <input
-                type="number"
-                className="form-control"
-                id="numberOfTickets"
-                value={numberOfTickets}
-                onChange={handleTicketChange}
-                min="1"
-                max={event.ticketAvailable}
-              />
+              <button
+                className="btn btn-primary"
+                onClick={handleBooking}
+                disabled={bookingSuccess || event.ticketAvailable < 1}
+              >
+                Book Now
+              </button>
             </div>
-
-            <div className="mb-3">
-              <strong>Total Price:</strong> ${totalPrice}
-            </div>
-
-            <button
-              className="btn btn-primary"
-              onClick={handleBooking}
-              disabled={bookingSuccess || event.ticketAvailable < 1}
-            >
-              Book Now
-            </button>
           </div>
         </div>
-      </div>
-      <EventBookingForm event={event} navigateToBooking={navigateToBooking} />
-
+        <EventBookingForm event={event} navigateToBooking={navigateToBooking} />
+      </>
     );
   }
 
