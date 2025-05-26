@@ -5,17 +5,20 @@ const Port = import.meta.env.VITE_API_PORT || 3001;
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // Store the entire user object instead of just role
-  const [role, setRole] = useState(null); // Keep role for backward compatibility
+  const [user, setUser] = useState(null);
+  const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true); // <-- Add loading state
 
   const fetchProfile = async () => {
     try {
       const res = await axios.get(`http://localhost:${Port}/api/v1/users/profile`, { withCredentials: true });
-      setUser(res.data); // Store entire user object
-      setRole(res.data.role); // Keep role for backward compatibility
+      setUser(res.data);
+      setRole(res.data.role);
     } catch {
       setUser(null);
       setRole(null);
+    } finally {
+      setLoading(false); // <-- Set loading to false after fetch
     }
   };
 
@@ -24,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, role, fetchProfile }}>
+    <AuthContext.Provider value={{ user, role, fetchProfile, loading }}>
       {children}
     </AuthContext.Provider>
   );

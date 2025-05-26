@@ -27,7 +27,7 @@ import { AuthProvider } from "./AuthContext";
 
 function App() {
   return (
-    <AuthProvider>
+    <>
       <Navbar />
       <Routes>
         {/* Organizer only */}
@@ -115,7 +115,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />
-    </AuthProvider>
+    </>
   );
 }
 
