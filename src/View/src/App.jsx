@@ -15,7 +15,7 @@ import HomePage from "./HomePage";
 import EventPage from "./EventPage";
 import Profile from "./Profile";
 import EventDetails from "./EventDetails";
-import PageNotFound from "./pageNotFound";
+import PageNotFound from "./PageNotFound";
 import BookingEvent from "./BookingEvent";
 import AllUsersPage from "./AllUsersPage";
 import AdminEvents from "./AdminEvents";
