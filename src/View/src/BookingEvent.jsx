@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import EventBookingForm from "./EventBookingForm";
+import BookingDetails from "./BookingDetails";
+import "./BookingEvent.css";
 
 function BookingEvent() {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
-  // For booking functionality
   const [event, setEvent] = useState(null);
-  const [numberOfTickets, setNumberOfTickets] = useState(1);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [bookingError, setBookingError] = useState(null);
+  const navigate = useNavigate();
 
   const PORT = import.meta.env.VITE_API_PORT || 4000;
 
@@ -45,7 +42,6 @@ function BookingEvent() {
               .then((eventRes) => {
                 console.log("Event found:", eventRes.data);
                 setEvent(eventRes.data);
-                setTotalPrice(eventRes.data.ticketPrice);
                 setLoading(false);
               })
               .catch((eventErr) => {
@@ -77,52 +73,13 @@ function BookingEvent() {
     }
   }, [id, navigate]);
 
-  // Handle ticket quantity change
-  const handleTicketChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (value > 0 && value <= (event?.ticketAvailable || 0)) {
-      setNumberOfTickets(value);
-      setTotalPrice(value * event.ticketPrice);
-    }
-  };
-
-  // Handle booking submission
-  const handleBooking = () => {
-    setBookingError(null);
-    setBookingSuccess(false);
-
-    axios
-      .post(
-        `http://localhost:${PORT}/api/v1/bookings`,
-        {
-          eventId: event._id,
-          numberOfTickets: numberOfTickets,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log("Booking successful:", res.data);
-        setBookingSuccess(true);
-        // Navigate to the booking details page after a short delay
-        // setTimeout(() => {
-        //   navigate(`/api/v1/bookings/${res.data._id}`);
-        // }, 2000);
-
-        setTimeout(() => {
-          window.location.href = `/bookings/${res.data._id}`;
-        }, 2000);
-      })
-      .catch((err) => {
-        console.error("Booking error:", err);
-        setBookingError(err.response?.data?.error || "Failed to book tickets");
-      });
+  const navigateToBooking = (bookingId) => {
+    window.location.href = `/bookings/${bookingId}`;
   };
 
   if (loading)
     return (
-      <div className="container mt-5 text-center">
+      <div className="loading-container">
         <div className="spinner-border" role="status"></div>
         <p>Loading...</p>
       </div>
@@ -130,164 +87,26 @@ function BookingEvent() {
 
   if (error)
     return (
-      <div className="container mt-5 alert alert-danger">Error: {error}</div>
+      <div className="error-container alert alert-danger">Error: {error}</div>
     );
 
   // Render booking form if we have an event
   if (event) {
     return (
-      <div className="container mt-4">
-        <h2>Book Tickets for {event.name}</h2>
-        <div className="card mb-4">
-          <div className="card-body">
-            <h5 className="card-title">{event.name}</h5>
-            <p className="card-text">{event.description}</p>
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <p>
-                  <strong>Date:</strong>{" "}
-                  {new Date(event.date).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Time:</strong>{" "}
-                  {new Date(event.date).toLocaleTimeString()}
-                </p>
-                <p>
-                  <strong>Location:</strong> {event.location}
-                </p>
-              </div>
-              <div className="col-md-6">
-                <p>
-                  <strong>Category:</strong> {event.category}
-                </p>
-                <p>
-                  <strong>Price per Ticket:</strong> ${event.ticketPrice}
-                </p>
-                <p>
-                  <strong>Available Tickets:</strong> {event.ticketAvailable}
-                </p>
-              </div>
-            </div>
-
-            {bookingSuccess && (
-              <div className="alert alert-success">
-                Booking successful! Redirecting to booking details...
-              </div>
-            )}
-
-            {bookingError && (
-              <div className="alert alert-danger">Error: {bookingError}</div>
-            )}
-
-            <div className="form-group mb-3">
-              <label htmlFor="numberOfTickets">Number of Tickets:</label>
-              <input
-                type="number"
-                className="form-control"
-                id="numberOfTickets"
-                value={numberOfTickets}
-                onChange={handleTicketChange}
-                min="1"
-                max={event.ticketAvailable}
-              />
-            </div>
-
-            <div className="mb-3">
-              <strong>Total Price:</strong> ${totalPrice}
-            </div>
-
-            <button
-              className="btn btn-primary"
-              onClick={handleBooking}
-              disabled={bookingSuccess || event.ticketAvailable < 1}
-            >
-              Book Now
-            </button>
-          </div>
-        </div>
-      </div>
+      <EventBookingForm event={event} navigateToBooking={navigateToBooking} />
     );
   }
 
   // If no data, show message
-  if (!data)
-    return (
-      <div className="container mt-5 alert alert-info">
-        No booking(s) found.
-      </div>
-    );
+  if (!data) return <div className="no-data-message">No booking(s) found.</div>;
 
-  // Rest of your component remains the same...
-  // Helper to render booking details
-  const renderBooking = (booking, onClick) => (
-  <div
-    key={booking._id || booking.id}
-    style={{
-      border: "2px solid gold",
-      margin: "10px",
-      padding: "16px",
-      cursor: "pointer",
-      background: "#fff",
-      color: "#b8860b", // golden text
-      borderRadius: "8px",
-      boxShadow: "0 2px 8px rgba(218,165,32,0.08)",
-      fontWeight: 500
-    }}
-    onClick={() => onClick(booking._id || booking.id)}
-    title="View booking details"
-  >
-    <div>
-      <strong style={{ color: "#b8860b" }}>Booking ID:</strong> {booking._id || booking.id}
-    </div>
-    <div>
-      <strong style={{ color: "#b8860b" }}>User:</strong> {typeof booking.user === 'object' ? booking.user.name || booking.user._id : booking.user}
-    </div>
-    <div>
-      <strong style={{ color: "#b8860b" }}>Event:</strong> {typeof booking.event === 'object' ? booking.event.title || booking.event.name : booking.event}
-    </div>
-    <div>
-      <strong style={{ color: "#b8860b" }}>Number of Tickets:</strong> {booking.numberOfTickets}
-    </div>
-    <div>
-      <strong style={{ color: "#b8860b" }}>Total Price:</strong> {booking.totalPrice}
-    </div>
-    <div>
-      <strong style={{ color: "#b8860b" }}>Status:</strong> {booking.status}
-    </div>
-    <div>
-      <strong style={{ color: "#b8860b" }}>Created At:</strong>{" "}
-      {booking.createdAt ? new Date(booking.createdAt).toLocaleString() : ""}
-    </div>
-    <div>
-      <strong style={{ color: "#b8860b" }}>Updated At:</strong>{" "}
-      {booking.updatedAt ? new Date(booking.updatedAt).toLocaleString() : ""}
-    </div>
-  </div>
+  // Render booking details
+  return (
+    <BookingDetails
+      data={data}
+      onBookingClick={(id) => navigate(`/bookings/${id}`)}
+    />
   );
-
-  // ...existing code...
-
-  if (Array.isArray(data)) {
-    return (
-      <div className="container mt-4">
-        <h2>Your Bookings</h2>
-        {data.length > 0 ? (
-          data.map(booking =>
-            renderBooking(booking, (id) => navigate(`/bookings/${id}`))
-          )
-        ) : (
-          <p>You don't have any bookings yet.</p>
-        )}
-      </div>
-    );
-  } else {
-    return (
-      <div className="container mt-4">
-        <h2>Booking Details</h2>
-        {renderBooking(data, () => {})}
-      </div>
-    );
-  }
 }
 
 export default BookingEvent;
