@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "cd src/View && npm install && npm run build",
-    "start": "node index.js",
+    "start": "npm install && cd src/View && npm install && cd ../.. && node index.js",
     "dev": "nodemon index.js",
     "deploy": "npm run build && vercel --prod"
   },
