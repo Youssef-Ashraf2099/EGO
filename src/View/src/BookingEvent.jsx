@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import EventBookingForm from "./EventBookingForm";
 import BookingDetails from "./BookingDetails";
-
+import "./BookingEvent.css";
 function BookingEvent() {
   const { id } = useParams();
   const [data, setData] = useState(null);

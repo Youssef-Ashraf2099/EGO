@@ -1,0 +1,22 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.error-container {
+  margin-top: 3rem;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.no-data-message {
+  margin-top: 3rem;
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
