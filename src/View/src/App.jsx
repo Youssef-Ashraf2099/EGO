@@ -30,14 +30,13 @@ function App() {
         <Route path="/events/create/new" element={<CreateEventPage />} />
 
         <Route path="/events/:id" element={<EventDetails />} />
-        <Route path="/events" element={<EventPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/events" element={<EventPage />} />
         <Route path="/api/v1/login" element={<Login />} />
         <Route path="/api/v1/register" element={<Register />} />
         <Route path="/api/v1/sendOtp" element={<SendOTP />} />
         <Route path="/api/v1/forgetPassword" element={<ForgotPassword />} />
-        <Route path="/api/v1/profile" element={<Profile />} />
+        <Route path="profile" element={<Profile />} />
         <Route path="/bookings" element={<BookingEvent />} />
         <Route path="/bookings/:id" element={<BookingEvent />} />
         <Route path="/api/v1/events/all" element={<AdminEvents />} />

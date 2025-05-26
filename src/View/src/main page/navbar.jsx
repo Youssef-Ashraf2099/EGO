@@ -2,11 +2,16 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import "../main page/styles/navbar.css";
+import { handleLogout } from "../authHandlers"; // adjust path if needed
+import { useNavigate } from "react-router-dom";
+
+const Port = import.meta.env.VITE_API_PORT || 4000; // Ensure this matches your API port
 
 const Navbar = () => {
-  const { role } = useAuth();
+  const { role, fetchProfile } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const navigate = useNavigate();
+  
   const handleMenuToggle = () => setMenuOpen(!menuOpen);
 
   return (
@@ -22,20 +27,20 @@ const Navbar = () => {
         </div>
 
         <nav className={`nav-menu${menuOpen ? " flex" : ""}`}>
-          {/* Always show Events */}
-          <Link to="/events" className="nav-link" onClick={() => setMenuOpen(false)}>
-            Events
-          </Link>
           {/* Show "Get Started" only if not logged in, otherwise show Dashboard */}
           {!role ? (
             <Link to="/api/v1/register" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
               Get Started
             </Link>
           ) : (
-            <Link to="/api/v1/profile" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
+            <Link to="profile" className="nav-link nav-button" onClick={() => setMenuOpen(false)}>
               Dashboard
             </Link>
           )}
+          {/* Always show Events */}
+          <Link to="/events" className="nav-link" onClick={() => setMenuOpen(false)}>
+            Events
+          </Link>
           {/* Role-based links */}
           {role === "Standard User" && (
             <Link to="/book-events" className="nav-link" onClick={() => setMenuOpen(false)}>
@@ -52,18 +57,31 @@ const Navbar = () => {
               <Link to="/api/v1/users" className="nav-link" onClick={() => setMenuOpen(false)}>
                 Manage Users
               </Link>
-              <Link to="/manage-events" className="nav-link" onClick={() => setMenuOpen(false)}>
+              <Link to="/api/v1/events/all" className="nav-link" onClick={() => setMenuOpen(false)}>
                 Manage Events
               </Link>
             </>
           )}
-          
-          {/* Additional static links */}
-          {!role && (
+          {/* Login/Logout link */}
+          {!role ? (
             <Link to="/api/v1/login" className="nav-link" onClick={() => setMenuOpen(false)}>
               Login
             </Link>
+          ) : (
+            <Link
+              to="#"
+              className="nav-link nav-logout"
+              style={{ cursor: "pointer" }}
+              onClick={async (e) => {
+                e.preventDefault();
+                setMenuOpen(false);
+                await handleLogout({ fetchProfile, navigate, Port });
+              }}
+            >
+              Logout
+            </Link>
           )}
+          {/* Additional static links */}
           <a href="/aboutus" className="nav-link" onClick={() => setMenuOpen(false)}>
             Contact
           </a>

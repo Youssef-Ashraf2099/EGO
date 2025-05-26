@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "./main page/styles/form.css";
 import { useAuth } from "./AuthContext";
 import { Link } from "react-router-dom";
+import { handleLogin } from "./authHandlers";
 const Port = import.meta.env.VITE_API_PORT;
 
 const Login = () => {
@@ -14,46 +14,25 @@ const Login = () => {
   const navigate = useNavigate();
   const { fetchProfile } = useAuth();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    console.log("login form submitted");
-
-    const form = {
-      email,
-      password,
-    };
-    try {
-      const res = await axios.post(
-        `http://localhost:${Port}/api/v1/login`,
-        form,
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("response status ", res.status);
-      console.log("response body ", res.data);
-
-      if (res.status === 200) {
-        await fetchProfile();
-        navigate("/api/v1/profile");
-      }
-    } catch (err) {
-      console.error("Error during login:", err);
-      setError(
-        err.response?.data?.message || "Invalid credentials. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="login-container">
       <div className="form-logo">EGO</div>
 
-      <form onSubmit={handleLogin} className="login-form">
+      <form
+        onSubmit={(e) =>
+          handleLogin({
+            e,
+            email,
+            password,
+            setLoading,
+            setError,
+            fetchProfile,
+            navigate,
+            Port,
+          })
+        }
+        className="login-form"
+      >
         <h2 className="form-title">Welcome Back</h2>
         <p className="form-subtitle">Sign in to access your account</p>
 

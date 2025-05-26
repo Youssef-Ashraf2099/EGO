@@ -2,8 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "./AuthContext"; // <-- Import AuthContext
-import "./dashboard.css";
+import "./Profile.css";
 const Port = import.meta.env.VITE_API_PORT || 4000;
+import { handleLogout } from "./authHandlers";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -68,23 +69,9 @@ const Profile = () => {
     }
   };
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(
-        `http://localhost:${Port}/api/v1/logout`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-      await fetchProfile(); // <-- Update auth context so Navbar re-renders
-      alert("Logged out successfully.");
-      console.log("Logged out");
-      navigate("/api/v1/login");
-    } catch (err) {
-      console.error("Logout failed:", err.message);
-      alert("Logout failed. Please try again.");
-    }
+  // Replace the old handleLogout with this:
+  const onLogout = async () => {
+    await handleLogout({ fetchProfile, navigate, Port });
   };
 
   const handleFileChange = async (e) => {
@@ -232,7 +219,7 @@ const Profile = () => {
                 {isEditing ? "Save Changes" : "Edit Profile"}
               </button>
 
-              <button className="logout-button" onClick={handleLogout}>
+              <button className="logout-button" onClick={onLogout}>
                 Logout
               </button>
             </div>
