@@ -10,7 +10,7 @@ const Footer = () => {
               <svg className="footer-logo-icon" viewBox="0 0 24 24">
                 <path d="M4 4h16v7H4zm0 9h16v7H4zm3-5h10M7 15h10"></path>
               </svg>
-              <span className="footer-logo-text">EIGO</span>
+              <span className="footer-logo-text">EGO</span>
             </div>
             <p className="footer-description">
               Eventick is a global self-service ticketing platform for live
