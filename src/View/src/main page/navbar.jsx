@@ -23,7 +23,7 @@ const Navbar = () => {
 
         <nav className={`nav-menu${menuOpen ? " flex" : ""}`}>
           {/* Always show Events */}
-          <Link to="/api/v1/events" className="nav-link" onClick={() => setMenuOpen(false)}>
+          <Link to="/events" className="nav-link" onClick={() => setMenuOpen(false)}>
             Events
           </Link>
           {/* Show "Get Started" only if not logged in, otherwise show Dashboard */}
