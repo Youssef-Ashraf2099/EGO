@@ -212,7 +212,7 @@ const EventDetails = () => {
           </main>
 
           <footer>
-            <p>© 2025 EGO Events. All rights reserved.</p>
+            <p>© {new Date.getFullYear()} EGO Events. All rights reserved.</p>
           </footer>
         </div>
       </div>
