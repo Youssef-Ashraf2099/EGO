@@ -5,13 +5,16 @@ const Port = import.meta.env.PORT || 3001;
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [role, setRole] = useState(null);
+  const [user, setUser] = useState(null); // Store the entire user object instead of just role
+  const [role, setRole] = useState(null); // Keep role for backward compatibility
 
   const fetchProfile = async () => {
     try {
       const res = await axios.get(`http://localhost:${Port}/api/v1/users/profile`, { withCredentials: true });
-      setRole(res.data.role);
+      setUser(res.data); // Store entire user object
+      setRole(res.data.role); // Keep role for backward compatibility
     } catch {
+      setUser(null);
       setRole(null);
     }
   };
@@ -21,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ role, fetchProfile }}>
+    <AuthContext.Provider value={{ user, role, fetchProfile }}>
       {children}
     </AuthContext.Provider>
   );

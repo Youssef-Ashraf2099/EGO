@@ -196,6 +196,7 @@ main {
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-right: auto; /* Pushes the button to the leftmost side */
 }
 
 .book-now:hover {
@@ -255,4 +256,84 @@ footer {
     nav ul {
         display: none;
     }
+}
+/* Add these styles to your EventDetails.css file */
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-event {
+  padding: 12px 24px;
+  background-color: #636363;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-event:hover {
+  background-color: #c6c6c6;
+}
+/* ...existing code... */
+
+/* Event Analytics Section */
+.event-analytics {
+  margin-top: 2rem;
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.event-analytics h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.analytics-chart {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* Ensure chart renders properly */
+.recharts-wrapper {
+  margin: 0 auto;
+}
+
+/* Style for the 3D bars */
+.recharts-bar-rectangle {
+  transition: opacity 0.3s;
+}
+
+.recharts-bar-rectangle:hover {
+  opacity: 0.9;
+}
+
+/* Adjust tooltip style */
+.recharts-tooltip-wrapper {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+}
+
+/* Responsive adjustments for charts */
+@media (max-width: 768px) {
+  .event-analytics {
+    padding: 1.5rem;
+  }
+  
+  .analytics-chart {
+    padding: 0.5rem;
+  }
 }

@@ -2,7 +2,7 @@ import EventsListing from "./main page/EventListing";
 import { useEffect, useState } from "react";
 import "./EventPage.css";
 import axios from "axios";
-const Port = import.meta.env.VITE_API_PORT || 3040;
+const Port = import.meta.env.VITE_API_PORT || 3500;
 
 const EventPage = () => {
   const [search, setSearch] = useState("");

@@ -1,4 +1,5 @@
 .event-card {
+    position: relative;
   border-radius: 8px;
   overflow: hidden;
   background-color: white;
@@ -21,21 +22,11 @@
 .category-text{
   font-size: 14px;
   color: #555;
-  margin-right: 50px;
 }
 .event-image-container {
   position: relative;
 }
-.money-icon{
-  font-size: 18px;
-  color: #efba1a;
-  margin-right: 2px;
-}
-.ticket-price-text{
-  font-size: 14px;
-  color: #555;
-  margin-right: 50px;
-}
+
 .event-image {
   width: 100%;
   height: 200px;
@@ -78,3 +69,32 @@
   font-size: 14px;
   opacity: 0.8;
 }
+/* Add these new styles for the state indicator */
+.event-state-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.event-state {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(239, 186, 26, 0.9);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.event-state:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+ 
