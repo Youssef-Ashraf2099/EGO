@@ -117,9 +117,7 @@ const EventDetails = () => {
               <img
                 src={
                   event.image
-                    ? `${event.image.startsWith("http") ? "" : "/"}${
-                        event.image
-                      }`
+                    ? getImageUrl(event.image)
                     : "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
                 }
                 alt="Music Concert Event"

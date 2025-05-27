@@ -6,6 +6,7 @@ import "./Profile.css";
 import axiosInstance from "./axiosURL";
 const Port = import.meta.env.VITE_API_PORT || 4000;
 import { handleLogout } from "./authHandlers";
+import { getImageUrl } from "./imageHelpers";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -124,9 +125,9 @@ const Profile = () => {
             <div className="profile-pic-small">
               {user.profilePicture ? (
                 <img
-                  src={`${user.profilePicture.startsWith("http") ? "" : "/"}${
-                    user.profilePicture
-                  }`}
+                  src={
+                    getImageUrl(user.profilePicture) ||
+                  }
                   alt="Profile"
                 />
               ) : (

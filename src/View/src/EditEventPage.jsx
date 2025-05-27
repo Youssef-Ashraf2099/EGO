@@ -293,7 +293,7 @@ const EditEventPage = () => {
             <div className="image-preview">
               <p>New image preview:</p>
               <img
-                src={preview}
+                src={getImageUrl(preview)}
                 alt="Preview"
                 style={{ maxWidth: "100%", maxHeight: "200px" }}
               />
