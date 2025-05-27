@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import axiosInstance from "./axiosURL";
-const Port = import.meta.env.PORT || 2099;
+const Port = import.meta.env.VITE_API_PORT || 2099;
 import "./main page/styles/form.css";
 
 const ForgotPassword = () => {
