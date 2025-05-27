@@ -14,11 +14,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import axiosInstance from "./axiosURL";
 
 const port = import.meta.env.VITE_API_PORT || 3500;
 
 const EventDetails = () => {
-  
   const { id } = useParams();
   const navigate = useNavigate();
   const [event, setEvent] = useState(null);
@@ -47,9 +47,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:${port}/api/v1/events/${id}`
-        );
+        const response = await axiosInstance.get(`/events/${id}`);
         console.log("Event data:", response.data);
         setEvent(response.data);
       } catch (error) {
@@ -119,7 +117,9 @@ const EventDetails = () => {
               <img
                 src={
                   event.image
-                    ? `http://localhost:${port}/${event.image}`
+                    ? `${event.image.startsWith("http") ? "" : "/"}${
+                        event.image
+                      }`
                     : "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=80"
                 }
                 alt="Music Concert Event"

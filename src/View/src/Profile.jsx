@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "./AuthContext"; // <-- Import AuthContext
 import "./Profile.css";
+import axiosInstance from "./axiosURL";
 const Port = import.meta.env.VITE_API_PORT || 4000;
 import { handleLogout } from "./authHandlers";
 
@@ -19,12 +20,9 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:${Port}/api/v1/users/profile`,
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await axiosInstance.get(`users/profile`, {
+          withCredentials: true,
+        });
 
         if (!res.data || typeof res.data !== "object" || !res.data.email) {
           throw new Error("Invalid user data received");
@@ -50,8 +48,8 @@ const Profile = () => {
 
   const handleEditClick = () => {
     if (isEditing) {
-      axios
-        .put(`http://localhost:${Port}/api/v1/users/profile`, editData, {
+      axiosInstance
+        .put(`/users/profile`, editData, {
           withCredentials: true,
         })
         .then(() => {
@@ -82,14 +80,10 @@ const Profile = () => {
     formData.append("profilePicture", file);
 
     try {
-      const res = await axios.put(
-        `http://localhost:${Port}/api/v1/profile-picture`,
-        formData,
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const res = await axiosInstance.put(`/profile-picture`, formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       setUser((prev) => ({ ...prev, profilePicture: res.data.profilePicture }));
       alert("Profile picture updated.");
@@ -105,7 +99,6 @@ const Profile = () => {
   return (
     <div className="dashboard">
       <div className="sidebar">
-        
         {/* <nav className="nav-menu">
           <ul>
             <li className="active">
@@ -131,7 +124,9 @@ const Profile = () => {
             <div className="profile-pic-small">
               {user.profilePicture ? (
                 <img
-                  src={`http://localhost:${Port}${user.profilePicture}`}
+                  src={`${user.profilePicture.startsWith("http") ? "" : "/"}${
+                    user.profilePicture
+                  }`}
                   alt="Profile"
                 />
               ) : (
@@ -150,7 +145,9 @@ const Profile = () => {
             >
               {user.profilePicture ? (
                 <img
-                  src={`http://localhost:${Port}${user.profilePicture}`}
+                  src={`${user.profilePicture.startsWith("http") ? "" : "/"}${
+                    user.profilePicture
+                  }`}
                   alt="Profile"
                 />
               ) : (

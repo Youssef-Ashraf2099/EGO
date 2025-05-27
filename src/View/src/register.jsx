@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-const Port = import.meta.env.VITE_API_PORT ;
+import axiosInstance from "./axiosURL"; // Import axiosInstance instead of axios
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -21,19 +20,15 @@ const Register = () => {
       role,
     };
     try {
-      const res = await axios.post(
-        `http://localhost:${Port}/api/v1/register`,
-        form,
-        {
-          withCredentials: true,
-        }
-      );
+      // Use axiosInstance instead of axios with localhost URL
+      const res = await axiosInstance.post("/register", form);
+
       console.log("response status ", res.status);
       console.log("response body ", res.data);
 
       if (res.status === 201) {
         alert("Registeration successful");
-        navigate("/api/v1/login");
+        navigate("/login"); // Remove the /api/v1 prefix from navigation
       } else {
         alert("Registeration failed");
       }

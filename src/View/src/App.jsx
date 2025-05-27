@@ -54,10 +54,10 @@ function App() {
         <Route path="/events" element={<EventPage />} />
 
         {/* Public */}
-        <Route path="/api/v1/login" element={<Login />} />
-        <Route path="/api/v1/register" element={<Register />} />
-        <Route path="/api/v1/sendOtp" element={<SendOTP />} />
-        <Route path="/api/v1/forgetPassword" element={<ForgotPassword />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/sendOtp" element={<SendOTP />} />
+        <Route path="/forgetPassword" element={<ForgotPassword />} />
         <Route path="/aboutus" element={<AboutUs />} />
         <Route path="/Terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
@@ -94,7 +94,7 @@ function App() {
 
         {/* System Admin only */}
         <Route
-          path="/api/v1/events/all"
+          path="/events/all"
           element={
             <ProtectedRoute allowedRoles={["System Admin"]}>
               <AdminEvents />
@@ -102,7 +102,7 @@ function App() {
           }
         />
         <Route
-          path="/api/v1/users"
+          path="/users"
           element={
             <ProtectedRoute allowedRoles={["System Admin"]}>
               <AllUsersPage />

@@ -1,12 +1,22 @@
-import axios from "axios";
+import React from "react";
+import axiosInstance from "./axiosURL";
 
-export const handleLogin = async ({ e, email, password, setLoading, setError, fetchProfile, navigate, Port }) => {
+export const handleLogin = async ({
+  e,
+  email,
+  password,
+  setLoading,
+  setError,
+  fetchProfile,
+  navigate,
+  Port,
+}) => {
   e.preventDefault();
   setLoading(true);
   setError("");
   try {
-    const res = await axios.post(
-      `http://localhost:${Port}/api/v1/login`,
+    const res = await axiosInstance.post(
+      `/login`,
       { email, password },
       { withCredentials: true }
     );
@@ -25,14 +35,10 @@ export const handleLogin = async ({ e, email, password, setLoading, setError, fe
 
 export const handleLogout = async ({ fetchProfile, navigate, Port }) => {
   try {
-    await axios.post(
-      `http://localhost:${Port}/api/v1/logout`,
-      {},
-      { withCredentials: true }
-    );
+    await axiosInstance.post(`/logout`, {}, { withCredentials: true });
     await fetchProfile();
     alert("Logged out successfully.");
-    navigate("/api/v1/login");
+    navigate("/login");
   } catch (err) {
     alert("Logout failed. Please try again.");
   }

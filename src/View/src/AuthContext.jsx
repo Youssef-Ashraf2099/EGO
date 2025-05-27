@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import axiosInstance from "./axiosURL";
 const Port = import.meta.env.VITE_API_PORT || 3001;
 
 const AuthContext = createContext();
@@ -11,7 +12,9 @@ export const AuthProvider = ({ children }) => {
 
   const fetchProfile = async () => {
     try {
-      const res = await axios.get(`http://localhost:${Port}/api/v1/users/profile`, { withCredentials: true });
+      const res = await axiosInstance.get(`/users/profile`, {
+        withCredentials: true,
+      });
       setUser(res.data);
       setRole(res.data.role);
     } catch {

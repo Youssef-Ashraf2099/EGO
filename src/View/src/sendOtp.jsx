@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import axiosInstance from "./axiosURL";
 import { useLocation } from "react-router-dom";
 import "./main page/styles/form.css";
 
@@ -13,7 +14,7 @@ const SendOTP = () => {
   const handleSendOtp = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`http://localhost:${Port}/api/v1/sendOtp`, {
+      const res = await axiosInstance.post(`/sendOtp`, {
         email,
       });
       console.log("response status", res.status);
@@ -23,7 +24,7 @@ const SendOTP = () => {
       if (res.status === 200) {
         alert("OTP sent successfully");
         localStorage.setItem("resetEmail", email);
-        navigate("/api/v1/forgetPassword");
+        navigate("/forgetPassword");
       } else {
         console.log("Failed to send OTP");
       }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import axiosInstance from "./axiosURL";
 const Port = import.meta.env.PORT || 2099;
 import "./main page/styles/form.css";
 
@@ -14,17 +15,18 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.put(
-        `http://localhost:${Port}/api/v1/forgetPassword`,
-        { email, otp, password: newPassword }
-      );
+      const res = await axiosInstance.put(`/forgetPassword`, {
+        email,
+        otp,
+        password: newPassword,
+      });
       console.log("response status ", res.status);
       console.log("response body ", res.data);
 
       if (res.status === 200) {
         console.log("successfully changed password");
         alert("password changed");
-        navigate("/api/v1/login");
+        navigate("/login");
       } else {
         alert("failed");
       }

@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import axiosInstance from "./axiosURL";
 // Import the CSS file
-import './main page/styles/EditEventPage.css';
+import "./main page/styles/EditEventPage.css";
 // Authentication imports kept but not used for now
 // import { isAuthenticated, hasRole, getAuthToken } from '../utils/auth';
 
@@ -15,65 +16,65 @@ const EditEventPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
-  
+
   // Add state for delete confirmation dialog
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  
+
   // Image state
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  
+
   // Form state
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    date: '',
-    location: '',
-    category: '',
-    ticketPrice: '',
-    ticketAvailable: '',
+    title: "",
+    description: "",
+    date: "",
+    location: "",
+    category: "",
+    ticketPrice: "",
+    ticketAvailable: "",
   });
 
   useEffect(() => {
     // Authentication check removed
-    
+
     // Fetch event data
     const fetchEvent = async () => {
       try {
         // Use full URL with port for direct access
-        const response = await axios.get(`http://localhost:${Port}/api/v1/events/${id}`);
-        
+        const response = await axiosInstance.get(`/events/${id}`);
+
         setEvent(response.data);
-        
+
         // Format date for the input field with error handling
-        let formattedDate = '';
+        let formattedDate = "";
         try {
           if (response.data.date) {
             const eventDate = new Date(response.data.date);
-            formattedDate = eventDate.toISOString().split('T')[0];
+            formattedDate = eventDate.toISOString().split("T")[0];
           } else {
-            formattedDate = new Date().toISOString().split('T')[0];
+            formattedDate = new Date().toISOString().split("T")[0];
           }
         } catch (dateError) {
-          console.error('Error parsing date:', dateError);
-          formattedDate = new Date().toISOString().split('T')[0];
+          console.error("Error parsing date:", dateError);
+          formattedDate = new Date().toISOString().split("T")[0];
         }
-        
+
         setFormData({
-          title: response.data.title || '',
-          description: response.data.description || '',
+          title: response.data.title || "",
+          description: response.data.description || "",
           date: formattedDate,
-          location: response.data.location || '',
-          category: response.data.category || '',
-          ticketPrice: response.data.ticketPrice || '',
-          ticketAvailable: response.data.ticketAvailable || '',
+          location: response.data.location || "",
+          category: response.data.category || "",
+          ticketPrice: response.data.ticketPrice || "",
+          ticketAvailable: response.data.ticketAvailable || "",
         });
-        
+
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching event:', error);
-        setError('Failed to load event data');
+        console.error("Error fetching event:", error);
+        setError("Failed to load event data");
         setLoading(false);
       }
     };
@@ -83,12 +84,12 @@ const EditEventPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
-  
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
@@ -100,39 +101,45 @@ const EditEventPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       // Create a FormData object for multipart/form-data
       const formDataToSend = new FormData();
-      
+
       // Add all form fields to FormData
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
-      
+
       // Add image if a new one was selected
       if (file) {
         formDataToSend.append("image", file);
       }
-      
-      console.log("Sending update to:", `http://localhost:${Port}/api/v1/events/${id}`);
-      
+
+      // console.log(
+      //   "Sending update to:",
+      //   `/events/${id}`
+      // );
+
       // Log form data entries
       for (let pair of formDataToSend.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
+        console.log(pair[0] + ": " + pair[1]);
       }
-      
-     await axios.put(`http://localhost:${Port}/api/v1/events/${id}`, formDataToSend, {
-        headers: { 
-          "Content-Type": "multipart/form-data"
-        }
+
+      await axiosInstance.put(`/events/${id}`, formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
       console.log("Event ID:", id);
       navigate(`/events/${id}`);
     } catch (error) {
-      console.error('Error updating event:', error);
-      console.error('Response:', error.response);
-      setError('Failed to update event: ' + (error.response?.data?.error || error.message));
+      console.error("Error updating event:", error);
+      console.error("Response:", error.response);
+      setError(
+        "Failed to update event: " +
+          (error.response?.data?.error || error.message)
+      );
     } finally {
       setLoading(false);
     }
@@ -142,11 +149,14 @@ const EditEventPage = () => {
   const handleDelete = async () => {
     setDeleteLoading(true);
     try {
-      await axios.delete(`http://localhost:${Port}/api/v1/events/${id}`);
-      navigate('/'); // Navigate to home page after successful deletion
+      await axiosInstance.delete(`/events/${id}`);
+      navigate("/"); // Navigate to home page after successful deletion
     } catch (error) {
-      console.error('Error deleting event:', error);
-      setError('Failed to delete event: ' + (error.response?.data?.error || error.message));
+      console.error("Error deleting event:", error);
+      setError(
+        "Failed to delete event: " +
+          (error.response?.data?.error || error.message)
+      );
       setShowDeleteConfirm(false);
     } finally {
       setDeleteLoading(false);
@@ -159,7 +169,7 @@ const EditEventPage = () => {
   return (
     <div className="edit-event-container">
       <h2>Edit Event</h2>
-      
+
       {/* Delete Confirmation Dialog */}
       {showDeleteConfirm && (
         <div className="delete-confirm-overlay">
@@ -167,14 +177,14 @@ const EditEventPage = () => {
             <h3>Delete Event</h3>
             <p>Are you sure you want to delete this event?</p>
             <div className="delete-confirm-buttons">
-              <button 
-                className="confirm-yes-btn" 
+              <button
+                className="confirm-yes-btn"
                 onClick={handleDelete}
                 disabled={deleteLoading}
               >
                 {deleteLoading ? "Deleting..." : "Yes"}
               </button>
-              <button 
+              <button
                 className="confirm-cancel-btn"
                 onClick={() => setShowDeleteConfirm(false)}
               >
@@ -184,7 +194,7 @@ const EditEventPage = () => {
           </div>
         </div>
       )}
-      
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="title">Title</label>
@@ -197,7 +207,7 @@ const EditEventPage = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="description">Description</label>
           <textarea
@@ -208,7 +218,7 @@ const EditEventPage = () => {
             rows="4"
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="date">Date</label>
           <input
@@ -220,7 +230,7 @@ const EditEventPage = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="location">Location</label>
           <input
@@ -232,7 +242,7 @@ const EditEventPage = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="category">Category</label>
           <input
@@ -244,7 +254,7 @@ const EditEventPage = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="ticketPrice">Ticket Price</label>
           <input
@@ -256,7 +266,7 @@ const EditEventPage = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="ticketAvailable">Available Tickets</label>
           <input
@@ -268,7 +278,7 @@ const EditEventPage = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="image">Event Image</label>
           <input
@@ -282,38 +292,40 @@ const EditEventPage = () => {
           {preview && (
             <div className="image-preview">
               <p>New image preview:</p>
-              <img 
-                src={preview} 
-                alt="Preview" 
-                style={{ maxWidth: '100%', maxHeight: '200px' }} 
+              <img
+                src={preview}
+                alt="Preview"
+                style={{ maxWidth: "100%", maxHeight: "200px" }}
               />
             </div>
           )}
           {event?.image && !preview && (
             <div className="current-image">
               <p>Current image:</p>
-              <img 
-                src={`http://localhost:${Port}/${event.image}`} 
-                alt="Current" 
-                style={{ maxWidth: '100%', maxHeight: '200px' }} 
+              <img
+                src={`${event.image.startsWith("http") ? "" : "/"}${
+                  event.image
+                }`}
+                alt="Current"
+                style={{ maxWidth: "100%", maxHeight: "200px" }}
               />
             </div>
           )}
         </div>
-        
+
         <div className="button-group">
           <button type="submit" className="save-button" disabled={loading}>
             {loading ? "Saving..." : "Save Changes"}
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="cancel-button"
             onClick={() => navigate(`/events/${id}`)}
           >
             Cancel
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="delete-button"
             onClick={() => setShowDeleteConfirm(true)}
           >

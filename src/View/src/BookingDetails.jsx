@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import "./BookingDetails.css";
+import axiosInstance from "./axiosURL";
 const Port = import.meta.env.VITE_API_PORT || 4000;
 
 function BookingDetails({ data, onBookingClick, onCancel }) {
@@ -17,12 +18,9 @@ function BookingDetails({ data, onBookingClick, onCancel }) {
       if (!confirmCancel) return;
 
       try {
-        const response = await axios.delete(
-          `http://localhost:${Port}/api/v1/bookings/${bookingId}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axiosInstance.delete(`/bookings/${bookingId}`, {
+          withCredentials: true,
+        });
         alert("Booking cancelled successfully.");
 
         // Notify parent to refresh bookings list

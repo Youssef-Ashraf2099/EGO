@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const Port = import.meta.env.VITE_API_PORT || 3040;
 import "./AdminEvents.css";
+import axiosInstance from "./axiosURL";
 
 const AdminEvents = () => {
   const [events, setEvents] = useState([]);
@@ -13,14 +14,11 @@ const AdminEvents = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:${Port}/api/v1/events/all`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const response = await axiosInstance.get(`/events/all`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         setEvents(response.data);
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -36,7 +34,7 @@ const AdminEvents = () => {
   };
   const handleDelete = async (eventId) => {
     try {
-      await axios.delete(`http://localhost:${Port}/api/v1/events/${eventId}`, {
+      await axiosInstance.delete(`/events/${eventId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -48,8 +46,8 @@ const AdminEvents = () => {
   };
   const handleApprove = async (eventId) => {
     try {
-      await axios.put(
-        `http://localhost:${Port}/api/v1/events/${eventId}`,
+      await axiosInstance.put(
+        `/events/${eventId}`,
         {
           status: "approved",
         },
@@ -70,8 +68,8 @@ const AdminEvents = () => {
   };
   const handleReject = async (eventId) => {
     try {
-      await axios.put(
-        `http://localhost:${Port}/api/v1/events/${eventId}`,
+      await axiosInstance.put(
+        `/events/${eventId}`,
         {
           status: "rejected",
         },

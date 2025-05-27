@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import axiosInstance from "./axiosURL"; // Import your axios instance
 import EventBookingForm from "./EventBookingForm";
 import BookingDetails from "./BookingDetails";
 import "./BookingEvent.css";
@@ -20,8 +21,8 @@ function BookingEvent() {
 
     if (id) {
       // Try to fetch booking first
-      axios
-        .get(`http://localhost:${PORT}/api/v1/bookings/${id}`, {
+      axiosInstance
+        .get(`/bookings/${id}`, {
           withCredentials: true,
         })
         .then((res) => {
@@ -33,8 +34,8 @@ function BookingEvent() {
           if (err.response && err.response.status === 404) {
             // Fallback to event data
             console.log("Booking not found, trying to fetch event details");
-            axios
-              .get(`http://localhost:${PORT}/api/v1/events/${id}`, {
+            axiosInstance
+              .get(`/events/${id}`, {
                 withCredentials: true,
               })
               .then((eventRes) => {
@@ -54,8 +55,8 @@ function BookingEvent() {
         });
     } else {
       // Fetch all bookings
-      axios
-        .get(`http://localhost:${PORT}/api/v1/users/bookings`, {
+      axiosInstance
+        .get(`/users/bookings`, {
           withCredentials: true,
         })
         .then((res) => {

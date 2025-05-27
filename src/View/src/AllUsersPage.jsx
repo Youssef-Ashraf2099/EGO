@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./AllUsersPage.css"; // Import the CSS file
+import axiosInstance from "./axiosURL";
 
 const AllUsersPage = () => {
   const [users, setUsers] = useState([]);
@@ -18,7 +19,7 @@ const AllUsersPage = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("/api/v1/users", {
+      const response = await axiosInstance.get("/users", {
         withCredentials: true,
       });
       console.log("Response data:", response.data);
@@ -36,7 +37,7 @@ const AllUsersPage = () => {
   const handleDeleteUser = async (userId) => {
     try {
       setDeleteLoading(true);
-      await axios.delete(`/api/v1/users/${userId}`, {
+      await axiosInstance.delete(`/users/${userId}`, {
         withCredentials: true,
       });
 
@@ -60,8 +61,8 @@ const AllUsersPage = () => {
     try {
       setUpdatingRole(true);
       // Updated endpoint to match the router configuration
-      const response = await axios.put(
-        `/api/v1/users/${editingUser.id}`,
+      const response = await axiosInstance.put(
+        `/users/${editingUser.id}`,
         { role: editingUser.newRole },
         { withCredentials: true }
       );

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./styles/CreateEventPage.css";
 import { useAuth } from "../AuthContext";
+import axiosInstance from "../axiosURL";
 
 const Port = import.meta.env.VITE_API_PORT || 3500;
 
@@ -77,9 +78,12 @@ function CreateEventPage() {
     if (!formData.date.trim()) errors.date = "Date is required";
     if (!formData.time.trim()) errors.time = "Time is required";
     if (!formData.location.trim()) errors.location = "Location is required";
-    if (!formData.ticketPrice.trim()) errors.ticketPrice = "Ticket Price is required";
-    if (!formData.ticketAvailable.trim()) errors.ticketAvailable = "Tickets Available is required";
-    if (!formData.description.trim()) errors.description = "Description is required";
+    if (!formData.ticketPrice.trim())
+      errors.ticketPrice = "Ticket Price is required";
+    if (!formData.ticketAvailable.trim())
+      errors.ticketAvailable = "Tickets Available is required";
+    if (!formData.description.trim())
+      errors.description = "Description is required";
 
     setValidationErrors(errors);
 
@@ -91,7 +95,9 @@ function CreateEventPage() {
 
     try {
       const data = new FormData();
-      const fullDateTime = new Date(`${formData.date}T${formData.time}`).toISOString();
+      const fullDateTime = new Date(
+        `${formData.date}T${formData.time}`
+      ).toISOString();
 
       data.append("date", fullDateTime);
       data.append("title", formData.title);
@@ -107,7 +113,7 @@ function CreateEventPage() {
       console.log(user._id, "Organizer ID");
       console.log(data.get("organizer"), "Organizer ID in form data");
 
-      const response = await axios.post(`http://localhost:${Port}/api/v1/events`, data, {
+      const response = await axiosInstance.post(`/events`, data, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -138,7 +144,9 @@ function CreateEventPage() {
       }, 2000);
     } catch (err) {
       console.error("Error creating event:", err);
-      setError(err.response?.data?.error || "Failed to create event. Please try again.");
+      setError(
+        err.response?.data?.error || "Failed to create event. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -151,8 +159,8 @@ function CreateEventPage() {
 
   return (
     <div className="create-event-page">
-      <button 
-        onClick={() => navigate("/")} 
+      <button
+        onClick={() => navigate("/")}
         className="home-btn"
         style={{ margin: "20px 0" }}
       >
@@ -179,7 +187,9 @@ function CreateEventPage() {
                   className={validationErrors.title ? "input-error" : ""}
                 />
                 {validationErrors.title && (
-                  <small className="input-error-message">{validationErrors.title}</small>
+                  <small className="input-error-message">
+                    {validationErrors.title}
+                  </small>
                 )}
               </div>
 
@@ -193,7 +203,9 @@ function CreateEventPage() {
                   className={validationErrors.category ? "input-error" : ""}
                 />
                 {validationErrors.category && (
-                  <small className="input-error-message">{validationErrors.category}</small>
+                  <small className="input-error-message">
+                    {validationErrors.category}
+                  </small>
                 )}
               </div>
             </div>
@@ -209,7 +221,9 @@ function CreateEventPage() {
                   className={validationErrors.date ? "input-error" : ""}
                 />
                 {validationErrors.date && (
-                  <small className="input-error-message">{validationErrors.date}</small>
+                  <small className="input-error-message">
+                    {validationErrors.date}
+                  </small>
                 )}
               </div>
 
@@ -223,7 +237,9 @@ function CreateEventPage() {
                   className={validationErrors.time ? "input-error" : ""}
                 />
                 {validationErrors.time && (
-                  <small className="input-error-message">{validationErrors.time}</small>
+                  <small className="input-error-message">
+                    {validationErrors.time}
+                  </small>
                 )}
               </div>
             </div>
@@ -239,7 +255,9 @@ function CreateEventPage() {
                   className={validationErrors.location ? "input-error" : ""}
                 />
                 {validationErrors.location && (
-                  <small className="input-error-message">{validationErrors.location}</small>
+                  <small className="input-error-message">
+                    {validationErrors.location}
+                  </small>
                 )}
               </div>
 
@@ -255,7 +273,9 @@ function CreateEventPage() {
                   className={validationErrors.ticketPrice ? "input-error" : ""}
                 />
                 {validationErrors.ticketPrice && (
-                  <small className="input-error-message">{validationErrors.ticketPrice}</small>
+                  <small className="input-error-message">
+                    {validationErrors.ticketPrice}
+                  </small>
                 )}
               </div>
             </div>
@@ -270,10 +290,14 @@ function CreateEventPage() {
                   onChange={handleChange}
                   min="0"
                   step="1"
-                  className={validationErrors.ticketAvailable ? "input-error" : ""}
+                  className={
+                    validationErrors.ticketAvailable ? "input-error" : ""
+                  }
                 />
                 {validationErrors.ticketAvailable && (
-                  <small className="input-error-message">{validationErrors.ticketAvailable}</small>
+                  <small className="input-error-message">
+                    {validationErrors.ticketAvailable}
+                  </small>
                 )}
               </div>
             </div>
@@ -288,7 +312,9 @@ function CreateEventPage() {
                 className={validationErrors.description ? "input-error" : ""}
               />
               {validationErrors.description && (
-                <small className="input-error-message">{validationErrors.description}</small>
+                <small className="input-error-message">
+                  {validationErrors.description}
+                </small>
               )}
             </div>
 
@@ -306,11 +332,17 @@ function CreateEventPage() {
               )}
             </div>
 
-            <button 
-              type="submit" 
-              disabled={loading || !user || role !== "Organizer"} 
+            <button
+              type="submit"
+              disabled={loading || !user || role !== "Organizer"}
               className="submit-btn"
-              title={!user ? "Please login first" : role !== "Organizer" ? "Only organizers can create events" : ""}
+              title={
+                !user
+                  ? "Please login first"
+                  : role !== "Organizer"
+                  ? "Only organizers can create events"
+                  : ""
+              }
             >
               {loading ? "Creating..." : "Create Event"}
             </button>

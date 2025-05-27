@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./EventBookingForm.css";
+import axiosInstance from "./axiosURL";
 
 function EventBookingForm({ event, navigateToBooking }) {
   const [numberOfTickets, setNumberOfTickets] = useState(1);
@@ -24,9 +25,9 @@ function EventBookingForm({ event, navigateToBooking }) {
     setBookingError(null);
     setBookingSuccess(false);
 
-    axios
+    axiosInstance
       .post(
-        `http://localhost:${PORT}/api/v1/bookings`,
+        `/bookings`,
         {
           eventId: event._id,
           numberOfTickets: numberOfTickets,

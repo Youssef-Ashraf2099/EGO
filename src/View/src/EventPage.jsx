@@ -2,6 +2,7 @@ import EventsListing from "./main page/EventListing";
 import { useEffect, useState } from "react";
 import "./EventPage.css";
 import axios from "axios";
+import axiosInstance from "./axiosURL";
 const Port = import.meta.env.VITE_API_PORT || 3500;
 
 const EventPage = () => {
@@ -13,9 +14,7 @@ const EventPage = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:${Port}/api/v1/events`
-        );
+        const response = await axiosInstance.get(`/events`);
         setEvents(response.data);
       } catch (error) {
         console.error("Error fetching events:", error);
