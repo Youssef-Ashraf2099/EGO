@@ -15,6 +15,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import axiosInstance from "./axiosURL";
+import { getImageUrl } from "./imageHelpers"; // Import image helper function
 
 const port = import.meta.env.VITE_API_PORT || 3500;
 
