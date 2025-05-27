@@ -124,12 +124,7 @@ const Profile = () => {
           <div className="user-badge">
             <div className="profile-pic-small">
               {user.profilePicture ? (
-                <img
-                  src={
-                    getImageUrl(user.profilePicture) ||
-                  }
-                  alt="Profile"
-                />
+                <img src={getImageUrl(user.profilePicture)} alt="Profile" />
               ) : (
                 <span>👤</span>
               )}
@@ -145,10 +140,7 @@ const Profile = () => {
               onClick={() => fileInputRef.current.click()}
             >
               {user.profilePicture ? (
-                <img
-                  src={getImageUrl(user.profilePicture) }
-                  alt="Profile"
-                />
+                <img src={getImageUrl(user.profilePicture)} alt="Profile" />
               ) : (
                 <div className="no-profile">
                   <span>📷</span>
