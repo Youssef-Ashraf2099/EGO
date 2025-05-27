@@ -71,10 +71,10 @@ const Login = () => {
         <div className="divider">or</div>
 
         <div className="login-links">
-          <Link to="/api/v1/sendOtp" className="login-link">
+          <Link to="/sendOtp" className="login-link">
             Forgot your password?
           </Link>
-          <Link to="/api/v1/register" className="login-link">
+          <Link to="/register" className="login-link">
             Don't have an account? Sign up
           </Link>
         </div>
