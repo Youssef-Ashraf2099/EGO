@@ -146,9 +146,7 @@ const Profile = () => {
             >
               {user.profilePicture ? (
                 <img
-                  src={`${user.profilePicture.startsWith("http") ? "" : "/"}${
-                    user.profilePicture
-                  }`}
+                  src={getImageUrl(user.profilePicture) }
                   alt="Profile"
                 />
               ) : (
