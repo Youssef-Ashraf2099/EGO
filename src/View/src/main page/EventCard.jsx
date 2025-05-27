@@ -2,7 +2,7 @@ import "./styles/EventCard.css";
 import { CiGrid41 } from "react-icons/ci";
 import { FaMoneyBill1Wave } from "react-icons/fa6";
 import { useState, useEffect } from "react";
-import { getImageUrl } from "./imageHelpers"; // Import the helper function
+import { getImageUrl } from "../imageHelpers"; // Import the helper function
 
 // Remove the port variable as it's no longer needed
 // const port = import.meta.env.VITE_API_PORT || 3500;
